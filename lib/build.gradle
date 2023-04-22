@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.protobuf'
+    id 'maven-publish'
 }
 
 android {
@@ -54,6 +55,27 @@ protobuf {
                     option "lite"
                 }
             }
+        }
+    }
+}
+
+// Run "./gradlew publishReleaseToLocalRepository" to generate release AAR locally
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.aurora'
+            artifactId = 'gplayapi'
+            version = '3.0.1'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'local'
+            url = "${project.buildDir}/repo"
         }
     }
 }
