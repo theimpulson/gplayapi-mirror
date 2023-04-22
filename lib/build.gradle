@@ -59,7 +59,7 @@ protobuf {
     }
 }
 
-// Run "./gradlew publishReleaseToLocalRepository" to generate release AAR locally
+// Run "./gradlew publishReleasePublicationToLocalRepository" to generate release AAR locally
 publishing {
     publications {
         release(MavenPublication) {

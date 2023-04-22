@@ -33,7 +33,7 @@ assembleRelease:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
   script:
-    - ./gradlew publishReleaseToLocalRepository
+    - ./gradlew publishReleasePublicationToLocalRepository
   artifacts:
     paths:
       - lib/build/repo/com/aurora/gplayapi/**/
