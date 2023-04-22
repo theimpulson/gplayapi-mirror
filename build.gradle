@@ -13,60 +13,12 @@
  *     GNU General Public License for more details.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.12")
-    }
-}
-
 plugins {
-    id("java-library")
-    id("com.google.protobuf") version("0.8.12")
-    id("org.jetbrains.kotlin.jvm") version("1.4.10")
+    id 'com.android.library' version '7.4.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
+    id 'com.google.protobuf' version '0.9.1' apply false
 }
 
-group("com.aurora")
-version("3.0.1")
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    //Protobuf
-    implementation "com.google.protobuf:protobuf-java:3.10.0"
-
-    //Fuel
-    implementation("com.github.kittinunf.fuel:fuel:2.3.0")
-
-    //Gson
-    implementation 'com.google.code.gson:gson:2.8.6'
-}
-
-sourceSets {
-    main.kotlin.srcDirs += "src/main/java"
-    main.kotlin.srcDirs += "build/generated/source/proto/main/java"
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = ("UTF-8")
-}
-
-jar {
-    exclude("*.proto")
-}
-
-clean {
-    delete protobuf.generatedFilesBaseDir
-}
-
-protobuf {
-    protoc {
-        artifact = ("com.google.protobuf:protoc:3.10.0")
-    }
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
