@@ -22,9 +22,7 @@ object DeviceManager {
     fun loadProperties(deviceName: String?): Properties? {
         return try {
             val properties = Properties()
-            val inputStream = javaClass
-                    .classLoader
-                    .getResourceAsStream(deviceName)
+            val inputStream = javaClass.classLoader?.getResourceAsStream("gplayapi_${deviceName}")
             if (inputStream != null) {
                 properties.load(inputStream)
             } else {
