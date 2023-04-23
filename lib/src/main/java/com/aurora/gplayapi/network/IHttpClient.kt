@@ -17,8 +17,11 @@ package com.aurora.gplayapi.network
 
 import com.aurora.gplayapi.data.models.PlayResponse
 import java.io.IOException
+import kotlinx.coroutines.flow.StateFlow
 
 interface IHttpClient {
+    val responseCode: StateFlow<Int>
+
     @Throws(IOException::class)
     fun post(url: String, headers: Map<String, String>, body: ByteArray): PlayResponse
 

@@ -19,8 +19,15 @@ import com.aurora.gplayapi.data.models.PlayResponse
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.*
 import java.nio.charset.Charset
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 object DefaultHttpClient : IHttpClient {
+
+    private val _responseCode = MutableStateFlow(100)
+    override val responseCode: StateFlow<Int>
+        get() = _responseCode.asStateFlow()
 
     override fun get(url: String, headers: Map<String, String>): PlayResponse {
         return get(url, headers, hashMapOf())
@@ -102,6 +109,7 @@ object DefaultHttpClient : IHttpClient {
             }
             isSuccessful = response.isSuccessful
             code = response.statusCode
+            _responseCode.value = response.statusCode
         }
     }
 }
