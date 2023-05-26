@@ -7,3 +7,6 @@ gradle-app.setting
 /local.properties
 /src/main/java/com/aurora/gplayapi/tests/*
 okhttp_cache/
+
+# MAC OSX system files
+*.DS_Store
