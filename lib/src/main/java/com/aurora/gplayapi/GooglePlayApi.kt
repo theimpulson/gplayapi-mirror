@@ -168,7 +168,7 @@ class GooglePlayApi(private val authData: AuthData) {
         val hashMap = Util.parseResponse(playResponse.responseBytes)
 
         return if (hashMap.containsKey("Auth")) {
-            hashMap.getOrDefault("Auth", "")
+            hashMap["Auth"] ?: ""
         } else {
             throw AuthException("Authentication failed : Could not generate OAuth Token")
         }
