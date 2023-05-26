@@ -1056,6 +1056,7 @@ message Dependencies {
   optional int32 targetSdk = 4;
   optional int32  unknown2 = 5;
   repeated string splitApks = 11;
+  repeated LibraryDependency libraryDependency = 13;
 }
 
 message Dependency {
@@ -1063,6 +1064,12 @@ message Dependency {
   optional int32 version = 2;
   optional int32 unknown4 = 4;
 }
+
+message LibraryDependency {
+  optional string packageName = 1;
+  optional int32 versionCode = 2;
+}
+
 
 message TestingProgramInfo {
   optional bool subscribed = 2;
