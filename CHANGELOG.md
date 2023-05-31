@@ -1,3 +1,6 @@
+Changelog : v3.1.3  
+• Implement shared library dependencies API  
+
 Changelog : v3.1.2  
 • Fix lint issue with getting authentication value from HashMap  
 • Create a jitpack configuration for JDK 17 support  
