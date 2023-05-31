@@ -188,6 +188,13 @@ object AppBuilder {
                         dependentSplits.add(splitId)
                     }
 
+                    it.libraryDependencyList.forEach { dependency ->
+                        var libApp = App(dependency.packageName)
+                        libApp.versionCode = dependency.versionCode
+                        libApp.offerType = 1
+                        dependentLibraries.add(libApp)
+                    }
+
                     totalSize = it.size
                     targetSDK = it.targetSdk
                 }

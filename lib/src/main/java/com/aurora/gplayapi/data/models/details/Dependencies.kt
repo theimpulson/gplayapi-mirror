@@ -15,9 +15,12 @@
 
 package com.aurora.gplayapi.data.models.details
 
+import com.aurora.gplayapi.data.models.App
+
 class Dependencies {
     var dependentPackages = mutableListOf<String>()
     var dependentSplits = mutableListOf<String>()
+    var dependentLibraries = mutableListOf<App>()
     var targetSDK: Int = -1
     var totalSize: Long = -1L
 }
