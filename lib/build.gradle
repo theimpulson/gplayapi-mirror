@@ -10,10 +10,10 @@ android {
     compileSdk 33
 
     defaultConfig {
-        minSdk 19
+        minSdk 21
         targetSdk 33
         aarMetadata {
-            minCompileSdk = 19
+            minCompileSdk = 21
         }
     }
 
