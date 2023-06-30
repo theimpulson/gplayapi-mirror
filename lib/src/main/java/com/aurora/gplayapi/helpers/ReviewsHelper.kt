@@ -23,7 +23,6 @@ import com.aurora.gplayapi.data.models.Review
 import com.aurora.gplayapi.data.models.ReviewCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
 
 class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -44,10 +43,11 @@ class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
     ): ReviewResponse? {
         val responseBody = getResponse(url, params, headers)
         val payload = getPayLoadFromBytes(responseBody.responseBytes)
-        return if (payload.hasReviewResponse())
+        return if (payload.hasReviewResponse()) {
             payload.reviewResponse
-        else
+        } else {
             null
+        }
     }
 
     @Throws(Exception::class)
@@ -58,14 +58,18 @@ class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
     ): ReviewResponse? {
         val responseBody = getResponse(url, params, headers)
         val payload = getPayLoadFromBytes(responseBody.responseBytes)
-        return if (payload.hasReviewSummaryResponse())
+        return if (payload.hasReviewSummaryResponse()) {
             payload.reviewSummaryResponse
-        else
+        } else {
             null
+        }
     }
 
     @Throws(Exception::class)
-    private fun postReviewResponse(params: Map<String, String>, headers: Map<String, String>): ReviewResponse? {
+    private fun postReviewResponse(
+        params: Map<String, String>,
+        headers: Map<String, String>
+    ): ReviewResponse? {
         val playResponse = httpClient.post(GooglePlayApi.URL_REVIEW_ADD_EDIT, headers, params)
         val payload = getPayLoadFromBytes(playResponse.responseBytes)
         return if (payload.hasReviewResponse()) payload.reviewResponse else null
@@ -116,7 +120,8 @@ class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
         params["doc"] = packageName
 
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val reviewResponse = getReviewSummaryResponse("${GooglePlayApi.URL_FDFE}/reviewSummary", params, headers)
+        val reviewResponse =
+            getReviewSummaryResponse("${GooglePlayApi.URL_FDFE}/reviewSummary", params, headers)
         return getReviewCluster(reviewResponse).reviewList
     }
 
@@ -139,7 +144,13 @@ class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun addOrEditReview(packageName: String, title: String, content: String, rating: Int, isBeta: Boolean): Review? {
+    fun addOrEditReview(
+        packageName: String,
+        title: String,
+        content: String,
+        rating: Int,
+        isBeta: Boolean
+    ): Review? {
         val params: MutableMap<String, String> = HashMap()
         params["doc"] = packageName
         params["title"] = title
@@ -162,7 +173,8 @@ class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
 
     fun next(nextPageUrl: String): ReviewCluster {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val reviewResponse = getReviewResponse("${GooglePlayApi.URL_FDFE}/${nextPageUrl}", mapOf(), headers)
+        val reviewResponse =
+            getReviewResponse("${GooglePlayApi.URL_FDFE}/$nextPageUrl", mapOf(), headers)
         return getReviewCluster(reviewResponse)
     }
 }

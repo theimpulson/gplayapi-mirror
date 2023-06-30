@@ -15,7 +15,6 @@
 
 package com.aurora.gplayapi
 
-import com.aurora.gplayapi.GooglePlayApi.Service.*
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
 import com.aurora.gplayapi.data.providers.HeaderProvider.getAuthHeaders
@@ -29,7 +28,6 @@ import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.Util
 import java.io.IOException
 import java.math.BigInteger
-import java.util.*
 
 class GooglePlayApi(private val authData: AuthData) {
 
@@ -129,37 +127,44 @@ class GooglePlayApi(private val authData: AuthData) {
         params.putAll(getAuthParams(aasToken))
 
         when (service) {
-            AC2DM -> {
+            Service.AC2DM -> {
                 params["service"] = "ac2dm"
                 params.remove("app")
             }
-            ANDROID_CHECK_IN_SERVER -> {
+
+            Service.ANDROID_CHECK_IN_SERVER -> {
                 params["oauth2_foreground"] = "0"
                 params["app"] = "com.google.android.gms"
                 params["service"] = "AndroidCheckInServer"
             }
-            EXPERIMENTAL_CONFIG -> {
+
+            Service.EXPERIMENTAL_CONFIG -> {
                 params["service"] = "oauth2:https://www.googleapis.com/auth/experimentsandconfigs"
             }
-            NUMBERER -> {
+
+            Service.NUMBERER -> {
                 params["app"] = "com.google.android.gms"
                 params["service"] = "oauth2:https://www.googleapis.com/auth/numberer"
             }
-            GCM -> {
+
+            Service.GCM -> {
                 params["app"] = "com.google.android.gms"
                 params["service"] = "oauth2:https://www.googleapis.com/auth/gcm"
             }
-            GOOGLE_PLAY -> {
+
+            Service.GOOGLE_PLAY -> {
                 headers["app"] = "com.google.android.gms"
                 params["service"] = "oauth2:https://www.googleapis.com/auth/googleplay"
             }
-            OAUTHLOGIN -> {
+
+            Service.OAUTHLOGIN -> {
                 params["oauth2_foreground"] = "0"
                 params["app"] = "com.google.android.googlequicksearchbox"
                 params["service"] = "oauth2:https://www.google.com/accounts/OAuthLogin"
                 params["callerPkg"] = "com.google.android.googlequicksearchbox"
             }
-            ANDROID -> {
+
+            Service.ANDROID -> {
                 params["service"] = "android"
             }
         }
@@ -216,7 +221,7 @@ class GooglePlayApi(private val authData: AuthData) {
         const val URL_LIBRARY = "$URL_FDFE/library"
         const val URL_MODIFY_LIBRARY = "$URL_FDFE/modifyLibrary"
 
-        //Not part of Google's API
+        // Not part of Google's API
         const val SALES_URL = "https://www.bestappsale.com/api/android/getsale.php"
     }
 }

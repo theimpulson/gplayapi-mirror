@@ -16,19 +16,21 @@
 package com.aurora.gplayapi.data.providers
 
 import com.aurora.gplayapi.data.models.AuthData
-import java.util.*
+import java.util.Locale
 
 object ParamProvider {
 
     fun getDefaultAuthParams(builder: AuthData): Map<String, String> {
         val params: MutableMap<String, String> = HashMap()
-        if (builder.gsfId.isNotBlank())
+        if (builder.gsfId.isNotBlank()) {
             params["androidId"] = builder.gsfId
+        }
         params["sdk_version"] = builder.deviceInfoProvider!!.sdkVersion.toString()
         params["Email"] = builder.email
-        params["google_play_services_version"] = builder.deviceInfoProvider!!.playServicesVersion.toString()
-        params["device_country"] = builder.locale.country.toLowerCase()
-        params["lang"] = builder.locale.language.toLowerCase()
+        params["google_play_services_version"] =
+            builder.deviceInfoProvider!!.playServicesVersion.toString()
+        params["device_country"] = builder.locale.country.lowercase(Locale.getDefault())
+        params["lang"] = builder.locale.language.lowercase(Locale.getDefault())
         params["callerSig"] = "38918a453d07199354f8b19af05ec6562ced5788"
         return params
     }

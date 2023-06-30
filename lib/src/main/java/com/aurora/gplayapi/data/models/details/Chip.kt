@@ -15,7 +15,7 @@
 
 package com.aurora.gplayapi.data.models.details
 
-import java.util.*
+import java.util.UUID
 
 class Chip {
     var id: String = UUID.randomUUID().toString()

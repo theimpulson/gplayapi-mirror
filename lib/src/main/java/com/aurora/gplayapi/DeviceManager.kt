@@ -16,13 +16,13 @@
 package com.aurora.gplayapi
 
 import java.io.FileNotFoundException
-import java.util.*
+import java.util.Properties
 
 object DeviceManager {
     fun loadProperties(deviceName: String?): Properties? {
         return try {
             val properties = Properties()
-            val inputStream = javaClass.classLoader?.getResourceAsStream("gplayapi_${deviceName}")
+            val inputStream = javaClass.classLoader?.getResourceAsStream("gplayapi_$deviceName")
             if (inputStream != null) {
                 properties.load(inputStream)
             } else {

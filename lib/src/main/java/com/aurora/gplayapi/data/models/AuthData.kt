@@ -16,7 +16,7 @@
 package com.aurora.gplayapi.data.models
 
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
-import java.util.*
+import java.util.Locale
 
 class AuthData {
 
@@ -27,7 +27,7 @@ class AuthData {
         this.aasToken = aasToken
     }
 
-    constructor(email: String, authToken: String, insecure : Boolean = true) {
+    constructor(email: String, authToken: String, insecure: Boolean = true) {
         this.email = email
         this.authToken = authToken
         this.isAnonymous = true

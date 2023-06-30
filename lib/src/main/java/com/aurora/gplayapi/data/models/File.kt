@@ -15,7 +15,7 @@
 
 package com.aurora.gplayapi.data.models
 
-import java.util.*
+import java.util.UUID
 
 class File {
     var id: String = UUID.randomUUID().toString()

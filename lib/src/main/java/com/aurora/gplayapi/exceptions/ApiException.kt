@@ -15,17 +15,17 @@
 
 package com.aurora.gplayapi.exceptions
 
-import java.lang.Exception
-
 sealed class ApiException {
 
     data class AppNotPurchased(val reason: String = "App not purchased") : Exception()
 
-    data class AppNotFound(val reason: String = "App not found, maybe restricted (OEM or Geo)") : Exception()
+    data class AppNotFound(val reason: String = "App not found, maybe restricted (OEM or Geo)") :
+        Exception()
 
     data class AppNotSupported(val reason: String = "App not supported") : Exception()
 
-    data class EmptyDownloads(val reason: String = "File list empty") : Exception() //Not sure about the root cause.
+    data class EmptyDownloads(val reason: String = "File list empty") :
+        Exception() // Not sure about the root cause.
 
     data class Unknown(val reason: String = "¯\\_(ツ)_/¯") : Exception()
 

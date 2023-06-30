@@ -17,7 +17,6 @@ package com.aurora.gplayapi
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.*
 
 object FileManager {
     fun loadPackages(fileName: String?): List<String>? {

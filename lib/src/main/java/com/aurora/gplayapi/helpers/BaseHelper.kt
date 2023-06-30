@@ -15,16 +15,31 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.*
+import com.aurora.gplayapi.BrowseResponse
+import com.aurora.gplayapi.BulkDetailsRequest
+import com.aurora.gplayapi.DetailsResponse
+import com.aurora.gplayapi.GooglePlayApi
+import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.ListResponse
+import com.aurora.gplayapi.Payload
+import com.aurora.gplayapi.PayloadApi
+import com.aurora.gplayapi.ResponseWrapper
+import com.aurora.gplayapi.ResponseWrapperApi
+import com.aurora.gplayapi.SearchResponse
+import com.aurora.gplayapi.SearchSuggestResponse
 import com.aurora.gplayapi.data.builders.AppBuilder.build
-import com.aurora.gplayapi.data.models.*
+import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.Artwork
+import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.PlayResponse
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.models.editor.EditorChoiceBundle
 import com.aurora.gplayapi.data.models.editor.EditorChoiceCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
-import java.util.*
 
 abstract class BaseHelper(protected var authData: AuthData) {
 
@@ -33,7 +48,11 @@ abstract class BaseHelper(protected var authData: AuthData) {
     abstract fun using(httpClient: IHttpClient): BaseHelper
 
     @Throws(IOException::class)
-    fun getResponse(url: String, params: Map<String, String>, headers: Map<String, String>): PlayResponse {
+    fun getResponse(
+        url: String,
+        params: Map<String, String>,
+        headers: Map<String, String>
+    ): PlayResponse {
         return httpClient.get(url, headers, params)
     }
 
@@ -80,13 +99,19 @@ abstract class BaseHelper(protected var authData: AuthData) {
     fun getPrefetchPayLoad(bytes: ByteArray?): Payload {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
         val payload = responseWrapper.payload
-        return if (responseWrapper.preFetchCount > 0 && ((payload.hasSearchResponse()
-                    && payload.searchResponse.itemCount == 0)
-                    || payload.hasListResponse() && payload.listResponse.itemCount == 0
-                    || payload.hasBrowseResponse())
+        return if (responseWrapper.preFetchCount > 0 && (
+            (
+                payload.hasSearchResponse() &&
+                    payload.searchResponse.itemCount == 0
+                ) ||
+                payload.hasListResponse() && payload.listResponse.itemCount == 0 ||
+                payload.hasBrowseResponse()
+            )
         ) {
             responseWrapper.getPreFetch(0).response.payload
-        } else payload
+        } else {
+            payload
+        }
     }
 
     open fun getAppsFromItem(item: Item): MutableList<App> {
@@ -96,7 +121,7 @@ abstract class BaseHelper(protected var authData: AuthData) {
                 if (subItem.type == 1) {
                     val app = build(subItem)
                     appList.add(app)
-                    //System.out.printf("%s -> %s\n", app.displayName, app.packageName);
+                    // System.out.printf("%s -> %s\n", app.displayName, app.packageName);
                 }
             }
         }
@@ -115,7 +140,9 @@ abstract class BaseHelper(protected var authData: AuthData) {
         val payload = getPayLoadFromBytes(bytes)
         return if (payload.hasSearchResponse()) {
             payload.searchResponse
-        } else null
+        } else {
+            null
+        }
     }
 
     @Throws(Exception::class)
@@ -123,7 +150,9 @@ abstract class BaseHelper(protected var authData: AuthData) {
         val payload = getPayLoadFromBytes(bytes)
         return if (payload.hasSearchSuggestResponse()) {
             payload.searchSuggestResponse
-        } else null
+        } else {
+            null
+        }
     }
 
     /*--------------------------------------- GENERIC APP STREAMS --------------------------------------------*/
@@ -131,20 +160,22 @@ abstract class BaseHelper(protected var authData: AuthData) {
     fun getNextStreamResponse(nextPageUrl: String): ListResponse {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + nextPageUrl, headers)
-        return if (playResponse.isSuccessful)
+        return if (playResponse.isSuccessful) {
             getListResponseFromBytes(playResponse.responseBytes)
-        else
+        } else {
             ListResponse.getDefaultInstance()
+        }
     }
 
     @Throws(Exception::class)
     fun getBrowseStreamResponse(browseUrl: String): BrowseResponse {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + browseUrl, headers)
-        return if (playResponse.isSuccessful)
+        return if (playResponse.isSuccessful) {
             getBrowseResponseFromBytes(playResponse.responseBytes)
-        else
+        } else {
             BrowseResponse.getDefaultInstance()
+        }
     }
 
     @Throws(Exception::class)
@@ -169,9 +200,11 @@ abstract class BaseHelper(protected var authData: AuthData) {
     }
 
     fun getStreamCluster(payload: Payload): StreamCluster {
-        return if (payload.hasListResponse())
+        return if (payload.hasListResponse()) {
             getStreamCluster(payload.listResponse)
-        else StreamCluster()
+        } else {
+            StreamCluster()
+        }
     }
 
     fun getStreamCluster(listResponse: ListResponse): StreamCluster {
@@ -261,13 +294,15 @@ abstract class BaseHelper(protected var authData: AuthData) {
         val browseUrl = getBrowseUrl(item)
         if (item.imageCount > 0) {
             item.imageList.forEach {
-                artworkList.add(Artwork().apply {
-                    type = it.imageType
-                    url = it.imageUrl
-                    aspectRatio = it.dimension.aspectRatio
-                    width = it.dimension.width
-                    height = it.dimension.height
-                })
+                artworkList.add(
+                    Artwork().apply {
+                        type = it.imageType
+                        url = it.imageUrl
+                        aspectRatio = it.dimension.aspectRatio
+                        width = it.dimension.width
+                        height = it.dimension.height
+                    }
+                )
             }
         }
         return EditorChoiceCluster().apply {

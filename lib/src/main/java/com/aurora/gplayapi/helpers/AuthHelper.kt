@@ -21,7 +21,8 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
 import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
+import java.util.Locale
+import java.util.Properties
 
 class AuthHelper private constructor() {
 
@@ -35,18 +36,20 @@ class AuthHelper private constructor() {
 
         fun build(email: String, aasToken: String): AuthData {
             val properties = DeviceManager.loadProperties("px_3a.properties")
-            if (properties != null)
+            if (properties != null) {
                 return build(email, aasToken, properties)
-            else
+            } else {
                 throw Exception("Unable to read device config")
+            }
         }
 
         fun build(email: String, aasToken: String, deviceName: String): AuthData {
             val properties = DeviceManager.loadProperties(deviceName)
-            if (properties != null)
+            if (properties != null) {
                 return build(email, aasToken, properties)
-            else
+            } else {
                 throw Exception("Unable to read device config")
+            }
         }
 
         fun build(email: String, aasToken: String, properties: Properties): AuthData {
@@ -74,7 +77,7 @@ class AuthHelper private constructor() {
 
             val tosResponse = api.toc()
 
-            //Fetch UserProfile
+            // Fetch UserProfile
             authData.userProfile = UserProfileHelper(authData).getUserProfile()
 
             return authData
@@ -86,7 +89,6 @@ class AuthHelper private constructor() {
             locale: Locale,
             deviceInfoProvider: DeviceInfoProvider
         ): AuthData {
-
             val authData = AuthData(email, authToken, true)
 
             authData.deviceInfoProvider = deviceInfoProvider
@@ -94,18 +96,18 @@ class AuthHelper private constructor() {
 
             val api = GooglePlayApi(authData)
 
-            //Android GSF ID
+            // Android GSF ID
             val gsfId = api.generateGsfId(deviceInfoProvider)
             authData.gsfId = gsfId
 
-            //Upload Device Config
+            // Upload Device Config
             val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
             authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
 
-            //GooglePlay TOS
+            // GooglePlay TOS
             val tosResponse = api.toc()
 
-            //Fetch UserProfile
+            // Fetch UserProfile
             authData.userProfile = UserProfileHelper(authData).getUserProfile()
 
             return authData

@@ -22,16 +22,16 @@ object RatingBuilder {
 
     fun build(rating: AggregateRating): Rating {
         return Rating(
-                rating.starRating,
-                rating.oneStarRatings,
-                rating.twoStarRatings,
-                rating.threeStarRatings,
-                rating.fourStarRatings,
-                rating.fiveStarRatings,
-                rating.thumbsUpCount,
-                rating.thumbsDownCount,
-                rating.ratingLabel,
-                rating.ratingCountLabelAbbreviated
+            rating.starRating,
+            rating.oneStarRatings,
+            rating.twoStarRatings,
+            rating.threeStarRatings,
+            rating.fourStarRatings,
+            rating.fiveStarRatings,
+            rating.thumbsUpCount,
+            rating.thumbsDownCount,
+            rating.ratingLabel,
+            rating.ratingCountLabelAbbreviated
         )
     }
 }

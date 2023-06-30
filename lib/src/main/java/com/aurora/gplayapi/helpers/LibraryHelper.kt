@@ -15,7 +15,9 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.*
+import com.aurora.gplayapi.GooglePlayApi
+import com.aurora.gplayapi.ListResponse
+import com.aurora.gplayapi.ModifyLibraryRequest
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
@@ -57,12 +59,17 @@ class LibraryHelper(authData: AuthData) : BaseHelper(authData) {
         val builder = ModifyLibraryRequest.newBuilder()
             .setLibraryId("u-wl")
 
-        if (isAddRequest)
+        if (isAddRequest) {
             builder.addAddPackageName(packageName)
-        else
+        } else {
             builder.addRemovePackageName(packageName)
+        }
 
-        val playResponse = httpClient.post(GooglePlayApi.URL_MODIFY_LIBRARY, headers, builder.build().toByteArray())
+        val playResponse = httpClient.post(
+            GooglePlayApi.URL_MODIFY_LIBRARY,
+            headers,
+            builder.build().toByteArray()
+        )
         return playResponse.isSuccessful
     }
 }

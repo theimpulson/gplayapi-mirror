@@ -17,11 +17,16 @@ package com.aurora.gplayapi.network
 
 import com.aurora.gplayapi.data.models.PlayResponse
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.*
-import java.nio.charset.Charset
+import com.github.kittinunf.fuel.core.Headers
+import com.github.kittinunf.fuel.core.Request
+import com.github.kittinunf.fuel.core.Response
+import com.github.kittinunf.fuel.core.isClientError
+import com.github.kittinunf.fuel.core.isServerError
+import com.github.kittinunf.fuel.core.isSuccessful
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.nio.charset.Charset
 
 object DefaultHttpClient : IHttpClient {
 
@@ -34,27 +39,27 @@ object DefaultHttpClient : IHttpClient {
     }
 
     override fun get(
-            url: String,
-            headers: Map<String, String>,
-            params: Map<String, String>
+        url: String,
+        headers: Map<String, String>,
+        params: Map<String, String>
     ): PlayResponse {
         val parameters = params
-                .map { it.key to it.value }
-                .toList()
+            .map { it.key to it.value }
+            .toList()
         val (request, response, result) = Fuel.get(url, parameters)
-                .header(headers)
-                .response()
+            .header(headers)
+            .response()
         return buildPlayResponse(response, request)
     }
 
     override fun get(
-            url: String,
-            headers: Map<String, String>,
-            paramString: String
+        url: String,
+        headers: Map<String, String>,
+        paramString: String
     ): PlayResponse {
         val (request, response, result) = Fuel.get(url + paramString)
-                .header(headers)
-                .response()
+            .header(headers)
+            .response()
         return buildPlayResponse(response, request)
     }
 
@@ -74,31 +79,30 @@ object DefaultHttpClient : IHttpClient {
 
     override fun post(url: String, headers: Map<String, String>, body: ByteArray): PlayResponse {
         val (request, response, result) = Fuel.post(url)
-                .header(headers)
-                .appendHeader(Headers.CONTENT_TYPE, "application/x-protobuf")
-                .body(body, Charset.defaultCharset())
-                .response()
+            .header(headers)
+            .appendHeader(Headers.CONTENT_TYPE, "application/x-protobuf")
+            .body(body, Charset.defaultCharset())
+            .response()
         return buildPlayResponse(response, request)
     }
 
     override fun post(
-            url: String,
-            headers: Map<String, String>,
-            params: Map<String, String>
+        url: String,
+        headers: Map<String, String>,
+        params: Map<String, String>
     ): PlayResponse {
         val parameters = params
-                .map { it.key to it.value }
-                .toList()
+            .map { it.key to it.value }
+            .toList()
         val (request, response, result) = Fuel.post(url, parameters)
-                .header(headers)
-                .response()
+            .header(headers)
+            .response()
         return buildPlayResponse(response, request)
     }
 
     @JvmStatic
     private fun buildPlayResponse(response: Response, request: Request): PlayResponse {
         return PlayResponse().apply {
-
             if (response.isSuccessful) {
                 responseBytes = response.body().toByteArray()
             }

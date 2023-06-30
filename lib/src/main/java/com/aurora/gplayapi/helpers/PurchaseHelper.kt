@@ -15,8 +15,12 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.*
+import com.aurora.gplayapi.BuyResponse
 import com.aurora.gplayapi.Constants.PATCH_FORMAT
+import com.aurora.gplayapi.DeliveryResponse
+import com.aurora.gplayapi.GooglePlayApi
+import com.aurora.gplayapi.ListResponse
+import com.aurora.gplayapi.ResponseWrapper
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.File
@@ -24,7 +28,6 @@ import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.exceptions.ApiException
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
-import java.util.*
 
 class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -49,11 +52,12 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             for (item in listResponse.itemList) {
                 for (subItem in item.subItemList) {
                     if (item.subItemCount > 0) {
-                        if (item.hasAnnotations()
-                            && item.annotations.hasPurchaseHistoryDetails()
-                            && item.annotations.purchaseHistoryDetails.hasPurchaseStatus()
-                        )
+                        if (item.hasAnnotations() &&
+                            item.annotations.hasPurchaseHistoryDetails() &&
+                            item.annotations.purchaseHistoryDetails.hasPurchaseStatus()
+                        ) {
                             continue
+                        }
                         purchaseAppList.addAll(getAppsFromItem(subItem))
                     }
                 }
@@ -97,7 +101,6 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         ),
         downloadToken: String
     ): DeliveryResponse {
-
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
         params["doc"] = packageName
@@ -113,7 +116,11 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         }
 
         val playResponse =
-            httpClient.get(GooglePlayApi.DELIVERY_URL, HeaderProvider.getDefaultHeaders(authData), params)
+            httpClient.get(
+                GooglePlayApi.DELIVERY_URL,
+                HeaderProvider.getDefaultHeaders(authData),
+                params
+            )
         val payload = ResponseWrapper.parseFrom(playResponse.responseBytes).payload
         return payload.deliveryResponse
     }
@@ -131,10 +138,13 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         when (deliveryResponse.status) {
             1 ->
                 return getDownloadsFromDeliveryResponse(packageName, versionCode, deliveryResponse)
+
             2 ->
                 throw ApiException.AppNotSupported()
+
             3 ->
                 throw ApiException.AppNotPurchased()
+
             else ->
                 throw ApiException.Unknown()
         }
@@ -147,48 +157,55 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     ): List<File> {
         val fileList: MutableList<File> = mutableListOf()
         if (deliveryResponse != null) {
-            //Add base apk
+            // Add base apk
             val androidAppDeliveryData = deliveryResponse.appDeliveryData
             if (androidAppDeliveryData != null) {
-                fileList.add(File().apply {
-                    name = "${packageName}.apk"
-                    url = androidAppDeliveryData.downloadUrl
-                    size = androidAppDeliveryData.downloadSize
-                    type = File.FileType.BASE
-                })
+                fileList.add(
+                    File().apply {
+                        name = "$packageName.apk"
+                        url = androidAppDeliveryData.downloadUrl
+                        size = androidAppDeliveryData.downloadSize
+                        type = File.FileType.BASE
+                    }
+                )
 
-                //Obb & patches (if any)
+                // Obb & patches (if any)
                 val fileMetadataList = deliveryResponse.appDeliveryData.additionalFileList
                 if (fileMetadataList != null) {
                     for (appFileMetadata in fileMetadataList) {
                         val isOBB = appFileMetadata.fileType == 0
                         val fileType = if (isOBB) "main" else "patch"
-                        fileList.add(File().apply {
-                            name = "$fileType.$versionCode.$packageName.obb"
-                            url = appFileMetadata.downloadUrl
-                            size = appFileMetadata.size
-                            type = if (isOBB) File.FileType.OBB else File.FileType.PATCH
-                        })
+                        fileList.add(
+                            File().apply {
+                                name = "$fileType.$versionCode.$packageName.obb"
+                                url = appFileMetadata.downloadUrl
+                                size = appFileMetadata.size
+                                type = if (isOBB) File.FileType.OBB else File.FileType.PATCH
+                            }
+                        )
                     }
                 }
 
-                //Add split apks (if any)
+                // Add split apks (if any)
                 val splitDeliveryDataList = deliveryResponse.appDeliveryData.splitDeliveryDataList
                 if (fileMetadataList != null) {
                     for (splitDeliveryData in splitDeliveryDataList) {
-                        fileList.add(File().apply {
-                            name = "${splitDeliveryData.name}.apk"
-                            url = splitDeliveryData.downloadUrl
-                            size = splitDeliveryData.downloadSize
-                            type = File.FileType.SPLIT
-                        })
+                        fileList.add(
+                            File().apply {
+                                name = "${splitDeliveryData.name}.apk"
+                                url = splitDeliveryData.downloadUrl
+                                size = splitDeliveryData.downloadSize
+                                type = File.FileType.SPLIT
+                            }
+                        )
                     }
                 }
             }
         }
 
-        if (fileList.isEmpty())
+        if (fileList.isEmpty()) {
             throw ApiException.Unknown()
+        }
 
         return fileList
     }

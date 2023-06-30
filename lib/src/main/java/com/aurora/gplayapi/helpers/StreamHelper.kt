@@ -22,7 +22,6 @@ import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.editor.EditorChoiceBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
 
 class StreamHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -56,16 +55,19 @@ class StreamHelper(authData: AuthData) : BaseHelper(authData) {
         if (type == Type.EARLY_ACCESS) {
             params["ct"] = "1"
         } else {
-            if (category != Category.NONE)
+            if (category != Category.NONE) {
                 params["cat"] = category.value
+            }
         }
 
-        val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + type.value, headers, params)
+        val playResponse =
+            httpClient.get(GooglePlayApi.URL_FDFE + "/" + type.value, headers, params)
 
-        return if (playResponse.isSuccessful)
+        return if (playResponse.isSuccessful) {
             getListResponseFromBytes(playResponse.responseBytes)
-        else
+        } else {
             ListResponse.getDefaultInstance()
+        }
     }
 
     enum class Category(var value: String) {

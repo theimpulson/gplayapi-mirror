@@ -81,8 +81,9 @@ object AppBuilder {
         app.targetSdk = appDetails.targetSdkVersion
         app.updatedOn = appDetails.infoUpdatedOn
 
-        if (app.developerName.isEmpty())
+        if (app.developerName.isEmpty()) {
             app.developerName = item.creator
+        }
 
         appDetails.instantLink?.let {
             app.instantAppLink = it
@@ -259,7 +260,8 @@ object AppBuilder {
     }
 
     private fun getInstalls(downloadInfo: String): Long {
-        val matcher: Matcher = Pattern.compile("[\\d]+").matcher(downloadInfo.replace("[,.\\s]+".toRegex(), ""))
+        val matcher: Matcher =
+            Pattern.compile("[\\d]+").matcher(downloadInfo.replace("[,.\\s]+".toRegex(), ""))
         return if (matcher.find()) Util.parseLong(matcher.group(0), 0) else 0
     }
 }

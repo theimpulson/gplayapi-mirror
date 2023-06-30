@@ -22,7 +22,6 @@ import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
 
 class CategoryHelper(authData: AuthData) : BaseHelper(authData) {
 

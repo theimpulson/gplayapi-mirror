@@ -16,7 +16,7 @@
 package com.aurora.gplayapi.data.providers
 
 import com.aurora.gplayapi.data.models.AuthData
-import java.util.*
+import java.util.Locale
 
 object HeaderProvider {
 
@@ -24,8 +24,9 @@ object HeaderProvider {
         val headers: MutableMap<String, String> = HashMap()
         headers["app"] = "com.google.android.gms"
         headers["User-Agent"] = builder.deviceInfoProvider!!.authUserAgentString
-        if (builder.gsfId.isNotBlank())
+        if (builder.gsfId.isNotBlank()) {
             headers["device"] = builder.gsfId
+        }
         return headers
     }
 
@@ -48,7 +49,8 @@ object HeaderProvider {
         headers["X-DFE-Request-Params"] = "timeoutMs=4000"
 
         if (authData.deviceCheckInConsistencyToken.isNotBlank()) {
-            headers["X-DFE-Device-Checkin-Consistency-Token"] = authData.deviceCheckInConsistencyToken
+            headers["X-DFE-Device-Checkin-Consistency-Token"] =
+                authData.deviceCheckInConsistencyToken
         }
 
         if (authData.deviceConfigToken.isNotBlank()) {

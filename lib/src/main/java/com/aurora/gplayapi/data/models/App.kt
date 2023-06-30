@@ -16,7 +16,11 @@
 package com.aurora.gplayapi.data.models
 
 import com.aurora.gplayapi.Constants.Restriction
-import com.aurora.gplayapi.data.models.details.*
+import com.aurora.gplayapi.data.models.details.AppInfo
+import com.aurora.gplayapi.data.models.details.Badge
+import com.aurora.gplayapi.data.models.details.Chip
+import com.aurora.gplayapi.data.models.details.Dependencies
+import com.aurora.gplayapi.data.models.details.TestingProgram
 import com.aurora.gplayapi.data.models.editor.EditorChoiceReason
 
 class App(var packageName: String) {

@@ -15,10 +15,15 @@
 
 package com.aurora.gplayapi.data.providers
 
-import com.aurora.gplayapi.*
-import java.util.*
+import com.aurora.gplayapi.AndroidBuildProto
+import com.aurora.gplayapi.AndroidCheckinProto
+import com.aurora.gplayapi.AndroidCheckinRequest
+import com.aurora.gplayapi.DeviceConfigurationProto
+import com.aurora.gplayapi.DeviceFeature
+import java.util.Properties
 
-class DeviceInfoProvider(var properties: Properties, var localeString: String) : BaseDeviceInfoProvider() {
+class DeviceInfoProvider(var properties: Properties, var localeString: String) :
+    BaseDeviceInfoProvider() {
 
     @Transient
     private var timeToReport = System.currentTimeMillis() / 1000
@@ -30,7 +35,8 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
     override val sdkVersion: Int = properties.getProperty("Build.VERSION.SDK_INT").toInt()
     override val playServicesVersion: Int = properties.getProperty("GSF.version").toInt()
     override val mccMnc: String = properties.getProperty("SimOperator")
-    override val authUserAgentString: String = ("GoogleAuth/1.4 (${properties.getProperty("Build.DEVICE")} ${properties.getProperty("Build.ID")})")
+    override val authUserAgentString: String =
+        ("GoogleAuth/1.4 (${properties.getProperty("Build.DEVICE")} ${properties.getProperty("Build.ID")})")
 
     override val userAgentString: String
         get() {
@@ -47,49 +53,54 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
             params.add("model=${properties.getProperty("Build.MODEL")}")
             params.add("buildId=${properties.getProperty("Build.ID")}")
             params.add("isWideScreen=${0}")
-            params.add("supportedAbis=${platforms}")
+            params.add("supportedAbis=$platforms")
 
-            return "Android-Finsky/${properties.getProperty("Vending.versionString")} (${params.joinToString(separator = ",")})"
+            return "Android-Finsky/${properties.getProperty("Vending.versionString")} (${
+            params.joinToString(
+                separator = ","
+            )
+            })"
         }
 
     override fun generateAndroidCheckInRequest(): AndroidCheckinRequest? {
         return AndroidCheckinRequest.newBuilder()
-                .setId(0)
-                .setCheckin(
-                        AndroidCheckinProto.newBuilder()
-                                .setBuild(
-                                        AndroidBuildProto.newBuilder()
-                                                .setId(properties.getProperty("Build.FINGERPRINT"))
-                                                .setProduct(properties.getProperty("Build.HARDWARE"))
-                                                .setCarrier(properties.getProperty("Build.BRAND"))
-                                                .setRadio(properties.getProperty("Build.RADIO"))
-                                                .setBootloader(properties.getProperty("Build.BOOTLOADER"))
-                                                .setDevice(properties.getProperty("Build.DEVICE"))
-                                                .setSdkVersion(getInt("Build.VERSION.SDK_INT"))
-                                                .setModel(properties.getProperty("Build.MODEL"))
-                                                .setManufacturer(properties.getProperty("Build.MANUFACTURER"))
-                                                .setBuildProduct(properties.getProperty("Build.PRODUCT"))
-                                                .setClient(properties.getProperty("Client"))
-                                                .setOtaInstalled(java.lang.Boolean.getBoolean(properties.getProperty("OtaInstalled")))
-                                                .setTimestamp(timeToReport)
-                                                .setGoogleServices(getInt("GSF.version"))
-                                )
-                                .setLastCheckinMsec(0)
-                                .setCellOperator(properties.getProperty("CellOperator"))
-                                .setSimOperator(properties.getProperty("SimOperator"))
-                                .setRoaming(properties.getProperty("Roaming"))
-                                .setUserNumber(0)
-                )
-                .setLocale(localeString)
-                .setTimeZone(properties.getProperty("TimeZone"))
-                .setVersion(3)
-                .setDeviceConfiguration(deviceConfigurationProto)
-                .setFragment(0)
-                .build()
+            .setId(0)
+            .setCheckin(
+                AndroidCheckinProto.newBuilder()
+                    .setBuild(
+                        AndroidBuildProto.newBuilder()
+                            .setId(properties.getProperty("Build.FINGERPRINT"))
+                            .setProduct(properties.getProperty("Build.HARDWARE"))
+                            .setCarrier(properties.getProperty("Build.BRAND"))
+                            .setRadio(properties.getProperty("Build.RADIO"))
+                            .setBootloader(properties.getProperty("Build.BOOTLOADER"))
+                            .setDevice(properties.getProperty("Build.DEVICE"))
+                            .setSdkVersion(getInt("Build.VERSION.SDK_INT"))
+                            .setModel(properties.getProperty("Build.MODEL"))
+                            .setManufacturer(properties.getProperty("Build.MANUFACTURER"))
+                            .setBuildProduct(properties.getProperty("Build.PRODUCT"))
+                            .setClient(properties.getProperty("Client"))
+                            .setOtaInstalled(java.lang.Boolean.getBoolean(properties.getProperty("OtaInstalled")))
+                            .setTimestamp(timeToReport)
+                            .setGoogleServices(getInt("GSF.version"))
+                    )
+                    .setLastCheckinMsec(0)
+                    .setCellOperator(properties.getProperty("CellOperator"))
+                    .setSimOperator(properties.getProperty("SimOperator"))
+                    .setRoaming(properties.getProperty("Roaming"))
+                    .setUserNumber(0)
+            )
+            .setLocale(localeString)
+            .setTimeZone(properties.getProperty("TimeZone"))
+            .setVersion(3)
+            .setDeviceConfiguration(deviceConfigurationProto)
+            .setFragment(0)
+            .build()
     }
 
     @Transient
-    override val deviceConfigurationProto: DeviceConfigurationProto = DeviceConfigurationProto.newBuilder()
+    override val deviceConfigurationProto: DeviceConfigurationProto =
+        DeviceConfigurationProto.newBuilder()
             .setTouchScreen(getInt("TouchScreen"))
             .setKeyboard(getInt("Keyboard"))
             .setNavigation(getInt("Navigation"))
@@ -127,9 +138,9 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
     private fun getDeviceFeatures(): List<DeviceFeature> {
         return getList("Features").map {
             DeviceFeature.newBuilder()
-                    .setName(it)
-                    .setValue(0)
-                    .build()
+                .setName(it)
+                .setValue(0)
+                .build()
         }
     }
 
@@ -137,14 +148,22 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
         if (!properties.containsKey("Vending.versionString") && properties.containsKey("Vending.version")) {
             var vendingVersionString = "7.1.15"
             if (properties.getProperty("Vending.version").length > 6) {
-                vendingVersionString = StringBuilder(properties.getProperty("Vending.version").substring(2, 6)).insert(2, ".").insert(1, ".").toString()
+                vendingVersionString =
+                    StringBuilder(properties.getProperty("Vending.version").substring(2, 6)).insert(
+                        2,
+                        "."
+                    ).insert(1, ".").toString()
             }
             properties["Vending.versionString"] = vendingVersionString
         }
 
-        if (properties.containsKey("Build.FINGERPRINT") && (!properties.containsKey("Build.ID")
-                        || !properties.containsKey("Build.VERSION.RELEASE"))) {
-            val fingerprint = properties.getProperty("Build.FINGERPRINT").split("/".toRegex()).toTypedArray()
+        if (properties.containsKey("Build.FINGERPRINT") && (
+            !properties.containsKey("Build.ID") ||
+                !properties.containsKey("Build.VERSION.RELEASE")
+            )
+        ) {
+            val fingerprint =
+                properties.getProperty("Build.FINGERPRINT").split("/".toRegex()).toTypedArray()
             var buildId = ""
             var release = ""
 
@@ -174,39 +193,39 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
     companion object {
         @Transient
         private val requiredFields = arrayOf(
-                "UserReadableName",
-                "Build.HARDWARE",
-                "Build.RADIO",
-                "Build.BOOTLOADER",
-                "Build.FINGERPRINT",
-                "Build.BRAND",
-                "Build.DEVICE",
-                "Build.VERSION.SDK_INT",
-                "Build.MODEL",
-                "Build.MANUFACTURER",
-                "Build.PRODUCT",
-                "TouchScreen",
-                "Keyboard",
-                "Navigation",
-                "ScreenLayout",
-                "HasHardKeyboard",
-                "HasFiveWayNavigation",
-                "GL.Version",
-                "GSF.version",
-                "Vending.version",
-                "Screen.Density",
-                "Screen.Width",
-                "Screen.Height",
-                "Platforms",
-                "SharedLibraries",
-                "Features",
-                "Locales",
-                "CellOperator",
-                "SimOperator",
-                "Roaming",
-                "Client",
-                "TimeZone",
-                "GL.Extensions"
+            "UserReadableName",
+            "Build.HARDWARE",
+            "Build.RADIO",
+            "Build.BOOTLOADER",
+            "Build.FINGERPRINT",
+            "Build.BRAND",
+            "Build.DEVICE",
+            "Build.VERSION.SDK_INT",
+            "Build.MODEL",
+            "Build.MANUFACTURER",
+            "Build.PRODUCT",
+            "TouchScreen",
+            "Keyboard",
+            "Navigation",
+            "ScreenLayout",
+            "HasHardKeyboard",
+            "HasFiveWayNavigation",
+            "GL.Version",
+            "GSF.version",
+            "Vending.version",
+            "Screen.Density",
+            "Screen.Width",
+            "Screen.Height",
+            "Platforms",
+            "SharedLibraries",
+            "Features",
+            "Locales",
+            "CellOperator",
+            "SimOperator",
+            "Roaming",
+            "Client",
+            "TimeZone",
+            "GL.Extensions"
         )
     }
 }

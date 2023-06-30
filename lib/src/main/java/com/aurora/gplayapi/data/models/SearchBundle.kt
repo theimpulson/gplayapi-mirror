@@ -15,8 +15,6 @@
 
 package com.aurora.gplayapi.data.models
 
-import java.util.*
-
 class SearchBundle {
     var id: Int = -1
     var query: String = String()

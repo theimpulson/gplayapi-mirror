@@ -20,7 +20,6 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
 
 class TopChartsHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -40,8 +39,9 @@ class TopChartsHelper(authData: AuthData) : BaseHelper(authData) {
         return if (playResponse.isSuccessful) {
             val listResponse = getListResponseFromBytes(playResponse.responseBytes)
             getStreamCluster(listResponse)
-        } else
+        } else {
             StreamCluster()
+        }
     }
 
     enum class Chart(var value: String) {

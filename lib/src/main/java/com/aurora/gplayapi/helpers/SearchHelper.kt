@@ -27,7 +27,6 @@ import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
-import java.util.*
 
 class SearchHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -38,10 +37,12 @@ class SearchHelper(authData: AuthData) : BaseHelper(authData) {
             val nextPageUrl = item.containerMetadata.nextPageUrl
             if (nextPageUrl.isNotBlank()) {
                 if (nextPageUrl.contains(searchTypeExtra)) {
-                    if (nextPageUrl.startsWith("getCluster?enpt=CkC"))
+                    if (nextPageUrl.startsWith("getCluster?enpt=CkC")) {
                         return SubBundle(nextPageUrl, SearchBundle.Type.SIMILAR)
-                    if (nextPageUrl.startsWith("getCluster?enpt=CkG"))
+                    }
+                    if (nextPageUrl.startsWith("getCluster?enpt=CkG")) {
                         return SubBundle(nextPageUrl, SearchBundle.Type.RELATED_TO_YOUR_SEARCH)
+                    }
                 } else {
                     return SubBundle(nextPageUrl, SearchBundle.Type.GENERIC)
                 }
@@ -71,7 +72,9 @@ class SearchHelper(authData: AuthData) : BaseHelper(authData) {
         val searchSuggestResponse = getSearchSuggestResponseFromBytes(responseBody.responseBytes)
         return if (searchSuggestResponse != null && searchSuggestResponse.entryCount > 0) {
             searchSuggestResponse.entryList
-        } else ArrayList()
+        } else {
+            ArrayList()
+        }
     }
 
     @Throws(Exception::class)
@@ -125,13 +128,14 @@ class SearchHelper(authData: AuthData) : BaseHelper(authData) {
         for (item in itemList) {
             if (item.subItemCount > 0) {
                 for (subItem in item.subItemList) {
-                    //Filter out only apps, discard other items (Music, Ebooks, Movies)
+                    // Filter out only apps, discard other items (Music, Ebooks, Movies)
                     if (subItem.type == 45) {
                         if (subItem.title.isEmpty() || subItem.title == "Apps") {
                             appList.addAll(getAppsFromItem(subItem))
                         } else {
-                            if (subItem.title.isNotEmpty())
+                            if (subItem.title.isNotEmpty()) {
                                 continue // Filter out `You Might Also Like` & `Related Apps`
+                            }
                             appList.add(AppBuilder.build(subItem))
                         }
                     }

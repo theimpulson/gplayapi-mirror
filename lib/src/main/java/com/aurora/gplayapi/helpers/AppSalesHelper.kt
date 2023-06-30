@@ -22,7 +22,7 @@ import com.aurora.gplayapi.data.models.sale.SaleBundle
 import com.aurora.gplayapi.network.IHttpClient
 import com.google.gson.Gson
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 
 class AppSalesHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -43,11 +43,14 @@ class AppSalesHelper(authData: AuthData) : BaseHelper(authData) {
         val playResponse = httpClient.get(GooglePlayApi.SALES_URL, headers = mapOf(), params)
         val saleBundle = Gson().fromJson(String(playResponse.responseBytes), SaleBundle::class.java)
 
-        return if (saleBundle.sales.isEmpty())
+        return if (saleBundle.sales.isEmpty()) {
             listOf()
-        else {
+        } else {
             val appDetailsHelper = AppDetailsHelper(authData)
-            return appDetailsHelper.getAppByPackageName(packageList = saleBundle.sales.map { it.idandroid }.toList())
+            return appDetailsHelper.getAppByPackageName(
+                packageList = saleBundle.sales.map { it.idandroid }
+                    .toList()
+            )
         }
     }
 }

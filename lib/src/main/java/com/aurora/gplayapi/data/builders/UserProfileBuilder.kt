@@ -17,7 +17,6 @@ package com.aurora.gplayapi.data.builders
 
 import com.aurora.gplayapi.data.models.UserProfile
 
-
 object UserProfileBuilder {
 
     fun build(userProfileProto: com.aurora.gplayapi.UserProfile): UserProfile {

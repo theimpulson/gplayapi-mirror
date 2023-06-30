@@ -16,7 +16,7 @@
 package com.aurora.gplayapi.data.models.details
 
 import com.aurora.gplayapi.data.models.Artwork
-import java.util.*
+import java.util.UUID
 
 class Badge {
     var id: String = UUID.randomUUID().toString()

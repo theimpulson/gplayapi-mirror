@@ -29,8 +29,6 @@ import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.exceptions.ApiException
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
-import java.util.*
-
 
 class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
 
@@ -60,10 +58,12 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
                     if (subItem.hasAnnotations() && subItem.annotations.hasOverlayMetaData()) {
                         if (subItem.annotations.overlayMetaData.hasOverlayTitle()) {
                             devStream.title = subItem.annotations.overlayMetaData.overlayTitle.title
-                            devStream.imgUrl = subItem.annotations.overlayMetaData.overlayTitle.compositeImage.url
+                            devStream.imgUrl =
+                                subItem.annotations.overlayMetaData.overlayTitle.compositeImage.url
                         }
                         if (subItem.annotations.overlayMetaData.hasOverlayDescription()) {
-                            devStream.description = subItem.annotations.overlayMetaData.overlayDescription.description
+                            devStream.description =
+                                subItem.annotations.overlayMetaData.overlayDescription.description
                         }
                     }
                 }
@@ -106,13 +106,14 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
                 val bulkDetailsResponse = payload.bulkDetailsResponse
                 for (entry in bulkDetailsResponse.entryList) {
                     val app = AppBuilder.build(entry.item)
-                    //System.out.printf("%s -> %s\n", app.displayName, app.packageName);
+                    // System.out.printf("%s -> %s\n", app.displayName, app.packageName);
                     appList.add(app)
                 }
             }
             return appList
-        } else
+        } else {
             throw ApiException.Server(playResponse.code, playResponse.errorString)
+        }
     }
 
     fun getDetailsStream(streamUrl: String): StreamBundle {
@@ -120,7 +121,7 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
         val params: MutableMap<String, String> = HashMap()
 
         val playResponse = httpClient.get(
-            "${GooglePlayApi.URL_FDFE}/${streamUrl}",
+            "${GooglePlayApi.URL_FDFE}/$streamUrl",
             headers,
             params
         )
@@ -171,15 +172,17 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
             val payload = getPayLoadFromBytes(playResponse.responseBytes)
             payload.hasTestingProgramResponse()
             TestingProgramStatus().apply {
-                if (payload.hasTestingProgramResponse()
-                    && payload.testingProgramResponse.hasResult()
-                    && payload.testingProgramResponse.result.hasDetails()
+                if (payload.hasTestingProgramResponse() &&
+                    payload.testingProgramResponse.hasResult() &&
+                    payload.testingProgramResponse.result.hasDetails()
                 ) {
                     val details = payload.testingProgramResponse.result.details
-                    if (details.hasSubscribed())
+                    if (details.hasSubscribed()) {
                         subscribed = details.subscribed
-                    if (details.hasUnsubscribed())
+                    }
+                    if (details.hasUnsubscribed()) {
                         unsubscribed = details.unsubscribed
+                    }
                 }
             }
         } else {

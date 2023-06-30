@@ -16,8 +16,8 @@
 package com.aurora.gplayapi.network
 
 import com.aurora.gplayapi.data.models.PlayResponse
-import java.io.IOException
 import kotlinx.coroutines.flow.StateFlow
+import java.io.IOException
 
 interface IHttpClient {
     val responseCode: StateFlow<Int>
