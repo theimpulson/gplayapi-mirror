@@ -1,3 +1,9 @@
+Changelog : v3.1.4  
+• Add Google Pixel Tablet spoofing configuration  
+• Bump minimum compile SDK to API 21  
+• Enable and compile with java language 17 features  
+• Make App class parcelable
+
 Changelog : v3.1.3  
 • Implement shared library dependencies API  
 
