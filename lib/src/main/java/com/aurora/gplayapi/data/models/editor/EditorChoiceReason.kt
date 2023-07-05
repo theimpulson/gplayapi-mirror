@@ -15,4 +15,8 @@
 
 package com.aurora.gplayapi.data.models.editor
 
-data class EditorChoiceReason(var bulletins: List<String>, var description: String)
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class EditorChoiceReason(var bulletins: List<String>, var description: String) : Parcelable

@@ -15,6 +15,8 @@
 
 package com.aurora.gplayapi.data.models.details
 
-class AppInfo {
-    var appInfoMap: MutableMap<String, String> = mutableMapOf()
-}
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class AppInfo(var appInfoMap: MutableMap<String, String> = mutableMapOf()) : Parcelable

@@ -15,14 +15,18 @@
 
 package com.aurora.gplayapi.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-class File {
-    var id: String = UUID.randomUUID().toString()
-    var name: String = String()
-    var url: String = String()
-    var size: Long = 0L
+@Parcelize
+data class File(
+    var id: String = UUID.randomUUID().toString(),
+    var name: String = String(),
+    var url: String = String(),
+    var size: Long = 0L,
     var type: FileType = FileType.BASE
+) : Parcelable {
 
     enum class FileType {
         BASE, OBB, PATCH, SPLIT

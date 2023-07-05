@@ -15,12 +15,16 @@
 
 package com.aurora.gplayapi.data.models.details
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-class Chip {
-    var id: String = UUID.randomUUID().toString()
-    var title: String = String()
+@Parcelize
+data class Chip(
+    var id: String = UUID.randomUUID().toString(),
+    var title: String = String(),
     var streamUrl: String? = String()
+) : Parcelable {
 
     override fun hashCode(): Int {
         return id.hashCode()

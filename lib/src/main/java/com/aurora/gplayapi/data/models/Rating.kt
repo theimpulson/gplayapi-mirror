@@ -15,6 +15,10 @@
 
 package com.aurora.gplayapi.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Rating(
     var average: Float = 0f,
     var oneStar: Long = 0L,
@@ -26,4 +30,4 @@ data class Rating(
     var thumbsDown: Long = 0L,
     var label: String = String(),
     var abbreviatedLabel: String = String()
-)
+) : Parcelable

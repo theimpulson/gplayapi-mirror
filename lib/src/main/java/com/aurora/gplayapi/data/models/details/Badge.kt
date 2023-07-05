@@ -15,17 +15,21 @@
 
 package com.aurora.gplayapi.data.models.details
 
+import android.os.Parcelable
 import com.aurora.gplayapi.data.models.Artwork
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-class Badge {
-    var id: String = UUID.randomUUID().toString()
-    var textMajor: String = String()
-    var textMinor: String = String()
-    var textMinorHtml: String? = String()
-    var textDescription: String? = String()
-    var artwork: Artwork? = null
+@Parcelize
+data class Badge(
+    var id: String = UUID.randomUUID().toString(),
+    var textMajor: String = String(),
+    var textMinor: String = String(),
+    var textMinorHtml: String? = String(),
+    var textDescription: String? = String(),
+    var artwork: Artwork? = null,
     var link: String = String()
+) : Parcelable {
 
     override fun equals(other: Any?): Boolean {
         return when (other) {

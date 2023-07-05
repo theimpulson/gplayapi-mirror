@@ -15,18 +15,22 @@
 
 package com.aurora.gplayapi.data.models.details
 
+import android.os.Parcelable
 import com.aurora.gplayapi.data.models.Artwork
+import kotlinx.parcelize.Parcelize
 
-class TestingProgram {
-    var artwork: Artwork = Artwork()
-    var displayName: String = String()
-    var email: String = String()
-    var isAvailable: Boolean = false
-    var isSubscribed: Boolean = false
+@Parcelize
+data class TestingProgram(
+    var artwork: Artwork = Artwork(),
+    var displayName: String = String(),
+    var email: String = String(),
+    var isAvailable: Boolean = false,
+    var isSubscribed: Boolean = false,
     var isSubscribedAndInstalled: Boolean = false
-}
+) : Parcelable
 
-class TestingProgramStatus {
-    var subscribed: Boolean = false
+@Parcelize
+data class TestingProgramStatus(
+    var subscribed: Boolean = false,
     var unsubscribed: Boolean = false
-}
+) : Parcelable

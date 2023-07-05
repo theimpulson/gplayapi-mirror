@@ -15,15 +15,20 @@
 
 package com.aurora.gplayapi.data.models
 
-class Review {
-    var title: String = String()
-    var comment: String = String()
-    var commentId: String = String()
-    var userName: String = String()
-    var userPhotoUrl: String = String()
-    var appVersion: String = String()
-    var rating: Int = 0
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class Review(
+    var title: String = String(),
+    var comment: String = String(),
+    var commentId: String = String(),
+    var userName: String = String(),
+    var userPhotoUrl: String = String(),
+    var appVersion: String = String(),
+    var rating: Int = 0,
     var timeStamp: Long = 0L
+) : Parcelable {
 
     override fun hashCode(): Int {
         return commentId.hashCode()
