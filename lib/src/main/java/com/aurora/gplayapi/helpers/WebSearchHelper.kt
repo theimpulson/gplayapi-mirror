@@ -19,6 +19,12 @@ class WebSearchHelper {
 
         val searchResults = Constants.COLLECTION.values().associateWith { enumValue ->
             when (enumValue) {
+                Constants.COLLECTION.EXACT -> searchResponse.dig<Collection<Any>>(
+                    SearchQueryBuilder.TAG,
+                    query,
+                    *enumValue.value
+                )
+
                 Constants.COLLECTION.QUERY -> searchResponse.dig<Collection<Any>>(
                     SearchQueryBuilder.TAG,
                     query,
@@ -33,8 +39,12 @@ class WebSearchHelper {
             }
         }
 
-        val apps = searchResults.mapValues { (_, value) ->
-            value.map { app -> WebAppBuilder.build(app) }
+        val apps = searchResults.mapValues { (key, value) ->
+            if (key == Constants.COLLECTION.EXACT) {
+                listOf(WebAppBuilder.buildExactApp(value))
+            } else {
+                value.map { app -> WebAppBuilder.build(app) }
+            }
         }.toMutableMap()
 
         return apps
