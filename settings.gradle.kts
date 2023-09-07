@@ -27,5 +27,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = 'gplayapi'
-include ':lib'
+rootProject.name = "gplayapi"
+include(":lib")
