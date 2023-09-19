@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "gplayapi"
 include(":lib")
+include(":sampleapp")
