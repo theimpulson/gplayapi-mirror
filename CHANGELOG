@@ -1,4 +1,9 @@
-Changelog : v3.1.4  
+Changelog : v3.2.0
+• Initial Web APIs support for search suggestions and results
+• Migrate to Kotlin DSL for gradle files
+• Add a sample app for easier testing and fixes
+
+Changelog : v3.1.4
 • Add Google Pixel Tablet spoofing configuration  
 • Bump minimum compile SDK to API 21  
 • Enable and compile with java language 17 features  
