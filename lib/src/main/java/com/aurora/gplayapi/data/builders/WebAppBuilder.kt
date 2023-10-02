@@ -43,7 +43,7 @@ object WebAppBuilder {
         }
         app.labeledRating = data.dig(2, 51, 0, 0)
         app.isFree = data.dig<String>(2, 57, 0, 0, 0, 0, 1, 0, 2).isEmpty() == true
-        app.containsAds = data.dig<String>(2, 48, 0).isNotEmpty()
+        app.containsAds = !data.dig<String?>(2, 48, 0).isNullOrBlank()
 
         return app
     }

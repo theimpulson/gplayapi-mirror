@@ -1,7 +1,7 @@
 package com.aurora.gplayapi.utils
 
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> Any.dig(vararg keys: Any): T {
+fun <T : Any?> Any.dig(vararg keys: Any): T {
     var current: Any? = this
     keys.forEach { key ->
         current = when (current) {
