@@ -3,11 +3,13 @@ package com.aurora.gplayapi.data.builders
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.utils.dig
+import java.util.UUID
 
 object WebAppBuilder {
 
     fun build(data: Any): App {
         val app = App(data.dig(0, 0))
+        app.id = UUID.randomUUID().hashCode() and Int.MAX_VALUE
         app.displayName = data.dig(3)
         app.description = data.dig(13, 1)
         app.developerName = data.dig(14)
@@ -28,6 +30,7 @@ object WebAppBuilder {
 
     fun buildExactApp(data: Any): App {
         val app = App(data.dig(11, 0, 0))
+        app.id = UUID.randomUUID().hashCode() and Int.MAX_VALUE
         app.displayName = data.dig(2, 0, 0)
         app.description = data.dig(2, 72, 0, 1)
         app.shortDescription = data.dig(2, 73, 0, 1)
