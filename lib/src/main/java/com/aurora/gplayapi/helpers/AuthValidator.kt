@@ -15,9 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.data.models.AuthData
-import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.network.IHttpClient
 
 class AuthValidator(authData: AuthData) : BaseHelper(authData) {
@@ -26,18 +24,16 @@ class AuthValidator(authData: AuthData) : BaseHelper(authData) {
         this.httpClient = httpClient
     }
 
-    fun isValid(endpoint: String = GooglePlayApi.URL_SYNC, method: METHOD = METHOD.POST): Boolean {
-        val headers = HeaderProvider.getDefaultHeaders(authData)
-        val playResponse = when (method) {
-            METHOD.POST -> httpClient.post(endpoint, headers, hashMapOf())
-            METHOD.GET -> httpClient.get(endpoint, headers, hashMapOf())
+    fun isValid(): Boolean {
+        return try {
+            val testPackageName = "com.android.chrome"
+            val app = AppDetailsHelper(authData)
+                .using(httpClient)
+                .getAppByPackageName(testPackageName)
+
+            app.packageName == testPackageName
+        } catch (e: Exception) {
+            false
         }
-
-        return playResponse.isSuccessful
-    }
-
-    enum class METHOD {
-        GET,
-        POST
     }
 }
