@@ -66,12 +66,6 @@ class AuthHelper private constructor() {
             val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
             authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
 
-            val ac2dm = api.generateToken(aasToken, GooglePlayApi.Service.AC2DM)
-            authData.ac2dmToken = ac2dm
-
-            val gcmToken = api.generateToken(aasToken, GooglePlayApi.Service.GCM)
-            authData.gcmToken = gcmToken
-
             val token = api.generateToken(aasToken, GooglePlayApi.Service.GOOGLE_PLAY)
             authData.authToken = token
 
