@@ -1,3 +1,7 @@
+Changelog : v3.2.2
+• Improve AuthValidator
+• Do not generate unused ac2dm & gcm tokens
+
 Changelog : v3.2.1
 • Fix WebSearchHelper
 
