@@ -28,7 +28,7 @@ import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class SearchHelper(authData: AuthData) : BaseHelper(authData) {
+open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
 
     private val searchTypeExtra = "_-"
 
@@ -59,7 +59,7 @@ class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     private var query: String = String()
 
     @Throws(Exception::class)
-    fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+    open fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val paramString = String.format(
             "?q=%s&sb=%d&sst=%d&sst=%d",
@@ -78,7 +78,7 @@ class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
+    open fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
         this.query = query
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val param: MutableMap<String, String> = HashMap()
