@@ -9,62 +9,78 @@ import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.utils.dig
 
 class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
-    @Throws(Exception::class)
-    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
-        val searchResponse = WebClient().fetch(
-            arrayOf(
-                SearchQueryBuilder.build(query)
-            )
-        ).let {
-            RpcBuilder.wrapResponse(it)
-        }
 
-        val packageNames = searchResponse.dig<Collection<Any>>(
-            SearchQueryBuilder.TAG,
-            query,
-            0,
-            1,
-            0,
-            0,
-            0
-        ).map { it.dig<String>(12, 0) }
-
-        // TODO:: Figure out how to use this nextPageURL
-        val nextPageUrl = searchResponse.dig<String>(
-            SearchQueryBuilder.TAG,
-            query,
-            1,
-            0
-        )
-
-        return SearchBundle().apply {
-            this.appList =
-                AppDetailsHelper(authData).getAppByPackageName(packageNames).toMutableList()
-            this.query = query
-            this.subBundles = hashSetOf()
-        }
-    }
+    private var query: String = String()
 
     @Throws(Exception::class)
     override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
-        val searchResponse = WebClient().fetch(
-            arrayOf(
-                SearchSuggestionQueryBuilder.build(query)
-            )
-        ).let {
-            RpcBuilder.wrapResponse(it)
-        }
+        val searchResponse = WebClient().fetch(arrayOf(SearchSuggestionQueryBuilder.build(query)))
+            .let { RpcBuilder.wrapResponse(it) }
 
-        val suggestions = searchResponse.dig<Collection<Any>>(
+        val payload = searchResponse.dig<Collection<Any>>(
             SearchSuggestionQueryBuilder.TAG,
             query,
             0
-        ).map {
+        )
+
+        val suggestions = payload.map {
             SearchSuggestEntry.newBuilder().apply {
                 title = it.dig(0)
             }.build()
         }
 
         return suggestions
+    }
+
+    @Throws(Exception::class)
+    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
+        this.query = query
+
+        val searQuery = SearchQueryBuilder.build(query, nextPageUrl)
+        val searchResponse = WebClient().fetch(arrayOf(searQuery))
+            .let { RpcBuilder.wrapResponse(it) }
+
+        var payload = searchResponse.dig<Collection<Any>>(
+            SearchQueryBuilder.TAG,
+            query,
+            0
+        )
+
+        // First stream is search stream, following are app streams (made-up names :p)
+        if (payload.dig<String>(0, 1) != "Apps") {
+            payload = payload.dig(1, 0)
+        }
+
+        // Find only the package names, complete app info is fetched via AppDetailsHelper
+        val packageNames: List<String> = payload.dig<Collection<Any>>(0, 0).map { it.dig(12, 0) }
+        val nextPageToken: String = payload.dig(0, 7, 1)
+
+        val searchBundle = SearchBundle().apply {
+            this.appList =
+                AppDetailsHelper(authData).getAppByPackageName(packageNames).toMutableList()
+            this.query = query
+            this.subBundles = hashSetOf()
+        }
+
+        // Include sub-bundles only if there is a next page
+        if (!nextPageToken.isNullOrEmpty()) {
+            val subBundle = SearchBundle.SubBundle(nextPageToken, SearchBundle.Type.GENERIC)
+            searchBundle.subBundles = hashSetOf(subBundle)
+        }
+
+        return searchBundle
+    }
+
+    @Throws(Exception::class)
+    override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
+        val compositeSearchBundle = SearchBundle()
+
+        bundleSet.forEach {
+            val searchBundle = searchResults(query, it.nextPageUrl)
+            compositeSearchBundle.appList.addAll(searchBundle.appList)
+            compositeSearchBundle.subBundles.addAll(searchBundle.subBundles)
+        }
+
+        return compositeSearchBundle
     }
 }

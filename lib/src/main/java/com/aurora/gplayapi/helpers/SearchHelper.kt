@@ -109,7 +109,7 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
+    open fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 
         bundleSet.forEach {
