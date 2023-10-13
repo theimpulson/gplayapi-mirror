@@ -90,6 +90,10 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
 
     @Throws(Exception::class)
     fun getAppByPackageName(packageList: List<String>): List<App> {
+        if (packageList.isEmpty()) {
+            return emptyList()
+        }
+
         val appList: MutableList<App> = ArrayList()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
         val request = getBulkDetailsBytes(packageList)
