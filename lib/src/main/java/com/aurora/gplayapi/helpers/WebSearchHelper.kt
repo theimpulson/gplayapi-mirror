@@ -23,6 +23,10 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
             0
         )
 
+        if (payload.isNullOrEmpty()) {
+            return emptyList()
+        }
+
         val suggestions = payload.map {
             SearchSuggestEntry.newBuilder().apply {
                 title = it.dig(0)
