@@ -167,7 +167,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             if (androidAppDeliveryData != null) {
                 fileList.add(
                     File().apply {
-                        name = "$packageName.apk"
+                        name = "base.apk"
                         url = androidAppDeliveryData.downloadUrl
                         size = androidAppDeliveryData.downloadSize
                         type = File.FileType.BASE
