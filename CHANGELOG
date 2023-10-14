@@ -1,3 +1,6 @@
+Changelog : v3.2.3
+• Boring release
+
 Changelog : v3.2.2
 • Improve AuthValidator
 • Do not generate unused ac2dm & gcm tokens
