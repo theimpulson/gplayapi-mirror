@@ -44,7 +44,7 @@ object HeaderProvider {
         headers["X-DFE-Network-Type"] = "4"
         headers["X-DFE-Content-Filters"] = ""
         headers["X-Limit-Ad-Tracking-Enabled"] = "false"
-        headers["X-Ad-Id"] = "LawadaMera"
+        headers["X-Ad-Id"] = ""
         headers["X-DFE-UserLanguages"] = authData.locale.toString()
         headers["X-DFE-Request-Params"] = "timeoutMs=4000"
 
@@ -87,7 +87,7 @@ object HeaderProvider {
         headers["X-DFE-Network-Type"] = "4"
         headers["X-DFE-Content-Filters"] = ""
         headers["X-Limit-Ad-Tracking-Enabled"] = "false"
-        headers["X-Ad-Id"] = "LawadaMera"
+        headers["X-Ad-Id"] = ""
         headers["X-DFE-UserLanguages"] = locale.toString()
         headers["X-DFE-Request-Params"] = "timeoutMs=4000"
 

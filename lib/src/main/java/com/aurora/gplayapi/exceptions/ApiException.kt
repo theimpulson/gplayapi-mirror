@@ -22,6 +22,8 @@ sealed class ApiException {
     data class AppNotFound(val reason: String = "App not found, maybe restricted (OEM or Geo)") :
         Exception()
 
+    data class AppRemoved(val reason: String = "App removed from Play Store") : Exception()
+
     data class AppNotSupported(val reason: String = "App not supported") : Exception()
 
     data class EmptyDownloads(val reason: String = "File list empty") :

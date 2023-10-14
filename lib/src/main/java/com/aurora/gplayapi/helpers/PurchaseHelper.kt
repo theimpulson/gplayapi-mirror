@@ -15,7 +15,6 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.BuyResponse
 import com.aurora.gplayapi.Constants.PATCH_FORMAT
 import com.aurora.gplayapi.DeliveryResponse
 import com.aurora.gplayapi.GooglePlayApi
@@ -68,7 +67,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(IOException::class)
-    fun getBuyResponse(packageName: String, versionCode: Int, offerType: Int): BuyResponse {
+    fun getDeliveryToken(packageName: String, versionCode: Int, offerType: Int): String {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
         params["doc"] = packageName
@@ -82,9 +81,9 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
 
         return if (playResponse.isSuccessful) {
             val payload = getPayLoadFromBytes(playResponse.responseBytes)
-            payload.buyResponse
+            payload.buyResponse.encodedDeliveryToken
         } else {
-            BuyResponse.getDefaultInstance()
+            ""
         }
     }
 
@@ -99,7 +98,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             PATCH_FORMAT.GZIPPED_GDIFF,
             PATCH_FORMAT.GZIPPED_BSDIFF
         ),
-        downloadToken: String
+        deliveryToken: String
     ): DeliveryResponse {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
@@ -111,8 +110,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             params["pf"] = patchFormats[0].value.toString();
         }*/
 
-        if (downloadToken.isNotEmpty()) {
-            params["dtok"] = downloadToken
+        if (deliveryToken.isNotEmpty()) {
+            params["dtok"] = deliveryToken
         }
 
         val playResponse =
@@ -127,12 +126,12 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
 
     @Throws(Exception::class)
     fun purchase(packageName: String, versionCode: Int, offerType: Int): List<File> {
-        val buyResponse = getBuyResponse(packageName, versionCode, offerType)
+        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType)
         val deliveryResponse = getDeliveryResponse(
             packageName = packageName,
             updateVersionCode = versionCode,
             offerType = offerType,
-            downloadToken = buyResponse.encodedDeliveryToken
+            deliveryToken = deliveryToken
         )
 
         when (deliveryResponse.status) {
@@ -144,6 +143,12 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
 
             3 ->
                 throw ApiException.AppNotPurchased()
+
+            7 ->
+                throw ApiException.AppRemoved()
+
+            9 ->
+                throw ApiException.AppNotSupported()
 
             else ->
                 throw ApiException.Unknown()
