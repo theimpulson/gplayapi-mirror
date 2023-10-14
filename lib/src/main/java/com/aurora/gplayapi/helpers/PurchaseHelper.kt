@@ -67,11 +67,15 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(IOException::class)
-    fun getDeliveryToken(packageName: String, versionCode: Int, offerType: Int): String {
+    fun getDeliveryToken(packageName: String, versionCode: Int, offerType: Int, certificateHash: String): String {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
         params["doc"] = packageName
         params["vc"] = versionCode.toString()
+
+        if (certificateHash.isNotEmpty()) {
+            params["ch"] = certificateHash
+        }
 
         val playResponse = httpClient.post(
             GooglePlayApi.PURCHASE_URL,
@@ -125,8 +129,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun purchase(packageName: String, versionCode: Int, offerType: Int): List<File> {
-        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType)
+    fun purchase(packageName: String, versionCode: Int, offerType: Int, certificateHash: String = ""): List<File> {
+        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
         val deliveryResponse = getDeliveryResponse(
             packageName = packageName,
             updateVersionCode = versionCode,

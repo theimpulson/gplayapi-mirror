@@ -16,6 +16,7 @@
 package com.aurora.gplayapi.data.models
 
 import android.os.Parcelable
+import com.aurora.gplayapi.CertificateSet
 import com.aurora.gplayapi.Constants.Restriction
 import com.aurora.gplayapi.data.models.details.AppInfo
 import com.aurora.gplayapi.data.models.details.Badge
@@ -81,7 +82,9 @@ data class App(
     var updatedOn: String = String(),
     var versionCode: Int = 0,
     var versionName: String = String(),
-    var videoArtwork: Artwork = Artwork()
+    var videoArtwork: Artwork = Artwork(),
+    var certificateHashList: MutableList<String> = mutableListOf(),
+    var certificateSetList: MutableList<EncodedCertificateSet> = mutableListOf()
 ) : Parcelable {
 
     override fun hashCode(): Int {

@@ -20,6 +20,7 @@ import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.Item
 import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.data.models.details.Badge
 import com.aurora.gplayapi.data.models.details.Chip
@@ -88,6 +89,14 @@ object AppBuilder {
         appDetails.instantLink?.let {
             app.instantAppLink = it
         }
+
+        app.certificateHashList.addAll(appDetails.certificateHashList)
+
+        app.certificateSetList.addAll(
+            appDetails.certificateSetList.map {
+                EncodedCertificateSet(it.certificateHash, it.sha256)
+            }
+        )
 
         parseEditorReasons(app, item)
         parseAppInfo(app, item)

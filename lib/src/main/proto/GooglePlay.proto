@@ -1045,8 +1045,8 @@ message EditorChoice{
 }
 
 message CertificateSet {
-  repeated string certificateHash = 1;
-  repeated string sha256 = 2;
+  optional string certificateHash = 1;
+  optional string sha256 = 2;
 }
 
 message Dependencies {
