@@ -15,7 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
 import java.net.URLEncoder
 
@@ -25,17 +25,20 @@ class WebClient {
         val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
         val requestsBody = buildFRequest(rpcRequests)
 
-        val (_, _, result) = url
-            .httpPost()
+        val request = Fuel.post(
+            url,
+            listOf()
+        )
             .header("Content-Type" to "application/x-www-form-urlencoded;charset=utf-8")
             .header("Origin" to "https://play.google.com")
             .body(requestsBody)
-            .responseString()
+
+        val (_, _, result) = request.responseString()
 
         return when (result) {
             is Result.Success -> result.get()
             is Result.Failure -> {
-                throw Exception("Kuchh toh gadbad hai Daya!")
+                throw result.error.exception
             }
         }
     }
@@ -43,7 +46,7 @@ class WebClient {
     private fun buildFRequest(rpcRequests: Array<String>): String {
         return """
             f.req=[[
-                ${rpcRequests.joinToString(separator = ","){ URLEncoder.encode(it, "UTF-8") }}
+                ${rpcRequests.joinToString(separator = ",") { URLEncoder.encode(it, "UTF-8") }}
             ]]
         """
             .trim()
