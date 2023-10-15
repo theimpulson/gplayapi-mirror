@@ -17,6 +17,7 @@ package com.aurora.gplayapi.helpers
 
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import java.net.URLEncoder
 
 class WebClient {
 
@@ -42,11 +43,9 @@ class WebClient {
     private fun buildFRequest(rpcRequests: Array<String>): String {
         return """
             f.req=[[
-                ${rpcRequests.joinToString(separator = ",")}
+                ${rpcRequests.joinToString(separator = ","){ URLEncoder.encode(it, "UTF-8") }}
             ]]
         """
-            .trimStart()
-            .trimEnd()
-            .trimIndent()
+            .trim()
     }
 }
