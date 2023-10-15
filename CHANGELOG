@@ -1,3 +1,7 @@
+Changelog : v3.2.4
+• Improve WebSearchHelper
+• Fix non-ASCII characters issues in search suggestions & query
+
 Changelog : v3.2.3
 • Boring release
 
