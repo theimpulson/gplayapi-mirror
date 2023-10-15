@@ -40,8 +40,9 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
     override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
 
-        val searQuery = SearchQueryBuilder.build(query, nextPageUrl)
-        val searchResponse = WebClient().fetch(arrayOf(searQuery))
+        val searchBundle = SearchBundle()
+        val searchQuery = SearchQueryBuilder.build(query, nextPageUrl)
+        val searchResponse = WebClient().fetch(arrayOf(searchQuery))
             .let { RpcBuilder.wrapResponse(it) }
 
         var payload = searchResponse.dig<Collection<Any>>(
@@ -50,24 +51,37 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
             0
         )
 
+        if (payload.isNullOrEmpty()) {
+            return searchBundle
+        }
+
         // First stream is search stream, following are app streams (made-up names :p)
         if (payload.dig<String>(0, 1) != "Apps") {
             payload = payload.dig(1, 0)
         }
 
         // Find only the package names, complete app info is fetched via AppDetailsHelper
-        val packageNames: List<String> = payload.dig<Collection<Any>>(0, 0).map { it.dig(12, 0) }
-        val nextPageToken: String = payload.dig(0, 7, 1)
+        val packageNames: List<String> = payload?.dig<Collection<Any>>(0, 0)?.let { entry ->
+            entry.mapNotNull {
+                it.dig(12, 0)
+            }
+        } ?: emptyList()
 
-        val searchBundle = SearchBundle().apply {
-            this.appList =
-                AppDetailsHelper(authData).getAppByPackageName(packageNames).toMutableList()
+        if (packageNames.isEmpty()) {
+            return searchBundle
+        }
+
+        val nextPageToken: String = payload?.dig<String>(0, 7, 1) ?: ""
+
+        searchBundle.apply {
+            this.appList = AppDetailsHelper(authData).getAppByPackageName(packageNames)
+                .toMutableList()
             this.query = query
             this.subBundles = hashSetOf()
         }
 
         // Include sub-bundles only if there is a next page
-        if (!nextPageToken.isNullOrEmpty()) {
+        if (nextPageToken.isNotEmpty()) {
             val subBundle = SearchBundle.SubBundle(nextPageToken, SearchBundle.Type.GENERIC)
             searchBundle.subBundles = hashSetOf(subBundle)
         }
