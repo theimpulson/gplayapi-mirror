@@ -4,8 +4,9 @@ package com.aurora.gplayapi.utils
 fun <T : Any?> Any.dig(vararg keys: Any): T? {
     var current: Any? = this
     keys.forEach { key ->
-        if (current == null)
+        if (current == null) {
             return null
+        }
         current = when (current) {
             is Collection<*> -> {
                 val index = key.toString().toIntOrNull()

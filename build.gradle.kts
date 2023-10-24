@@ -19,5 +19,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.9.10" apply false
     id("org.jetbrains.kotlin.plugin.parcelize") version "1.9.10" apply false
     id("com.google.protobuf") version "0.9.4" apply false
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.1" apply false
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" apply false
 }

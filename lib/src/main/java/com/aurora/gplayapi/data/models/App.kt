@@ -16,7 +16,6 @@
 package com.aurora.gplayapi.data.models
 
 import android.os.Parcelable
-import com.aurora.gplayapi.CertificateSet
 import com.aurora.gplayapi.Constants.Restriction
 import com.aurora.gplayapi.data.models.details.AppInfo
 import com.aurora.gplayapi.data.models.details.Badge

@@ -70,10 +70,13 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
                 }
             }
         }
-        if (!getAllAppDetails)
+        if (!getAllAppDetails) {
             return purchaseAppList
-        return AppDetailsHelper(authData).getAppByPackageName(purchaseAppList.map { it.packageName }
-            .distinct())
+        }
+        return AppDetailsHelper(authData).getAppByPackageName(
+            purchaseAppList.map { it.packageName }
+                .distinct()
+        )
     }
 
     @Throws(IOException::class)

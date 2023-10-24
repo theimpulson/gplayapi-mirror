@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class EncodedCertificateSet(
     val certificateSet: String,
-    val sha256: String,
+    val sha256: String
 ) : Parcelable
