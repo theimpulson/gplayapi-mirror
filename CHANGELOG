@@ -1,3 +1,6 @@
+Changelog : v3.2.5
+• Minor fix to PurchaseHelper to handle duplicates
+
 Changelog : v3.2.4
 • Improve WebSearchHelper
 • Fix non-ASCII characters issues in search suggestions & query
