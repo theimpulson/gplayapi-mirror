@@ -34,7 +34,15 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         this.httpClient = httpClient
     }
 
-    fun getPurchaseHistory(offset: Int = 0): List<App> {
+    /**
+     * @param offset
+     * @param getAllAppDetails
+     * <code>false</code>: the returned App instances will only contain basic properties
+     * <code>true</code>: all App details are retrieved using AppDetailsHelper
+     * @return list of apps purchased by the selected account, starting at offset.
+     * The number of entries is defined by Google (usually less than 20)
+     */
+    fun getPurchaseHistory(offset: Int = 0, getAllAppDetails: Boolean = true): List<App> {
         val headers: MutableMap<String, String> = HeaderProvider.getDefaultHeaders(authData)
         val params: MutableMap<String, String> = mutableMapOf(
             "o" to "$offset"
@@ -62,8 +70,10 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
                 }
             }
         }
-
-        return AppDetailsHelper(authData).getAppByPackageName(purchaseAppList.map { it.packageName })
+        if (!getAllAppDetails)
+            return purchaseAppList
+        return AppDetailsHelper(authData).getAppByPackageName(purchaseAppList.map { it.packageName }
+            .distinct())
     }
 
     @Throws(IOException::class)
