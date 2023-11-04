@@ -46,9 +46,17 @@ object Constants {
     enum class Restriction(val restriction: Int) {
         GENERIC(-1),
         NOT_RESTRICTED(1),
-        GEO_RESTRICTED(2),
+        GEO_RESTRICTED(2), // This item isn't available in your country.
         DEVICE_RESTRICTED(7),
-        UNKNOWN(9);
+        NOT_IN_GROUP(8), // You're not in the targeted group for this item.
+        UNKNOWN(9),
+        CARRIER_RESTRICTED(10), // This item isn't available on your carrier.
+        COUNTRY_OR_CARRIER_RESTRICTED(11), // This item isn't available in your country or on your carrier.
+        PARENTAL_CONTROL_RESTRICTION(12), // Parental controls restrict downloading of this item.
+        ADMIN_RESTRICTED(21), // Your administrator has not given you access to this item.
+        ADMIN_PERMISSION_NOT_ACCEPTED(22), // Your administrator has not accepted permissions for this item.
+        AGE_RESTRICTED(30), // guess: Google user needs to be of full age
+        APP_OUTDATED(32); // guess: App needs to be updated -> use old device profile for download
 
         companion object {
             fun forInt(restriction: Int): Restriction {
@@ -56,7 +64,15 @@ object Constants {
                     1 -> NOT_RESTRICTED
                     2 -> GEO_RESTRICTED
                     7 -> DEVICE_RESTRICTED
+                    8 -> NOT_IN_GROUP
                     9 -> UNKNOWN
+                    10 -> CARRIER_RESTRICTED
+                    11 -> COUNTRY_OR_CARRIER_RESTRICTED
+                    12 -> PARENTAL_CONTROL_RESTRICTION
+                    21 -> ADMIN_RESTRICTED
+                    22 -> ADMIN_PERMISSION_NOT_ACCEPTED
+                    30 -> AGE_RESTRICTED
+                    32 -> APP_OUTDATED
                     else -> GENERIC
                 }
             }
