@@ -52,12 +52,12 @@ class AuthHelper private constructor() {
             }
         }
 
-        fun build(email: String, aasToken: String, properties: Properties): AuthData {
-            val deviceInfoProvider = DeviceInfoProvider(properties, Locale.getDefault().toString())
+        fun build(email: String, aasToken: String, properties: Properties, locale: Locale = Locale.getDefault()): AuthData {
+            val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
 
             val authData = AuthData(email, aasToken)
             authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = Locale.getDefault()
+            authData.locale = locale
 
             val api = GooglePlayApi(authData).via(httpClient)
             val gsfId = api.generateGsfId(deviceInfoProvider)

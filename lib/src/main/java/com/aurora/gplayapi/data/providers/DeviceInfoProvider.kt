@@ -80,7 +80,11 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
                             .setManufacturer(properties.getProperty("Build.MANUFACTURER"))
                             .setBuildProduct(properties.getProperty("Build.PRODUCT"))
                             .setClient(properties.getProperty("Client"))
-                            .setOtaInstalled(java.lang.Boolean.getBoolean(properties.getProperty("OtaInstalled")))
+                            .setOtaInstalled(
+                                java.lang.Boolean.parseBoolean(
+                                    properties.getProperty("OtaInstalled", "false")
+                                )
+                            )
                             .setTimestamp(timeToReport)
                             .setGoogleServices(getInt("GSF.version"))
                     )
@@ -132,7 +136,7 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
     }
 
     private fun getList(key: String): List<String> {
-        return listOf(*properties.getProperty(key).split(",".toRegex()).toTypedArray())
+        return listOf(*properties.getProperty(key, "").split(",".toRegex()).toTypedArray())
     }
 
     private fun getDeviceFeatures(): List<DeviceFeature> {

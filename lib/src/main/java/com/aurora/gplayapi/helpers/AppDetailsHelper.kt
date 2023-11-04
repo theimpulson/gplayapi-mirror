@@ -15,6 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
+import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.Payload
@@ -73,19 +74,23 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getAppByPackageName(packageName: String): App {
+    fun getDetailsResponseByPackageName(packageName: String): DetailsResponse {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params["doc"] = packageName
 
         val playResponse = httpClient.get(GooglePlayApi.URL_DETAILS, headers, params)
-
         if (playResponse.isSuccessful) {
-            val detailsResponse = getDetailsResponseFromBytes(playResponse.responseBytes)
-            return AppBuilder.build(detailsResponse)
+            return getDetailsResponseFromBytes(playResponse.responseBytes)
         } else {
             throw ApiException.AppNotFound(playResponse.errorString)
         }
+    }
+
+    @Throws(Exception::class)
+    fun getAppByPackageName(packageName: String): App {
+        val detailsResponse = getDetailsResponseByPackageName(packageName)
+        return AppBuilder.build(detailsResponse)
     }
 
     @Throws(Exception::class)
