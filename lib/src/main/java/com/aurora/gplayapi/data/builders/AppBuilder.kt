@@ -19,6 +19,7 @@ import com.aurora.gplayapi.AppDetails
 import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.data.models.ActiveDevices
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.File
@@ -95,6 +96,12 @@ object AppBuilder {
         app.certificateSetList.addAll(
             appDetails.certificateSetList.map {
                 EncodedCertificateSet(it.certificateHash, it.sha256)
+            }
+        )
+
+        app.compatibility.addAll(
+            appDetails.compatibility.activeDevicesList.map {
+                ActiveDevices(it.requiredOS, it.device)
             }
         )
 
