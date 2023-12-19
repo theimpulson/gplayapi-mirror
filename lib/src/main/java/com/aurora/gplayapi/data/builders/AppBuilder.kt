@@ -19,6 +19,7 @@ import com.aurora.gplayapi.AppDetails
 import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.data.models.ActiveDevice
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.File
@@ -95,6 +96,12 @@ object AppBuilder {
         app.certificateSetList.addAll(
             appDetails.certificateSetList.map {
                 EncodedCertificateSet(it.certificateHash, it.sha256)
+            }
+        )
+
+        app.compatibility.addAll(
+            appDetails.compatibility.activeDevicesList.map {
+                ActiveDevice(name = it.name, requiredOS = it.requiredOS)
             }
         )
 
@@ -222,6 +229,10 @@ object AppBuilder {
                 }
                 appInfoMap["DOWNLOAD"] = item.details.appDetails.infoDownload
                 appInfoMap["UPDATED_ON"] = item.details.appDetails.infoUpdatedOn
+                val minAndroidVersion =
+                    app.compatibility.map { it.requiredOS.split(" ")[0].toFloatOrNull() ?: 1F }
+                        .minOfOrNull { it } ?: 1F
+                appInfoMap["REQUIRES"] = "Android $minAndroidVersion and up"
             }
         }
     }

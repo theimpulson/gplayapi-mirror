@@ -1019,6 +1019,16 @@ message AppDetails {
   optional string inAppProduct = 67;
   optional string downloadLabelAbbreviated = 77;
   optional string downloadLabel = 78;
+  optional Compatibility compatibility = 82;
+}
+
+message Compatibility {
+  repeated ActiveDevice activeDevices = 1;
+}
+
+message ActiveDevice {
+  optional string requiredOS = 1;
+  optional string name = 2;
 }
 
 message ModifyLibrary{
