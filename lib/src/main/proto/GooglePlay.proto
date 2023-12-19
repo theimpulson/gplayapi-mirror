@@ -1692,6 +1692,7 @@ message Payload {
   optional BrowseResponse browseResponse = 7;
   optional PurchaseStatusResponse purchaseStatusResponse = 8;
   optional string logResponse = 10;
+  optional DataInfoParentItem dataInfoParentItem = 11;
   optional string flagContentResponse = 13;
   optional BulkDetailsResponse bulkDetailsResponse = 19;
   optional DeliveryResponse deliveryResponse = 21;
@@ -2184,4 +2185,70 @@ message ModifyLibraryRequest {
   optional string libraryId = 1;
   repeated string addPackageName = 2;
   repeated string removePackageName = 3;
+}
+
+message DataInfoParentItem {
+  optional DataInfoParentTwoItem dataInfoParentTwoItem = 11;
+}
+
+message DataInfoParentTwoItem {
+  optional DataInfoParentThreeItem dataInfoParentThreeItem = 2;
+}
+
+message DataInfoParentThreeItem {
+  optional PackageName packageName = 1;
+  optional DataSafetyAndSecurityParent dataSafetyAndSecurityParent = 3;
+}
+
+message PackageName {
+  optional string packageName = 1; // com.instagram.barcelona
+}
+
+message DataSafetyAndSecurityParent {
+  optional DataSafetyAndSecurity dataSafetyAndSecurity = 59;
+}
+
+message DataSafetyAndSecurity {
+  optional DataSafetySectionItem dataShared = 1;
+  optional DataSafetySectionItem dataCollected = 2;
+  optional DataSecuritySection dataSecurity = 10;
+}
+
+message DataSecuritySection {
+  optional string title = 2; // Security practices
+  repeated DataSecuritySectionItem dataSecuritySectionItem = 3;
+}
+
+message DataSecuritySectionItem {
+  optional string title = 2; // Data is encrypted in transit
+  optional DataSectionSubtitle dataSectionSubtitle = 4;
+}
+
+message DataSafetySectionItem {
+  repeated DataSafetySection dataSafetySection = 1;
+  optional string title = 2; // Data Shared
+  optional DataSectionSubtitle dataSectionSubtitle = 4;
+}
+
+message DataSectionSubtitle {
+  optional string subtitle = 2; // Data that may be shared with other companies or organizations
+}
+
+message DataSafetySection {
+  optional DataSafetyHeader dataSafetyHeader = 1;
+  repeated DataSafetyItem dataSafetyItem = 5;
+}
+
+message DataSafetyHeader {
+  optional string sectionName = 2; // Personal info
+  optional DataSectionHeaderInfo dataSectionHeaderInfo = 4;
+}
+
+message DataSectionHeaderInfo {
+  optional string sectionInfo = 2; // Name, Email address, User IDs, and Phone number
+}
+
+message DataSafetyItem {
+  optional string title = 1; // Email address
+  optional string reason = 3; // Fraud prevention, security, and compliance
 }
