@@ -1,3 +1,10 @@
+Changelog : v3.2.6
+• Introduce new getDetailsResponseByPackageName method
+• Define more possible restrictions
+• Handle default for OTA property
+• Add compatibility information for active device
+• Expose required android version (or minSdk) for apps in app info
+
 Changelog : v3.2.5
 • Minor fix to PurchaseHelper to handle duplicates
 
