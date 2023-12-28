@@ -1,3 +1,6 @@
+Changelog : v3.2.8
+• Publish GPlayAPI on GitLab Package Registry
+
 Changelog : v3.2.7
 • Provide SHA256 and/or SHA1 when available for files purchased using PurchaseHelper
 
