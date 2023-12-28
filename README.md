@@ -15,6 +15,22 @@ I'm not resposible for anything that may go wrong with:
 
 **Hold your own beer!**
 
+## Download
+
+GPlayAPI is available on [GitLab Package Registry](https://gitlab.com/AuroraOSS/gplayapi/-/packages).
+
+Add the maven repository into `settings.gradle.kts` file's repository block:
+
+```kotlin
+maven("https://gitlab.com/api/v4/projects/18497829/packages/maven")
+```
+
+Then, add a dependency upon the library in the `build.gradle.kts` file's dependency block:
+
+```kotlin
+implementation("com.aurora:gplayapi:3.2.7")
+```
+
 ## Build
 
 To build the library locally, run the following commands:

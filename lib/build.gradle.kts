@@ -75,6 +75,17 @@ publishing {
     }
     repositories {
         maven {
+            name = "GitLab"
+            url = uri("https://gitlab.com/api/v4/projects/18497829/packages/maven")
+            credentials(HttpHeaderCredentials::class) {
+                name = "Job-Token"
+                value = System.getenv("CI_JOB_TOKEN")
+            }
+            authentication {
+                create("header", HttpHeaderAuthentication::class)
+            }
+        }
+        maven {
             name = "local"
             url = uri("./build/repo")
         }
