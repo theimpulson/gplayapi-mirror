@@ -26,6 +26,7 @@ import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.exceptions.ApiException
 import com.aurora.gplayapi.network.IHttpClient
+import com.aurora.gplayapi.utils.CertUtil
 import java.io.IOException
 
 class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
@@ -188,6 +189,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
                         url = androidAppDeliveryData.downloadUrl
                         size = androidAppDeliveryData.downloadSize
                         type = File.FileType.BASE
+                        sha1 = CertUtil.decodeHash(androidAppDeliveryData.sha1)
+                        sha256 = CertUtil.decodeHash(androidAppDeliveryData.sha256)
                     }
                 )
 
@@ -203,6 +206,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
                                 url = appFileMetadata.downloadUrl
                                 size = appFileMetadata.size
                                 type = if (isOBB) File.FileType.OBB else File.FileType.PATCH
+                                sha1 = CertUtil.decodeHash(appFileMetadata.sha1)
                             }
                         )
                     }
@@ -218,6 +222,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
                                 url = splitDeliveryData.downloadUrl
                                 size = splitDeliveryData.downloadSize
                                 type = File.FileType.SPLIT
+                                sha1 = CertUtil.decodeHash(splitDeliveryData.sha1)
+                                sha256 = CertUtil.decodeHash(splitDeliveryData.sha256)
                             }
                         )
                     }

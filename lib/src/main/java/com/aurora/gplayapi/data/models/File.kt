@@ -25,7 +25,9 @@ data class File(
     var name: String = String(),
     var url: String = String(),
     var size: Long = 0L,
-    var type: FileType = FileType.BASE
+    var type: FileType = FileType.BASE,
+    var sha1: String = String(),
+    var sha256: String = String()
 ) : Parcelable {
 
     enum class FileType {
