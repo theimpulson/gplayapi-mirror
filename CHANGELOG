@@ -1,3 +1,6 @@
+Changelog : v3.2.9
+• Fix PurchaseHelper while purchasing apps with certificate hash
+
 Changelog : v3.2.8
 • Publish GPlayAPI on GitLab Package Registry
 
