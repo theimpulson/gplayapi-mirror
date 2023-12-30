@@ -116,7 +116,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             PATCH_FORMAT.GZIPPED_GDIFF,
             PATCH_FORMAT.GZIPPED_BSDIFF
         ),
-        deliveryToken: String
+        deliveryToken: String,
+        certificateHash: String
     ): DeliveryResponse {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
@@ -127,6 +128,10 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             params["bvc"] = installedVersionCode.toString();
             params["pf"] = patchFormats[0].value.toString();
         }*/
+
+        if (certificateHash.isNotEmpty()) {
+            params["ch"] = certificateHash
+        }
 
         if (deliveryToken.isNotEmpty()) {
             params["dtok"] = deliveryToken
@@ -149,7 +154,8 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             packageName = packageName,
             updateVersionCode = versionCode,
             offerType = offerType,
-            deliveryToken = deliveryToken
+            deliveryToken = deliveryToken,
+            certificateHash = certificateHash
         )
 
         when (deliveryResponse.status) {
