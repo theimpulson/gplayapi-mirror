@@ -15,31 +15,36 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.result.Result
+import android.util.Log
+import com.aurora.gplayapi.network.DefaultHttpClient.GET
+import com.aurora.gplayapi.network.DefaultHttpClient.okHttpClient
 import java.net.URLEncoder
+import okhttp3.Headers.Companion.toHeaders
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class WebClient {
 
+    private val TAG = WebClient::class.java.simpleName
+
     fun fetch(rpcRequests: Array<String>): String {
         val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
-        val requestsBody = buildFRequest(rpcRequests)
-
-        val request = Fuel.post(
-            url,
-            listOf()
+        val headersList = mapOf(
+            "Content-Type" to "application/x-www-form-urlencoded;charset=utf-8",
+            "Origin" to "https://play.google.com"
         )
-            .header("Content-Type" to "application/x-www-form-urlencoded;charset=utf-8")
-            .header("Origin" to "https://play.google.com")
-            .body(requestsBody)
 
-        val (_, _, result) = request.responseString()
+        val request = Request.Builder()
+            .url(url)
+            .headers(headersList.toHeaders())
+            .method(GET, buildFRequest(rpcRequests).toRequestBody())
+            .build()
 
-        return when (result) {
-            is Result.Success -> result.get()
-            is Result.Failure -> {
-                throw result.error.exception
-            }
+        return try {
+            okHttpClient.newCall(request).execute().body!!.toString()
+        } catch (exception: Exception) {
+            Log.e(TAG, "Failed to fetch request", exception)
+            String()
         }
     }
 

@@ -15,27 +15,45 @@
 
 package com.aurora.gplayapi.network
 
+import android.util.Log
 import com.aurora.gplayapi.data.models.PlayResponse
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.Headers
-import com.github.kittinunf.fuel.core.Request
-import com.github.kittinunf.fuel.core.Response
-import com.github.kittinunf.fuel.core.isClientError
-import com.github.kittinunf.fuel.core.isServerError
-import com.github.kittinunf.fuel.core.isSuccessful
+import java.io.IOException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
+import okhttp3.Headers.Companion.toHeaders
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 
-object DefaultHttpClient : IHttpClient {
+internal object DefaultHttpClient : IHttpClient {
+
+    private const val TAG = "DefaultHttpClient"
+
+    const val POST = "POST"
+    const val GET = "GET"
 
     private val _responseCode = MutableStateFlow(100)
     override val responseCode: StateFlow<Int>
         get() = _responseCode.asStateFlow()
 
+    val okHttpClient = OkHttpClient().newBuilder()
+        .connectTimeout(25, TimeUnit.SECONDS)
+        .readTimeout(25, TimeUnit.SECONDS)
+        .writeTimeout(25, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .build()
+
     override fun get(url: String, headers: Map<String, String>): PlayResponse {
-        return get(url, headers, hashMapOf())
+        return get(url, headers, mapOf())
     }
 
     override fun get(
@@ -43,13 +61,12 @@ object DefaultHttpClient : IHttpClient {
         headers: Map<String, String>,
         params: Map<String, String>
     ): PlayResponse {
-        val parameters = params
-            .map { it.key to it.value }
-            .toList()
-        val (request, response, result) = Fuel.get(url, parameters)
-            .header(headers)
-            .response()
-        return buildPlayResponse(response, request)
+        val request = Request.Builder()
+            .url(buildUrl(url, params))
+            .headers(headers.toHeaders())
+            .method(GET, null)
+            .build()
+        return processRequest(request)
     }
 
     override fun get(
@@ -57,10 +74,12 @@ object DefaultHttpClient : IHttpClient {
         headers: Map<String, String>,
         paramString: String
     ): PlayResponse {
-        val (request, response, result) = Fuel.get(url + paramString)
-            .header(headers)
-            .response()
-        return buildPlayResponse(response, request)
+        val request = Request.Builder()
+            .url(url + paramString)
+            .headers(headers.toHeaders())
+            .method(GET, null)
+            .build()
+        return processRequest(request)
     }
 
     override fun getAuth(url: String): PlayResponse {
@@ -78,12 +97,12 @@ object DefaultHttpClient : IHttpClient {
     }
 
     override fun post(url: String, headers: Map<String, String>, body: ByteArray): PlayResponse {
-        val (request, response, result) = Fuel.post(url)
-            .header(headers)
-            .appendHeader(Headers.CONTENT_TYPE, "application/x-protobuf")
-            .body(body, Charset.defaultCharset())
-            .response()
-        return buildPlayResponse(response, request)
+        val requestBody = body.toRequestBody(
+            "application/x-protobuf".toMediaType(),
+            0,
+            body.size
+        )
+        return post(url, headers, requestBody)
     }
 
     override fun post(
@@ -91,29 +110,56 @@ object DefaultHttpClient : IHttpClient {
         headers: Map<String, String>,
         params: Map<String, String>
     ): PlayResponse {
-        val parameters = params
-            .map { it.key to it.value }
-            .toList()
-        val (request, response, result) = Fuel.post(url, parameters)
-            .header(headers)
-            .response()
-        return buildPlayResponse(response, request)
+        val request = Request.Builder()
+            .url(buildUrl(url, params))
+            .headers(headers.toHeaders())
+            .method(POST, "".toRequestBody(null))
+            .build()
+        return processRequest(request)
+    }
+
+    private fun processRequest(request: Request): PlayResponse {
+        // Reset response code as flow doesn't sends the same value twice
+        _responseCode.value = 0
+
+        val call = okHttpClient.newCall(request)
+        return buildPlayResponse(call.execute())
+    }
+
+    private fun buildUrl(url: String, params: Map<String, String>): HttpUrl {
+        val urlBuilder = url.toHttpUrl().newBuilder()
+        params.forEach {
+            urlBuilder.addQueryParameter(it.key, it.value)
+        }
+        return urlBuilder.build()
+    }
+
+    @Throws(IOException::class)
+    fun post(url: String, headers: Map<String, String>, requestBody: RequestBody): PlayResponse {
+        val request = Request.Builder()
+            .url(url)
+            .headers(headers.toHeaders())
+            .method(POST, requestBody)
+            .build()
+        return processRequest(request)
     }
 
     @JvmStatic
-    private fun buildPlayResponse(response: Response, request: Request): PlayResponse {
+    private fun buildPlayResponse(response: Response): PlayResponse {
         return PlayResponse().apply {
-            if (response.isSuccessful) {
-                responseBytes = response.body().toByteArray()
+            isSuccessful = response.isSuccessful
+            code = response.code
+
+            if (response.body != null) {
+                responseBytes = response.body!!.bytes()
             }
 
-            if (response.isClientError || response.isServerError) {
-                errorBytes = response.responseMessage.toByteArray()
-                errorString = String(errorBytes)
+            if (!isSuccessful) {
+                errorString = response.message
             }
-            isSuccessful = response.isSuccessful
-            code = response.statusCode
-            _responseCode.value = response.statusCode
+        }.also {
+            _responseCode.value = response.code
+            Log.d(TAG, "OKHTTP [${response.code}] ${response.request.url}")
         }
     }
 }
