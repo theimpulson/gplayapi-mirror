@@ -16,12 +16,12 @@ android {
         aarMetadata {
             minCompileSdk = 21
         }
+        consumerProguardFiles("proguard-rules.pro")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            consumerProguardFiles("proguard-rules.pro")
         }
     }
     compileOptions {
