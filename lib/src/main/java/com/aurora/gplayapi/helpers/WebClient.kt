@@ -16,7 +16,7 @@
 package com.aurora.gplayapi.helpers
 
 import android.util.Log
-import com.aurora.gplayapi.network.DefaultHttpClient.GET
+import com.aurora.gplayapi.network.DefaultHttpClient.POST
 import com.aurora.gplayapi.network.DefaultHttpClient.okHttpClient
 import java.net.URLEncoder
 import okhttp3.Headers.Companion.toHeaders
@@ -37,11 +37,12 @@ class WebClient {
         val request = Request.Builder()
             .url(url)
             .headers(headersList.toHeaders())
-            .method(GET, buildFRequest(rpcRequests).toRequestBody())
+            .method(POST, buildFRequest(rpcRequests).toRequestBody())
             .build()
 
         return try {
-            okHttpClient.newCall(request).execute().body!!.toString()
+            val response = okHttpClient.newCall(request).execute()
+            response.body!!.string()
         } catch (exception: Exception) {
             Log.e(TAG, "Failed to fetch request", exception)
             String()
