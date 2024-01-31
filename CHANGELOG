@@ -1,3 +1,8 @@
+Changelog : v3.2.10
+• Switch from Fuel to OkHttp library for network calls
+• Update dependencies & plugins
+• Bump compileSdk to 34
+
 Changelog : v3.2.9
 • Fix PurchaseHelper while purchasing apps with certificate hash
 
