@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+option java_package = "com.aurora.gplayapi.playfe";
+option java_multiple_files = true;
+
+import "google/protobuf/any.proto";
+
+message Payload {
+  GetItemsResponse getItemsResponse = 1;
+  GetItemsRequest getItemsRequest = 2;
+  AppDetailsResponse appDetailsResponse = 11;
+}
+
+message PackageDetails {
+  string packageName = 1;
+}
+
+message AppPackagingDetails {
+  PackageDetails packageDetails = 1;
+}
+
+message GetItemsRequest {
+  AppPackagingDetails appPackagingDetails = 1;
+  google.protobuf.Any unknown = 2;
+}
+
+message GetItemsResponse {
+  GetItemsRequest getItemsRequest = 145;
+}
+
+message AppDetailsResponse {
+  AppPackagingDetails appPackagingDetails = 1;
+  AppDetails appDetails = 2;
+  google.protobuf.Any unknown = 3;
+}
+
+message AppDetails {
+  PackageDetails packageDetails = 1;
+  AppDetailsMore appDetailsMore = 3;
+}
+
+message AppDetailsMore {
+  Version version = 2;
+  DownloadStats downloadStats = 8;
+  Changelog changelog = 9;
+  Screenshots screenshots = 10;
+  ShortDescription shortDescription = 11;
+  YouTubeAssets youTubeAssets = 13;
+  Publisher publisher = 14;
+  Support support = 15;
+  Permissions permissions = 26;
+  InAppPurchases inAppPurchases = 31;
+}
+
+message Version {
+  int64 versionCode = 1;
+  string versionName = 2;
+  google.protobuf.Any unknown = 3;
+}
+
+message DownloadStats {
+  string title = 1;
+  int64 number = 2;
+  string approxTitle = 5;
+  string approxTitleExpanded = 6;
+}
+
+message Changelog {
+  string details = 1;
+  string date = 2;
+}
+
+message Screenshots {
+  repeated Screenshot screenshot = 1;
+}
+
+message Screenshot {
+  google.protobuf.Any unknown = 2;
+  Dimensions dimensions = 3;
+  Artwork artwork = 6;
+}
+
+message Dimensions {
+  int32 height = 1;
+  int32 width = 2;
+}
+
+message Artwork {
+  string URL = 1;
+}
+
+message ShortDescription {
+  string title = 1;
+}
+
+message YouTubeAssets {
+  // TODO: ACTUALLY CARE ABOUT IT
+}
+
+message Publisher {
+  string title = 1;
+}
+
+message Support {
+  string email = 1;
+  string website = 2;
+  string address = 3;
+}
+
+message Permissions {
+  repeated string permission = 1;
+}
+
+message InAppPurchases {
+  int32 exists = 1;
+  string price = 2;
+}
