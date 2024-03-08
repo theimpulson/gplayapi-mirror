@@ -16,16 +16,19 @@
 package com.aurora.gplayapi.helpers
 
 import android.util.Log
-import com.aurora.gplayapi.network.DefaultHttpClient.POST
-import com.aurora.gplayapi.network.DefaultHttpClient.okHttpClient
+import com.aurora.gplayapi.network.DefaultHttpClient
+import com.aurora.gplayapi.network.IHttpClient
 import java.net.URLEncoder
-import okhttp3.Headers.Companion.toHeaders
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 
 class WebClient {
 
     private val TAG = WebClient::class.java.simpleName
+
+    private var httpClient: IHttpClient = DefaultHttpClient
+
+    fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
 
     fun fetch(rpcRequests: Array<String>): String {
         val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
@@ -34,15 +37,9 @@ class WebClient {
             "Origin" to "https://play.google.com"
         )
 
-        val request = Request.Builder()
-            .url(url)
-            .headers(headersList.toHeaders())
-            .method(POST, buildFRequest(rpcRequests).toRequestBody())
-            .build()
-
         return try {
-            val response = okHttpClient.newCall(request).execute()
-            response.body!!.string()
+            val res = httpClient.post(url, headersList, buildFRequest(rpcRequests).toByteArray())
+            res.responseBytes.decodeToString()
         } catch (exception: Exception) {
             Log.e(TAG, "Failed to fetch request", exception)
             String()

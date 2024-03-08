@@ -6,15 +6,21 @@ import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 
 class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
 
     private var query: String = String()
 
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
+
     @Throws(Exception::class)
     override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
-        val searchResponse = WebClient().fetch(arrayOf(SearchSuggestionQueryBuilder.build(query)))
+        val searchResponse = WebClient().using(httpClient)
+            .fetch(arrayOf(SearchSuggestionQueryBuilder.build(query)))
             .let { RpcBuilder.wrapResponse(it) }
 
         val payload = searchResponse.dig<Collection<Any>>(
@@ -42,7 +48,8 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
 
         val searchBundle = SearchBundle()
         val searchQuery = SearchQueryBuilder.build(query, nextPageUrl)
-        val searchResponse = WebClient().fetch(arrayOf(searchQuery))
+        val searchResponse = WebClient().using(httpClient)
+            .fetch(arrayOf(searchQuery))
             .let { RpcBuilder.wrapResponse(it) }
 
         var payload = searchResponse.dig<Collection<Any>>(
@@ -74,7 +81,8 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
         val nextPageToken: String = payload?.dig<String>(0, 7, 1) ?: ""
 
         searchBundle.apply {
-            this.appList = AppDetailsHelper(authData).getAppByPackageName(packageNames)
+            this.appList = AppDetailsHelper(authData).using(httpClient)
+                .getAppByPackageName(packageNames)
                 .toMutableList()
             this.query = query
             this.subBundles = hashSetOf()

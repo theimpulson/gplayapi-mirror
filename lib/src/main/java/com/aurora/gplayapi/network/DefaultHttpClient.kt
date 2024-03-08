@@ -43,7 +43,7 @@ internal object DefaultHttpClient : IHttpClient {
     override val responseCode: StateFlow<Int>
         get() = _responseCode.asStateFlow()
 
-    val okHttpClient = OkHttpClient().newBuilder()
+    private val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(25, TimeUnit.SECONDS)
         .readTimeout(25, TimeUnit.SECONDS)
         .writeTimeout(25, TimeUnit.SECONDS)
