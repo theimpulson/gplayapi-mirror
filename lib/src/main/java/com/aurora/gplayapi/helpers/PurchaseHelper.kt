@@ -108,6 +108,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     @Throws(IOException::class)
     fun getDeliveryResponse(
         packageName: String,
+        splitModule: String = String(),
         installedVersionCode: Int = 0,
         updateVersionCode: Int,
         offerType: Int,
@@ -129,6 +130,10 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             params["pf"] = patchFormats[0].value.toString();
         }*/
 
+        if (splitModule.isNotEmpty())  {
+            params["mn"] = splitModule
+        }
+
         if (certificateHash.isNotEmpty()) {
             params["ch"] = certificateHash
         }
@@ -148,6 +153,28 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
+    fun getOnDemandModule(
+        packageName: String,
+        splitModule: String,
+        versionCode: Int,
+        offerType: Int,
+        certificateHash: String = ""
+    ): File? {
+        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
+        val deliveryResponse = getDeliveryResponse(
+            packageName = packageName,
+            splitModule = splitModule,
+            updateVersionCode = versionCode,
+            offerType = offerType,
+            deliveryToken = deliveryToken,
+            certificateHash = certificateHash
+        )
+
+        val modules = processDeliveryResponse(packageName, versionCode, deliveryResponse)
+        return modules.find { it.name == "$splitModule.apk" }
+    }
+
+    @Throws(Exception::class)
     fun purchase(packageName: String, versionCode: Int, offerType: Int, certificateHash: String = ""): List<File> {
         val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
         val deliveryResponse = getDeliveryResponse(
@@ -158,24 +185,22 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
             certificateHash = certificateHash
         )
 
+        return processDeliveryResponse(packageName, versionCode, deliveryResponse)
+    }
+
+    @Throws(Exception::class)
+    private fun processDeliveryResponse(
+        packageName: String,
+        versionCode: Int,
+        deliveryResponse: DeliveryResponse
+    ): List<File> {
         when (deliveryResponse.status) {
-            1 ->
-                return getDownloadsFromDeliveryResponse(packageName, versionCode, deliveryResponse)
-
-            2 ->
-                throw ApiException.AppNotSupported()
-
-            3 ->
-                throw ApiException.AppNotPurchased()
-
-            7 ->
-                throw ApiException.AppRemoved()
-
-            9 ->
-                throw ApiException.AppNotSupported()
-
-            else ->
-                throw ApiException.Unknown()
+            1 -> return getDownloadsFromDeliveryResponse(packageName, versionCode, deliveryResponse)
+            2 -> throw ApiException.AppNotSupported()
+            3 -> throw ApiException.AppNotPurchased()
+            7 -> throw ApiException.AppRemoved()
+            9 -> throw ApiException.AppNotSupported()
+            else -> throw ApiException.Unknown()
         }
     }
 
