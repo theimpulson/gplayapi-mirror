@@ -14,10 +14,10 @@
  */
 
 plugins {
-    id("com.android.application") version "8.2.1" apply false
-    id("com.android.library") version "8.2.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("org.jetbrains.kotlin.plugin.parcelize") version "1.9.22" apply false
-    id("com.google.protobuf") version "0.9.4" apply false
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.jetbrains.kotlin.parcelize) apply false
+    alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.protobuf) apply false
 }

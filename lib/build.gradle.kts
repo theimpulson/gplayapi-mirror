@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.parcelize")
-    id("com.google.protobuf")
-    id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.parcelize)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.protobuf)
+    `maven-publish`
 }
 
 android {
@@ -40,10 +40,10 @@ android {
 
 dependencies {
 
-    implementation("com.google.protobuf:protobuf-javalite:3.25.2")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.google.gson)
+    implementation(libs.google.protobuf)
+    implementation(libs.squareup.okhttp)
+    implementation(libs.kotlin.coroutines.android)
 }
 
 protobuf {
