@@ -28,7 +28,7 @@ maven("https://gitlab.com/api/v4/projects/18497829/packages/maven")
 Then, add a dependency upon the library in the `build.gradle.kts` file's dependency block:
 
 ```kotlin
-implementation("com.aurora:gplayapi:3.2.10")
+implementation("com.aurora:gplayapi:3.2.11")
 ```
 
 ## Build
