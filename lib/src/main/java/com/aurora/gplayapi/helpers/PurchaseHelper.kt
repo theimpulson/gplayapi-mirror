@@ -112,11 +112,7 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         installedVersionCode: Int = 0,
         updateVersionCode: Int,
         offerType: Int,
-        patchFormats: Array<PATCH_FORMAT> = arrayOf(
-            PATCH_FORMAT.GDIFF,
-            PATCH_FORMAT.GZIPPED_GDIFF,
-            PATCH_FORMAT.GZIPPED_BSDIFF
-        ),
+        patchFormat: PATCH_FORMAT = PATCH_FORMAT.GDIFF,
         deliveryToken: String,
         certificateHash: String
     ): DeliveryResponse {
@@ -125,10 +121,10 @@ class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
         params["doc"] = packageName
         params["vc"] = updateVersionCode.toString()
 
-        /*if (installedVersionCode > 0) {
+        if (installedVersionCode > 0) {
             params["bvc"] = installedVersionCode.toString();
-            params["pf"] = patchFormats[0].value.toString();
-        }*/
+            params["pf"] = patchFormat.value.toString();
+        }
 
         if (splitModule.isNotEmpty())  {
             params["mn"] = splitModule
