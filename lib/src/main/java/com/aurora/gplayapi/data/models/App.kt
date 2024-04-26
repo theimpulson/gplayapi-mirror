@@ -84,7 +84,8 @@ data class App(
     var videoArtwork: Artwork = Artwork(),
     var certificateHashList: MutableList<String> = mutableListOf(),
     var certificateSetList: MutableList<EncodedCertificateSet> = mutableListOf(),
-    val compatibility: MutableList<ActiveDevice> = mutableListOf()
+    val compatibility: MutableList<ActiveDevice> = mutableListOf(),
+    var contentRating: ContentRating = ContentRating()
 ) : Parcelable {
 
     override fun hashCode(): Int {

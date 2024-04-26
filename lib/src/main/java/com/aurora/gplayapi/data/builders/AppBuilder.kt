@@ -21,6 +21,8 @@ import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.Item
 import com.aurora.gplayapi.data.models.ActiveDevice
 import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.Artwork
+import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.data.models.details.Badge
@@ -112,6 +114,7 @@ object AppBuilder {
         parseInfoBadges(app, item)
         parseStreamUrls(app, item)
         parseRating(app, item)
+        parseContentRating(app, item)
         parseArtwork(app, item)
 
         parseDependencies(app, appDetails)
@@ -191,6 +194,20 @@ object AppBuilder {
 
     private fun parseRating(app: App, item: Item) {
         app.rating = RatingBuilder.build(item.aggregateRating)
+    }
+
+    private fun parseContentRating(app: App, item: Item) {
+        app.contentRating = ContentRating(
+            title = item.contentRating.title,
+            description = item.contentRating.description,
+            recommendation = item.contentRating.recommendation,
+            artwork = Artwork(
+                width = item.contentRating.contentRatingImage.dimension.width,
+                height = item.contentRating.contentRatingImage.dimension.height,
+                url = item.contentRating.contentRatingImage.image.url
+            ),
+            recommendationAndDescriptionHtml = item.contentRating.recommendationAndDescriptionHtml,
+        )
     }
 
     private fun parseDependencies(app: App, appDetails: AppDetails) {
