@@ -1,14 +1,14 @@
 [versions]
-activityVersion = "1.8.2"
-androidGradlePlugin = "8.3.1"
+activityVersion = "1.9.0"
+androidGradlePlugin = "8.4.1"
 coilVersion = "2.6.0"
-composeBom = "2024.03.00"
-coreVersion = "1.12.0"
-coroutinesVersion = "1.8.0"
+composeBom = "2024.05.00"
+coreVersion = "1.13.1"
+coroutinesVersion = "1.8.1"
 gsonVersion = "2.10.1"
-kotlinVersion = "1.9.23"
+kotlinVersion = "2.0.0"
 ktlintVersion = "12.1.0"
-lifecycleVersion = "2.7.0"
+lifecycleVersion = "2.8.1"
 okhttpVersion = "4.12.0"
 protobufPluginVersion = "0.9.4"
 protobufJavaliteVersion = "3.25.3"
@@ -36,4 +36,5 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 ktlint  = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintVersion" }
 protobuf  = { id = "com.google.protobuf", version.ref = "protobufPluginVersion" }
 jetbrains-kotlin-android  = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
 jetbrains-kotlin-parcelize  = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinVersion" }
