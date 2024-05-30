@@ -1,3 +1,7 @@
+Changelog : v3.2.12
+• Support for content ratings of apps
+• Update dependencies & plugins
+
 Changelog : v3.2.11
 • New spoof configurations for x86 devices
 • Update dependencies & plugins; Migrated to build version catalog
