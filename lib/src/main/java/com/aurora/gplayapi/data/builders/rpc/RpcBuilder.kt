@@ -10,14 +10,14 @@ object RpcBuilder {
         val filteredLines = lines.filter { it.startsWith("[[\"wrb.fr") }
         val result = HashMap<String, HashMap<String, Any>?>()
 
-        filteredLines.forEach {
-            val jaggedProto = parseJaggedString(it)
-            val (type, packageName) = (jaggedProto.dig<String>(0, 6)).toString().split("@")
+        filteredLines
+            .forEach {
+                val jaggedProto = parseJaggedString(it)
+                val (type, packageName) = (jaggedProto.dig<String>(0, 6)).toString().split("@")
+                val rpcData = jaggedProto.dig<String>(0, 2) ?: return@forEach
 
-            result[type] = hashMapOf(
-                packageName to parseJaggedString(jaggedProto.dig<String>(0, 2))
-            )
-        }
+                result[type] = hashMapOf(packageName to parseJaggedString(rpcData))
+            }
 
         return result
     }

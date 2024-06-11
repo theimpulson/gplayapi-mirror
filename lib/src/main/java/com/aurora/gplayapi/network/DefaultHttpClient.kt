@@ -17,20 +17,19 @@ package com.aurora.gplayapi.network
 
 import android.util.Log
 import com.aurora.gplayapi.data.models.PlayResponse
-import java.io.IOException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.concurrent.TimeUnit
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 internal object DefaultHttpClient : IHttpClient {
 
@@ -97,12 +96,7 @@ internal object DefaultHttpClient : IHttpClient {
     }
 
     override fun post(url: String, headers: Map<String, String>, body: ByteArray): PlayResponse {
-        val requestBody = body.toRequestBody(
-            "application/x-protobuf".toMediaType(),
-            0,
-            body.size
-        )
-        return post(url, headers, requestBody)
+        return post(url, headers, body.toRequestBody())
     }
 
     override fun post(
@@ -113,7 +107,7 @@ internal object DefaultHttpClient : IHttpClient {
         val request = Request.Builder()
             .url(buildUrl(url, params))
             .headers(headers.toHeaders())
-            .method(POST, "".toRequestBody(null))
+            .method(POST, "".toRequestBody())
             .build()
         return processRequest(request)
     }
