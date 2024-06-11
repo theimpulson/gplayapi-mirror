@@ -2,24 +2,21 @@ package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.data.builders.rpc.RpcBuilder
 import com.aurora.gplayapi.data.models.App
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
-import com.aurora.gplayapi.helpers.AppDetailsHelper
 import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-open class BaseWebHelper(var authData: AuthData) {
+open class BaseWebHelper {
     private var httpClient: IHttpClient = DefaultHttpClient
-    private val appDetailsHelper = AppDetailsHelper(authData)
 
     fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
 
-    fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>?> {
+    fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>> {
         return WebClient(httpClient)
             .fetch(freq)
             .let {
@@ -83,7 +80,7 @@ open class BaseWebHelper(var authData: AuthData) {
             clusterSubtitle = payload.dig(clusterIndex, 1, 1) ?: ""
             clusterNextPageUrl = payload.dig(clusterIndex, 1, 3, 1) ?: ""
             clusterBrowseUrl = payload.dig(clusterIndex, 1, 2, 4, 2) ?: ""
-            clusterAppList = getAppByPackageName(
+            clusterAppList = getAppDetails(
                 (payload.dig<ArrayList<Any>>(clusterIndex, 0) ?: arrayListOf()).mapNotNull {
                     it.dig(
                         *appIndex
@@ -93,13 +90,9 @@ open class BaseWebHelper(var authData: AuthData) {
         }
     }
 
-    /**
-     * TODO: Parse the payload to get the app details instead of fetching via AppDetailsHelper
-     */
-    fun getAppByPackageName(packageNames: List<String>): MutableList<App> {
-        return appDetailsHelper.using(httpClient)
+    fun getAppDetails(packageNames: List<String>): MutableList<App> {
+        return WebAppDetailsHelper()
+            .using(httpClient)
             .getAppByPackageName(packageNames)
-            .filter { it.packageName.isNotEmpty() }
-            .toMutableList()
     }
 }

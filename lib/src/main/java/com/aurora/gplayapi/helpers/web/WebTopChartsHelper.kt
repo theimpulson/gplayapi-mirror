@@ -1,12 +1,11 @@
 package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.data.builders.rpc.TopChartsBuilder
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-class WebTopChartsHelper(authData: AuthData) : BaseWebHelper(authData) {
+class WebTopChartsHelper : BaseWebHelper() {
     /**
      * Fetches the top charts for a given category and chart
      * @param category The category of the top charts
@@ -54,7 +53,7 @@ class WebTopChartsHelper(authData: AuthData) : BaseWebHelper(authData) {
             return streamCluster
         }
 
-        val apps = getAppByPackageName(packageNames)
+        val apps = getAppDetails(packageNames)
 
         streamCluster.apply {
             id = UUID.randomUUID().hashCode()

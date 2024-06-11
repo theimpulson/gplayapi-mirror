@@ -3,12 +3,11 @@ package com.aurora.gplayapi.helpers.web
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-class WebSearchHelper(authData: AuthData) : BaseWebHelper(authData) {
+class WebSearchHelper : BaseWebHelper() {
     private var query: String = String()
 
     fun searchSuggestions(query: String): List<SearchSuggestEntry> {
@@ -70,7 +69,7 @@ class WebSearchHelper(authData: AuthData) : BaseWebHelper(authData) {
 
         searchBundle.apply {
             this.id = UUID.randomUUID().hashCode()
-            this.appList = getAppByPackageName(packageNames)
+            this.appList = getAppDetails(packageNames)
             this.query = query
             this.subBundles = hashSetOf()
         }

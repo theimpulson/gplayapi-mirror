@@ -5,24 +5,37 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object RpcBuilder {
-    fun wrapResponse(input: String): HashMap<String, HashMap<String, Any>?> {
+    fun wrapResponse(input: String): HashMap<String, HashMap<String, Any>> {
         val lines = input.lines()
-        val filteredLines = lines.filter { it.startsWith("[[\"wrb.fr") }
-        val result = HashMap<String, HashMap<String, Any>?>()
+        val filteredLines: ArrayList<Any> = arrayListOf()
+        val result = HashMap<String, HashMap<String, Any>>()
+
+        lines
+            .filter { it.startsWith("[[\"wrb.fr") }
+            .map { parseJaggedString(it) }
+            .first()
+            .forEach {
+                if (it.dig<String>(0) == "wrb.fr") {
+                    filteredLines.add(it)
+                }
+            }
 
         filteredLines
             .forEach {
-                val jaggedProto = parseJaggedString(it)
-                val (type, packageName) = (jaggedProto.dig<String>(0, 6)).toString().split("@")
-                val rpcData = jaggedProto.dig<String>(0, 2) ?: return@forEach
+                val (type, packageName) = (it.dig<String>(6)).toString().split("@")
+                val rpcData = it.dig<String>(2) ?: return@forEach
 
-                result[type] = hashMapOf(packageName to parseJaggedString(rpcData))
+                if (result[type] == null) {
+                    result[type] = hashMapOf()
+                }
+
+                result[type]?.put(packageName, parseJaggedString(rpcData))
             }
 
         return result
     }
 
-    private fun parseJaggedString(input: String?): Collection<Any> {
+    private fun parseJaggedString(input: String): Collection<Any> {
         val gson = Gson()
         val arrayType = object : TypeToken<Collection<Any>>() {}.type
         return gson.fromJson(input, arrayType)

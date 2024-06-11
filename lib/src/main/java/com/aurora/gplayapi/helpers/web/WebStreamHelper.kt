@@ -3,12 +3,11 @@ package com.aurora.gplayapi.helpers.web
 import com.aurora.gplayapi.data.builders.rpc.FeaturedStreamBuilder
 import com.aurora.gplayapi.data.builders.rpc.NextBundleBuilder
 import com.aurora.gplayapi.data.builders.rpc.NextClusterBuilder
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.utils.dig
 
-class WebStreamHelper(authData: AuthData) : BaseWebHelper(authData) {
+class WebStreamHelper : BaseWebHelper() {
     /**
      * Fetches the stream cluster for the given category.
      * @param category The category to fetch the stream cluster for.
