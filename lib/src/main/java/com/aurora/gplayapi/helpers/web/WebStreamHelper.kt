@@ -5,9 +5,14 @@ import com.aurora.gplayapi.data.builders.rpc.NextBundleBuilder
 import com.aurora.gplayapi.data.builders.rpc.NextClusterBuilder
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
+import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 
 class WebStreamHelper : BaseWebHelper() {
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
+
     /**
      * Fetches the stream cluster for the given category.
      * @param category The category to fetch the stream cluster for.

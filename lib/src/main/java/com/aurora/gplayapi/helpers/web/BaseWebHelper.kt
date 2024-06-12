@@ -9,12 +9,10 @@ import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-open class BaseWebHelper {
-    private var httpClient: IHttpClient = DefaultHttpClient
+abstract class BaseWebHelper {
+    var httpClient: IHttpClient = DefaultHttpClient
 
-    fun using(httpClient: IHttpClient) = apply {
-        this.httpClient = httpClient
-    }
+    abstract fun using(httpClient: IHttpClient): BaseWebHelper
 
     fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>> {
         return WebClient(httpClient)

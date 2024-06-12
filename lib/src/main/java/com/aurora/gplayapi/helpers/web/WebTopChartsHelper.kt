@@ -2,10 +2,15 @@ package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.data.builders.rpc.TopChartsBuilder
 import com.aurora.gplayapi.data.models.StreamCluster
+import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
 class WebTopChartsHelper : BaseWebHelper() {
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
+
     /**
      * Fetches the top charts for a given category and chart
      * @param category The category of the top charts

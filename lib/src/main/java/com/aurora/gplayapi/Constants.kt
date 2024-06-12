@@ -84,4 +84,10 @@ object Constants {
         QUERY(arrayOf(0, 1, 1, 21, 0)),
         SIMILAR(arrayOf(0, 1, 2, 22, 0))
     }
+
+    enum class WebCategoryType(val value: Int) {
+        APPLICATION(0),
+        GAME(1),
+        KIDS(2),
+    }
 }
