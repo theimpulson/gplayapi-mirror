@@ -11,6 +11,8 @@ object WebAppBuilder {
         val app = App(packageName)
 
         val appInfoPayload = payload.dig<ArrayList<Any>>(1, 2) ?: arrayListOf()
+        val downloadsPayload = appInfoPayload.dig<ArrayList<Any>>(13) ?: arrayListOf()
+        val offersPayload = appInfoPayload.dig<ArrayList<Any>>(57, 0, 0, 0, 0) ?: arrayListOf()
 
         app.apply {
             id = packageName.hashCode()
@@ -47,24 +49,31 @@ object WebAppBuilder {
             developerAddress = appInfoPayload.dig<String>(69, 2, 0) ?: ""
 
             downloadString = appInfoPayload.dig<String>(13, 3) ?: ""
-            installs = (appInfoPayload.dig<Double>(13, 2) ?: 0.0).toLong()
+            installs = (downloadsPayload.dig<Double>(2) ?: 0.0).toLong()
+            isFree = (offersPayload.dig<Double>(1, 0, 0) ?: 0.0) == 0.0
+            price = offersPayload.dig<String>(1, 0, 2) ?: ""
 
             val ratingPayload = appInfoPayload.dig<ArrayList<Any>>(51) ?: arrayListOf()
             if (ratingPayload.isNotEmpty()) {
-                rating = Rating().apply {
-                    average = (ratingPayload.dig<Double>(0, 1) ?: 0.0).toFloat()
-                    oneStar = (ratingPayload.dig<Long>(1, 1, 1, 1) ?: 0L)
-                    twoStar = (ratingPayload.dig<Long>(1, 2, 1, 1) ?: 0L)
-                    threeStar = (ratingPayload.dig<Long>(1, 3, 1, 1) ?: 0L)
-                    fourStar = (ratingPayload.dig<Long>(1, 4, 1, 1) ?: 0L)
-                    fiveStar = (ratingPayload.dig<Long>(1, 5, 1, 1) ?: 0L)
-                    label = ratingPayload.dig<String>(2, 0) ?: ""
-                    abbreviatedLabel = ratingPayload.dig<String>(0, 0) ?: ""
-                }
+                rating = parseRating(ratingPayload)
+                labeledRating = ratingPayload.dig<String>(0, 0) ?: ""
             }
         }
 
         return app
+    }
+
+    private fun parseRating(payload: ArrayList<Any>): Rating {
+        return Rating().apply {
+            average = (payload.dig<Double>(0, 1) ?: 0.0).toFloat()
+            oneStar = (payload.dig<Long>(1, 1, 1, 1) ?: 0L)
+            twoStar = (payload.dig<Long>(1, 2, 1, 1) ?: 0L)
+            threeStar = (payload.dig<Long>(1, 3, 1, 1) ?: 0L)
+            fourStar = (payload.dig<Long>(1, 4, 1, 1) ?: 0L)
+            fiveStar = (payload.dig<Long>(1, 5, 1, 1) ?: 0L)
+            label = payload.dig<String>(2, 0) ?: ""
+            abbreviatedLabel = payload.dig<String>(0, 0) ?: ""
+        }
     }
 
     private fun parseArtwork(payload: ArrayList<Any>, artworkType: Int = 0): Artwork {

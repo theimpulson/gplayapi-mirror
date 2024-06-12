@@ -5,7 +5,7 @@ object CategoryBuilder {
 
     fun build(tag: String = TAG): String {
         return """
-            ["KT5WVe","[1]",null,"${TAG}@${TAG}"]
+            ["KT5WVe","[1]",null,"${tag}@${tag}"]
         """
             .trim()
     }
