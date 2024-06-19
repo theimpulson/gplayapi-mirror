@@ -4,16 +4,11 @@ import com.aurora.gplayapi.data.builders.rpc.RpcBuilder
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
-import com.aurora.gplayapi.network.DefaultHttpClient
-import com.aurora.gplayapi.network.IHttpClient
+import com.aurora.gplayapi.helpers.BaseHelper
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-abstract class BaseWebHelper {
-    var httpClient: IHttpClient = DefaultHttpClient
-
-    abstract fun using(httpClient: IHttpClient): BaseWebHelper
-
+abstract class BaseWebHelper : BaseHelper() {
     fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>> {
         return WebClient(httpClient)
             .fetch(freq)

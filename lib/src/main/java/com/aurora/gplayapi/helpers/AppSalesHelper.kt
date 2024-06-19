@@ -24,7 +24,7 @@ import com.google.gson.Gson
 import java.io.IOException
 import java.util.Locale
 
-class AppSalesHelper(authData: AuthData) : BaseHelper(authData) {
+class AppSalesHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

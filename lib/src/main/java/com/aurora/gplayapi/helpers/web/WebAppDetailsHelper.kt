@@ -23,7 +23,16 @@ class WebAppDetailsHelper {
             }
     }
 
-    fun getAppByPackageName(packageNames: List<String>): MutableList<App> {
+    fun getAppByPackageName(packageName: String): App {
+        val apps = getAppByPackageNames(listOf(packageName))
+        return if (apps.isNotEmpty()) {
+            apps.first()
+        } else {
+            App(packageName)
+        }
+    }
+
+    fun getAppByPackageNames(packageNames: List<String>): MutableList<App> {
         val requests = packageNames.map { packageName -> MetadataBuilder.build(packageName) }
         val response = execute(requests.toTypedArray())
         val apps: MutableList<App> = mutableListOf()

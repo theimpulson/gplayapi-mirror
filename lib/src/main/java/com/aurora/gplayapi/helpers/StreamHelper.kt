@@ -23,7 +23,7 @@ import com.aurora.gplayapi.data.models.editor.EditorChoiceBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class StreamHelper(authData: AuthData) : BaseHelper(authData) {
+class StreamHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

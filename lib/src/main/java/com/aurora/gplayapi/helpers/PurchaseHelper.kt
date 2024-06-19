@@ -29,7 +29,7 @@ import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.CertUtil
 import java.io.IOException
 
-class PurchaseHelper(authData: AuthData) : BaseHelper(authData) {
+class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

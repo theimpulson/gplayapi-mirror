@@ -24,7 +24,7 @@ import com.aurora.gplayapi.data.models.ReviewCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class ReviewsHelper(authData: AuthData) : BaseHelper(authData) {
+class ReviewsHelper(authData: AuthData) : NativeHelper(authData) {
 
     companion object {
         const val DEFAULT_SIZE = 20

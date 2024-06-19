@@ -11,7 +11,7 @@ class WebCategoryHelper : BaseWebHelper() {
         this.httpClient = httpClient
     }
 
-    fun fetch(type: Constants.WebCategoryType): List<Category> {
+    fun getAllCategoriesList(type: Constants.WebCategoryType): List<Category> {
         val response = execute(arrayOf(CategoryBuilder.build()))
         val payload = response.dig<Collection<Any>>(
             CategoryBuilder.TAG,

@@ -17,13 +17,15 @@ package com.aurora.gplayapi.helpers
 
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.Payload
+import com.aurora.gplayapi.ResponseWrapper
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.network.IHttpClient
 
-class CategoryHelper(authData: AuthData) : BaseHelper(authData) {
+class CategoryHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
@@ -59,6 +61,35 @@ class CategoryHelper(authData: AuthData) : BaseHelper(authData) {
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + homeUrl, headers)
         return getSubCategoryBundle(playResponse.responseBytes)
+    }
+
+    private fun getSubCategoryBundle(payload: Payload): StreamBundle {
+        var streamBundle = StreamBundle()
+        if (payload.hasListResponse() && payload.listResponse.itemCount > 0) {
+            streamBundle = getStreamBundle(payload.listResponse)
+        }
+        return streamBundle
+    }
+
+    @Throws(Exception::class)
+    fun getSubCategoryBundle(bytes: ByteArray?): StreamBundle {
+        val responseWrapper = ResponseWrapper.parseFrom(bytes)
+        var streamBundle = StreamBundle()
+
+        if (responseWrapper.preFetchCount > 0) {
+            responseWrapper.preFetchList.forEach {
+                if (it.hasResponse() && it.response.hasPayload()) {
+                    val payload = it.response.payload
+                    val currentStreamBundle = getSubCategoryBundle(payload)
+                    streamBundle.streamClusters.putAll(currentStreamBundle.streamClusters)
+                }
+            }
+        } else if (responseWrapper.hasPayload()) {
+            val payload = responseWrapper.payload
+            streamBundle = getSubCategoryBundle(payload)
+        }
+
+        return streamBundle
     }
 
     private fun getCategoryFromItem(type: Category.Type, subItem: Item): Category {

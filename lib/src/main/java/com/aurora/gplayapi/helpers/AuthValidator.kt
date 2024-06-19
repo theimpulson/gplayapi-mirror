@@ -18,7 +18,7 @@ package com.aurora.gplayapi.helpers
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.network.IHttpClient
 
-class AuthValidator(authData: AuthData) : BaseHelper(authData) {
+class AuthValidator(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

@@ -27,7 +27,8 @@ class WebTopChartsHelper : BaseWebHelper() {
      * - topgrossing
      * - movers_shakers
      * */
-    fun fetch(category: String, chart: String): StreamCluster {
+    @Throws(Exception::class)
+    fun getCluster(category: String, chart: String): StreamCluster {
         var webChart = chart
 
         // Remove apps_ prefix, web charts don't have it

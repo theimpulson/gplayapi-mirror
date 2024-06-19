@@ -21,7 +21,7 @@ import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class TopChartsHelper(authData: AuthData) : BaseHelper(authData) {
+class TopChartsHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

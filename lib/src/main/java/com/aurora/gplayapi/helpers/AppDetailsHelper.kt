@@ -31,7 +31,7 @@ import com.aurora.gplayapi.exceptions.ApiException
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
 
-class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
+class AppDetailsHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

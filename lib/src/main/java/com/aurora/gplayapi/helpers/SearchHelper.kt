@@ -15,6 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
+import android.annotation.SuppressLint
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
 import com.aurora.gplayapi.ListResponse
@@ -28,9 +29,13 @@ import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
+class SearchHelper(authData: AuthData) : NativeHelper(authData) {
 
     private val searchTypeExtra = "_-"
+
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
 
     private fun getSubBundle(item: Item): SubBundle {
         try {
@@ -52,14 +57,11 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
         return SubBundle("", SearchBundle.Type.BOGUS)
     }
 
-    override fun using(httpClient: IHttpClient) = apply {
-        this.httpClient = httpClient
-    }
-
     private var query: String = String()
 
+    @SuppressLint("DefaultLocale")
     @Throws(Exception::class)
-    open fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+    fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val paramString = String.format(
             "?q=%s&sb=%d&sst=%d&sst=%d",
@@ -78,7 +80,7 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    open fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
+    fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
         this.query = query
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val param: MutableMap<String, String> = HashMap()
@@ -109,7 +111,7 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    open fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
+    fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 
         bundleSet.forEach {
