@@ -1,17 +1,32 @@
 package com.aurora.gplayapi.helpers.web
 
-import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.data.builders.rpc.CategoryBuilder
 import com.aurora.gplayapi.data.models.Category
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.helpers.contracts.CategoryContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 
-class WebCategoryHelper : BaseWebHelper() {
+class WebCategoryHelper : BaseWebHelper(), CategoryContract {
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
 
-    fun getAllCategoriesList(type: Constants.WebCategoryType): List<Category> {
+    override fun getAllCategoriesList(type: Category.Type): List<Category> {
+        val webType: Category.WebType = when (type) {
+            Category.Type.GAME -> Category.WebType.GAME
+            Category.Type.APPLICATION -> Category.WebType.APPLICATION
+            Category.Type.FAMILY -> Category.WebType.FAMILY
+        }
+
+        return getAllCategoriesList(webType)
+    }
+
+    override fun getSubCategoryBundle(homeUrl: String): StreamBundle {
+        return StreamBundle()
+    }
+
+    private fun getAllCategoriesList(type: Category.WebType): List<Category> {
         val response = execute(arrayOf(CategoryBuilder.build()))
         val payload = response.dig<Collection<Any>>(
             CategoryBuilder.TAG,
@@ -28,7 +43,7 @@ class WebCategoryHelper : BaseWebHelper() {
     }
 
     private fun parseCategory(
-        type: Constants.WebCategoryType,
+        type: Category.WebType,
         payload: Collection<Any>
     ): List<Category> {
         return (payload.dig<ArrayList<Any>>(type.value, 3) ?: arrayListOf()).map {

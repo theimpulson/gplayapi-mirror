@@ -23,16 +23,17 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider
+import com.aurora.gplayapi.helpers.contracts.CategoryContract
 import com.aurora.gplayapi.network.IHttpClient
 
-class CategoryHelper(authData: AuthData) : NativeHelper(authData) {
+class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContract {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
 
     @Throws(Exception::class)
-    fun getAllCategoriesList(type: Category.Type): List<Category> {
+    override fun getAllCategoriesList(type: Category.Type): List<Category> {
         val categoryList: MutableList<Category> = ArrayList()
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
@@ -57,9 +58,10 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getSubCategoryBundle(homeUrl: String): StreamBundle {
+    override fun getSubCategoryBundle(homeUrl: String): StreamBundle {
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + homeUrl, headers)
+
         return getSubCategoryBundle(playResponse.responseBytes)
     }
 
@@ -72,7 +74,7 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getSubCategoryBundle(bytes: ByteArray?): StreamBundle {
+    private fun getSubCategoryBundle(bytes: ByteArray?): StreamBundle {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
         var streamBundle = StreamBundle()
 

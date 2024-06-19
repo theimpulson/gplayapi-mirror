@@ -27,9 +27,10 @@ import com.aurora.gplayapi.data.models.PlayResponse
 import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
+import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 
-class SearchHelper(authData: AuthData) : NativeHelper(authData) {
+class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract {
 
     private val searchTypeExtra = "_-"
 
@@ -61,7 +62,7 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData) {
 
     @SuppressLint("DefaultLocale")
     @Throws(Exception::class)
-    fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+    override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val paramString = String.format(
             "?q=%s&sb=%d&sst=%d&sst=%d",
@@ -80,7 +81,7 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
+    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val param: MutableMap<String, String> = HashMap()
@@ -111,7 +112,7 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
+    override fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 
         bundleSet.forEach {

@@ -47,7 +47,7 @@ class StreamHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getListResponse(type: Type, category: Category): ListResponse {
+    private fun getListResponse(type: Type, category: Category): ListResponse {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"

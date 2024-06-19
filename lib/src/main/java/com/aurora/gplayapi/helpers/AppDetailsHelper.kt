@@ -28,10 +28,11 @@ import com.aurora.gplayapi.data.models.details.DevStream
 import com.aurora.gplayapi.data.models.details.TestingProgramStatus
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.exceptions.ApiException
+import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
 
-class AppDetailsHelper(authData: AuthData) : NativeHelper(authData) {
+class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsContract {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
@@ -88,20 +89,20 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getAppByPackageName(packageName: String): App {
+    override fun getAppByPackageName(packageName: String): App {
         val detailsResponse = getDetailsResponseByPackageName(packageName)
         return AppBuilder.build(detailsResponse)
     }
 
     @Throws(Exception::class)
-    fun getAppByPackageName(packageList: List<String>): List<App> {
-        if (packageList.isEmpty()) {
+    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
+        if (packageNameList.isEmpty()) {
             return emptyList()
         }
 
         val appList: MutableList<App> = ArrayList()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val request = getBulkDetailsBytes(packageList)
+        val request = getBulkDetailsBytes(packageNameList)
 
         if (!headers.containsKey("Content-Type")) {
             headers["Content-Type"] = "application/x-protobuf"

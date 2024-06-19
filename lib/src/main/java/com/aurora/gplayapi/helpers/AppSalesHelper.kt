@@ -48,7 +48,7 @@ class AppSalesHelper(authData: AuthData) : NativeHelper(authData) {
         } else {
             val appDetailsHelper = AppDetailsHelper(authData)
             return appDetailsHelper.getAppByPackageName(
-                packageList = saleBundle.sales.map { it.idandroid }
+                packageNameList = saleBundle.sales.map { it.idandroid }
                     .toList()
             )
         }

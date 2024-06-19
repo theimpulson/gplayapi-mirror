@@ -4,11 +4,12 @@ import com.aurora.gplayapi.data.builders.WebAppBuilder
 import com.aurora.gplayapi.data.builders.rpc.MetadataBuilder
 import com.aurora.gplayapi.data.builders.rpc.RpcBuilder
 import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
 import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 
-class WebAppDetailsHelper {
+class WebAppDetailsHelper : AppDetailsContract {
     private var httpClient: IHttpClient = DefaultHttpClient
 
     fun using(httpClient: IHttpClient) = apply {
@@ -23,8 +24,8 @@ class WebAppDetailsHelper {
             }
     }
 
-    fun getAppByPackageName(packageName: String): App {
-        val apps = getAppByPackageNames(listOf(packageName))
+    override fun getAppByPackageName(packageName: String): App {
+        val apps = getAppByPackageName(listOf(packageName))
         return if (apps.isNotEmpty()) {
             apps.first()
         } else {
@@ -32,12 +33,12 @@ class WebAppDetailsHelper {
         }
     }
 
-    fun getAppByPackageNames(packageNames: List<String>): MutableList<App> {
-        val requests = packageNames.map { packageName -> MetadataBuilder.build(packageName) }
+    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
+        val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
         val response = execute(requests.toTypedArray())
         val apps: MutableList<App> = mutableListOf()
 
-        packageNames.forEach { packageName ->
+        packageNameList.forEach { packageName ->
             val payload = response.dig<Any>(MetadataBuilder.TAG, packageName)
             if (payload != null) {
                 apps.add(

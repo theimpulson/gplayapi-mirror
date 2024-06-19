@@ -4,18 +4,19 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
 import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-class WebSearchHelper : BaseWebHelper() {
+class WebSearchHelper : BaseWebHelper(), SearchContract {
     private var query: String = String()
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
 
-    fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+    override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val searchResponse = execute(arrayOf(SearchSuggestionQueryBuilder.build(query)))
 
         val payload = searchResponse.dig<Collection<Any>>(
@@ -37,7 +38,7 @@ class WebSearchHelper : BaseWebHelper() {
         return suggestions
     }
 
-    fun searchResults(query: String, nextPageUrl: String): SearchBundle {
+    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
 
         val searchBundle = SearchBundle()
@@ -88,7 +89,7 @@ class WebSearchHelper : BaseWebHelper() {
         return searchBundle
     }
 
-    fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
+    override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 
         bundleSet.forEach {

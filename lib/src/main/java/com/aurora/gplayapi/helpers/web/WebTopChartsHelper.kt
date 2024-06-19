@@ -2,11 +2,12 @@ package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.data.builders.rpc.TopChartsBuilder
 import com.aurora.gplayapi.data.models.StreamCluster
+import com.aurora.gplayapi.helpers.contracts.TopChartsContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
-class WebTopChartsHelper : BaseWebHelper() {
+class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
@@ -28,7 +29,7 @@ class WebTopChartsHelper : BaseWebHelper() {
      * - movers_shakers
      * */
     @Throws(Exception::class)
-    fun getCluster(category: String, chart: String): StreamCluster {
+    override fun getCluster(category: String, chart: String): StreamCluster {
         var webChart = chart
 
         // Remove apps_ prefix, web charts don't have it
@@ -69,5 +70,12 @@ class WebTopChartsHelper : BaseWebHelper() {
         }
 
         return streamCluster
+    }
+
+    /**
+     * Irrelevant for web client as it doesn't support pagination
+     */
+    override fun getNextStreamCluster(nextPageUrl: String): StreamCluster {
+        return StreamCluster()
     }
 }
