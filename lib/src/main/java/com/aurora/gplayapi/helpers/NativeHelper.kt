@@ -292,16 +292,12 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     fun getEditorChoiceBundles(listResponse: ListResponse?): List<EditorChoiceBundle> {
         val editorChoiceBundles: MutableList<EditorChoiceBundle> = ArrayList()
 
-        listResponse?.let { it ->
-            it.itemList.forEach {
-                it?.let {
-                    it.subItemList.forEach {
-                        it?.let {
-                            val bundle = getEditorChoiceBundles(it)
-                            if (bundle.bundleChoiceClusters.isNotEmpty()) {
-                                editorChoiceBundles.add(bundle)
-                            }
-                        }
+        listResponse?.itemList?.forEach { item ->
+            item?.subItemList?.forEach { subItem ->
+                subItem?.let {
+                    val bundle = getEditorChoiceBundles(it)
+                    if (bundle.bundleChoiceClusters.isNotEmpty()) {
+                        editorChoiceBundles.add(bundle)
                     }
                 }
             }
