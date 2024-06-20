@@ -43,9 +43,8 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
             "$category$webChart"
         )
 
-        val streamCluster = StreamCluster()
         if (payload.isNullOrEmpty()) {
-            return streamCluster
+            return StreamCluster()
         }
 
         val packageNames: List<String> =
@@ -56,18 +55,15 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
             } ?: emptyList()
 
         if (packageNames.isEmpty()) {
-            return streamCluster
+            return StreamCluster()
         }
 
         val apps = getAppDetails(packageNames)
-
-        streamCluster.apply {
-            clusterTitle = category
-            clusterSubtitle = chart
+        return StreamCluster(
+            clusterTitle = category,
+            clusterSubtitle = chart,
             clusterAppList = apps
-        }
-
-        return streamCluster
+        )
     }
 
     /**

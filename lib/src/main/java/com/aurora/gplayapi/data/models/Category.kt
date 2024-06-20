@@ -15,12 +15,13 @@
 
 package com.aurora.gplayapi.data.models
 
-class Category {
-    var title: String = String()
-    var imageUrl: String = String()
-    var browseUrl: String = String()
-    var color: String = String()
-    var type: Type = Type.APPLICATION
+data class Category(
+    val title: String = String(),
+    val imageUrl: String = String(),
+    val browseUrl: String = String(),
+    val color: String = String(),
+    val type: Type = Type.APPLICATION
+) {
 
     enum class Type(val value: String) {
         APPLICATION("APPLICATION"),

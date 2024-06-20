@@ -102,10 +102,11 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
         if (responseBody.isSuccessful) {
             val payload = getPrefetchPayLoad(responseBody.responseBytes)
             if (payload.hasListResponse()) {
-                searchBundle = getSearchBundle(payload.listResponse)
-                searchBundle.subBundles = searchBundle.subBundles
-                    .filter { it.type == SearchBundle.Type.GENERIC }
-                    .toMutableSet()
+                searchBundle = getSearchBundle(payload.listResponse).copy(
+                    subBundles = searchBundle.subBundles
+                        .filter { it.type == SearchBundle.Type.GENERIC }
+                        .toMutableSet()
+                )
                 return searchBundle
             }
         }
@@ -149,7 +150,6 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
                 searchBundle.subBundles.add(getSubBundle(item))
             }
         }
-        searchBundle.appList = appList
-        return searchBundle
+        return searchBundle.copy(appList = appList)
     }
 }

@@ -15,10 +15,11 @@
 
 package com.aurora.gplayapi.data.models
 
-class ReviewCluster {
-    var id: Int = -1
-    var nextPageUrl: String = String()
-    var reviewList: MutableList<Review> = mutableListOf()
+data class ReviewCluster(
+    val id: Int = -1,
+    val nextPageUrl: String = String(),
+    val reviewList: MutableList<Review> = mutableListOf()
+) {
 
     fun hasNext(): Boolean {
         return nextPageUrl.isNotBlank()

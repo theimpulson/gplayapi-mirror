@@ -15,10 +15,10 @@
 
 package com.aurora.gplayapi.data.models
 
-class PlayResponse {
-    var responseBytes: ByteArray = byteArrayOf()
-    var errorBytes: ByteArray = byteArrayOf()
-    var errorString: String = ("No Error")
-    var isSuccessful: Boolean = false
-    var code: Int = 0
-}
+data class PlayResponse(
+    val responseBytes: ByteArray = byteArrayOf(),
+    val errorBytes: ByteArray = byteArrayOf(),
+    val errorString: String = ("No Error"),
+    val isSuccessful: Boolean = false,
+    val code: Int = 0
+)

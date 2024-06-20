@@ -15,8 +15,8 @@
 
 package com.aurora.gplayapi.data.models.sale
 
-class SaleBundle(
-    var currency: String,
-    var currencycode: String,
-    var sales: List<AppOnSale>
+data class SaleBundle(
+    val currency: String,
+    val currencycode: String,
+    val sales: List<AppOnSale>
 )

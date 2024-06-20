@@ -15,8 +15,8 @@
 
 package com.aurora.gplayapi.data.models.editor
 
-class EditorChoiceBundle {
-    var id: Int = -1
-    var bundleTitle: String = String()
-    var bundleChoiceClusters: List<EditorChoiceCluster> = ArrayList()
-}
+data class EditorChoiceBundle(
+    val id: Int = -1,
+    val bundleTitle: String = String(),
+    val bundleChoiceClusters: List<EditorChoiceCluster> = ArrayList()
+)

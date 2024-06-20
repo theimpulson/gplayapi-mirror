@@ -40,26 +40,36 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
     }
 
     private fun getDevStream(payload: Payload): DevStream {
-        val devStream = DevStream()
         val listResponse: ListResponse = payload.listResponse
         for (item in listResponse.itemList) {
             for (subItem in item.subItemList) {
                 if (subItem.categoryId != 3) {
                     if (subItem.hasAnnotations() && subItem.annotations.hasOverlayMetaData()) {
-                        if (subItem.annotations.overlayMetaData.hasOverlayTitle()) {
-                            devStream.title = subItem.annotations.overlayMetaData.overlayTitle.title
-                            devStream.imgUrl =
+                        val hasTitle = subItem.annotations.overlayMetaData.hasOverlayTitle()
+                        val hasDesc = subItem.annotations.overlayMetaData.hasOverlayDescription()
+                        return DevStream(
+                            title = if (hasTitle) {
+                                subItem.annotations.overlayMetaData.overlayTitle.title
+                            } else {
+                                String()
+                            },
+                            imgUrl = if (hasTitle) {
                                 subItem.annotations.overlayMetaData.overlayTitle.compositeImage.url
-                        }
-                        if (subItem.annotations.overlayMetaData.hasOverlayDescription()) {
-                            devStream.description =
+                            } else {
+                                String()
+                            },
+                            description = if (hasDesc) {
                                 subItem.annotations.overlayMetaData.overlayDescription.description
-                        }
+                            } else {
+                                String()
+                            },
+                            streamBundle = getStreamBundle(payload.listResponse)
+                        )
                     }
                 }
             }
         }
-        return devStream
+        return DevStream()
     }
 
     @Throws(Exception::class)
@@ -147,15 +157,12 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
             params
         )
 
-        var devStream = DevStream()
-
         if (playResponse.isSuccessful) {
             val payload = getPayLoadFromBytes(playResponse.responseBytes)
-            devStream = getDevStream(payload)
-            devStream.streamBundle = getStreamBundle(payload.listResponse)
+            return getDevStream(payload)
         }
 
-        return devStream
+        return DevStream()
     }
 
     @Throws(IOException::class)

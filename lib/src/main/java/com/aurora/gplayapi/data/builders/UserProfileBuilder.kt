@@ -20,10 +20,10 @@ import com.aurora.gplayapi.data.models.UserProfile
 internal object UserProfileBuilder {
 
     fun build(userProfileProto: com.aurora.gplayapi.UserProfile): UserProfile {
-        return UserProfile().apply {
-            name = userProfileProto.name
-            email = userProfileProto.profileDescription
+        return UserProfile(
+            name = userProfileProto.name,
+            email = userProfileProto.profileDescription,
             artwork = ArtworkBuilder.build(userProfileProto.getImage(0))
-        }
+        )
     }
 }

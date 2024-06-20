@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel : ViewModel() {
 
-    private val _authData = MutableStateFlow(AuthData("", ""))
+    private val _authData: MutableStateFlow<AuthData?> = MutableStateFlow(null)
     val authData = _authData.asStateFlow()
 
     fun buildAuthData(context: Context) {

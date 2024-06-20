@@ -5,6 +5,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.BaseHelper
+import com.aurora.gplayapi.utils.Commons
 import com.aurora.gplayapi.utils.dig
 
 abstract class BaseWebHelper : BaseHelper() {
@@ -15,7 +16,7 @@ abstract class BaseWebHelper : BaseHelper() {
     }
 
     fun parseBundle(category: String, payload: Any): StreamBundle {
-        val streamBundle = StreamBundle()
+        var streamBundle = StreamBundle()
         payload.dig<Collection<Any>>(0, 1)?.let { entries ->
             entries.mapNotNull { entry ->
                 val topCharts = entry.dig(27, 1) ?: arrayListOf<Any>()
@@ -45,16 +46,15 @@ abstract class BaseWebHelper : BaseHelper() {
                 StreamCluster()
             }
                 .filter { it.clusterAppList.isNotEmpty() }
-                .forEach { streamCluster ->
-                    streamBundle.streamClusters[streamCluster.id] = streamCluster
+                .also {
+                    streamBundle = StreamBundle(
+                        id = Commons.getUniqueId(),
+                        streamTitle = category,
+                        streamNextPageUrl = payload.dig(0, 3, 1) ?: "",
+                        streamClusters = it.associateBy { b -> b.id }.toMutableMap()
+                    )
                 }
         }
-
-        streamBundle.apply {
-            streamTitle = category
-            streamNextPageUrl = payload.dig(0, 3, 1) ?: ""
-        }
-
         return streamBundle
     }
 
@@ -63,11 +63,11 @@ abstract class BaseWebHelper : BaseHelper() {
         clusterIndex: Int,
         appIndex: Array<Int> = arrayOf(0, 0)
     ): StreamCluster {
-        return StreamCluster().apply {
-            clusterTitle = payload.dig(clusterIndex, 1, 0) ?: ""
-            clusterSubtitle = payload.dig(clusterIndex, 1, 1) ?: ""
-            clusterNextPageUrl = payload.dig(clusterIndex, 1, 3, 1) ?: ""
-            clusterBrowseUrl = payload.dig(clusterIndex, 1, 2, 4, 2) ?: ""
+        return StreamCluster(
+            clusterTitle = payload.dig(clusterIndex, 1, 0) ?: "",
+            clusterSubtitle = payload.dig(clusterIndex, 1, 1) ?: "",
+            clusterNextPageUrl = payload.dig(clusterIndex, 1, 3, 1) ?: "",
+            clusterBrowseUrl = payload.dig(clusterIndex, 1, 2, 4, 2) ?: "",
             clusterAppList = getAppDetails(
                 (payload.dig<ArrayList<Any>>(clusterIndex, 0) ?: arrayListOf()).mapNotNull {
                     it.dig(
@@ -75,7 +75,7 @@ abstract class BaseWebHelper : BaseHelper() {
                     )
                 }
             )
-        }
+        )
     }
 
     fun getAppDetails(packageNames: List<String>): MutableList<App> {

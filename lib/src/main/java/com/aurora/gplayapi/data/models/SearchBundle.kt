@@ -15,18 +15,20 @@
 
 package com.aurora.gplayapi.data.models
 
-class SearchBundle {
-    var id: Int = -1
-    var query: String = String()
-    var suggestionTerms: MutableSet<String> = HashSet()
-    var subBundles: MutableSet<SubBundle> = hashSetOf()
-    var appList: MutableList<App> = mutableListOf()
+data class SearchBundle(
+    val id: Int = -1,
+    val query: String = String(),
+    val suggestionTerms: MutableSet<String> = HashSet(),
+    val subBundles: MutableSet<SubBundle> = hashSetOf(),
+    val appList: MutableList<App> = mutableListOf()
+) {
 
     enum class Type {
         GENERIC, SIMILAR, RELATED_SEARCHES, RELATED_TO_YOUR_SEARCH, YOU_MIGHT_ALSO_LIKE, BOGUS
     }
 
-    class SubBundle(var nextPageUrl: String, var type: Type) {
+    data class SubBundle(val nextPageUrl: String, val type: Type) {
+
         override fun hashCode(): Int {
             return nextPageUrl.hashCode()
         }

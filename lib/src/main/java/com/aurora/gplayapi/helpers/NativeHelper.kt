@@ -146,13 +146,13 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         val subtitle = if (item.hasSubtitle()) item.subtitle else String()
         val browseUrl = getBrowseUrl(item)
 
-        return StreamCluster().apply {
-            clusterTitle = title
-            clusterSubtitle = subtitle
-            clusterBrowseUrl = browseUrl
-            clusterNextPageUrl = getNextPageUrl(item)
+        return StreamCluster(
+            clusterTitle = title,
+            clusterSubtitle = subtitle,
+            clusterBrowseUrl = browseUrl,
+            clusterNextPageUrl = getNextPageUrl(item),
             clusterAppList = getAppsFromItem(item)
-        }
+        )
     }
 
     fun getStreamCluster(payload: Payload): StreamCluster {
@@ -203,11 +203,11 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
                 nextPageUrl = getNextPageUrl(item)
             }
         }
-        return StreamBundle().apply {
-            streamTitle = title
-            streamNextPageUrl = nextPageUrl
+        return StreamBundle(
+            streamTitle = title,
+            streamNextPageUrl = nextPageUrl,
             streamClusters = streamClusterMap
-        }
+        )
     }
 
     /*------------------------------------- EDITOR'S CHOICE CLUSTER & BUNDLES ------------------------------------*/
@@ -229,12 +229,12 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
                 )
             }
         }
-        return EditorChoiceCluster().apply {
-            id = browseUrl.hashCode()
-            clusterTitle = title
-            clusterBrowseUrl = browseUrl
+        return EditorChoiceCluster(
+            id = browseUrl.hashCode(),
+            clusterTitle = title,
+            clusterBrowseUrl = browseUrl,
             clusterArtwork = artworkList
-        }
+        )
     }
 
     private fun getEditorChoiceBundles(item: Item): EditorChoiceBundle {
@@ -244,11 +244,11 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
             choiceClusters.add(getEditorChoiceCluster(subItem))
         }
 
-        return EditorChoiceBundle().apply {
-            id = title.hashCode()
-            bundleTitle = title
+        return EditorChoiceBundle(
+            id = title.hashCode(),
+            bundleTitle = title,
             bundleChoiceClusters = choiceClusters
-        }
+        )
     }
 
     fun getEditorChoiceBundles(listResponse: ListResponse?): List<EditorChoiceBundle> {

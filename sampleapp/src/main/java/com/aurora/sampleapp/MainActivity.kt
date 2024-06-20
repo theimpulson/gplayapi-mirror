@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GPlayApiTheme {
-                Scaffold() {
+                Scaffold {
                     val context = LocalContext.current
                     LaunchedEffect(key1 = Unit) { viewModel.buildAuthData(context) }
 
@@ -46,22 +46,24 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center
                     ) {
 
-                        val authData: AuthData by viewModel.authData.collectAsStateWithLifecycle()
+                        val authData: AuthData? by viewModel.authData.collectAsStateWithLifecycle()
 
-                        if (authData.email.isNotBlank()) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .requiredSize(192.dp)
-                                    .clip(RoundedCornerShape(20.dp)),
-                                model = authData.userProfile?.artwork?.url,
-                                contentDescription = ""
-                            )
+                        if (authData != null) {
+                            authData?.let { data ->
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .padding(10.dp)
+                                        .requiredSize(192.dp)
+                                        .clip(RoundedCornerShape(20.dp)),
+                                    model = data.userProfile?.artwork?.url,
+                                    contentDescription = ""
+                                )
 
-                            Text(
-                                modifier = Modifier.padding(vertical = 20.dp),
-                                text = authData.email
-                            )
+                                Text(
+                                    modifier = Modifier.padding(vertical = 20.dp),
+                                    text = data.email
+                                )
+                            }
 
                             Button(onClick = { viewModel.doSomething(context) }) {
                                 Text(text = "Do something!")

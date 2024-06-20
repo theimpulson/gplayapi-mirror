@@ -49,9 +49,8 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
             0
         )
 
-        val searchBundle = SearchBundle()
         if (payload.isNullOrEmpty()) {
-            return searchBundle
+            return SearchBundle()
         }
 
         // First stream is search stream, following are app streams (made-up names :p)
@@ -67,25 +66,22 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
         } ?: emptyList()
 
         if (packageNames.isEmpty()) {
-            return searchBundle
+            return SearchBundle()
         }
 
         val nextPageToken: String = payload?.dig<String>(0, 7, 1) ?: ""
 
-        searchBundle.apply {
-            this.id = UUID.randomUUID().hashCode()
-            this.appList = getAppDetails(packageNames)
-            this.query = query
-            this.subBundles = hashSetOf()
-        }
-
         // Include sub-bundles only if there is a next page
-        if (nextPageToken.isNotEmpty()) {
-            val subBundle = SearchBundle.SubBundle(nextPageToken, SearchBundle.Type.GENERIC)
-            searchBundle.subBundles = hashSetOf(subBundle)
-        }
-
-        return searchBundle
+        return SearchBundle(
+            id = UUID.randomUUID().hashCode(),
+            appList = getAppDetails(packageNames),
+            query = query,
+            subBundles = if (nextPageToken.isNotEmpty()) {
+                hashSetOf(SearchBundle.SubBundle(nextPageToken, SearchBundle.Type.GENERIC))
+            } else {
+                hashSetOf()
+            }
+        )
     }
 
     override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {

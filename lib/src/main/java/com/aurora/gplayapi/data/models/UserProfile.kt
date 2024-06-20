@@ -15,8 +15,8 @@
 
 package com.aurora.gplayapi.data.models
 
-class UserProfile {
-    var name: String = String()
-    var email: String = String()
-    var artwork: Artwork = Artwork()
-}
+data class UserProfile(
+    val name: String = String(),
+    val email: String = String(),
+    val artwork: Artwork = Artwork()
+)

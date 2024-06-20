@@ -56,12 +56,12 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
     }
 
     private fun getCategoryFromItem(type: Category.Type, subItem: Item): Category {
-        val category = Category()
-        category.title = subItem.title
-        category.imageUrl = subItem.getImage(0).imageUrl
-        category.color = subItem.getImage(0).fillColorRGB
-        category.browseUrl = subItem.annotations.annotationLink.resolvedLink.browseUrl
-        category.type = type
-        return category
+        return Category(
+            title = subItem.title,
+            imageUrl = subItem.getImage(0).imageUrl,
+            color = subItem.getImage(0).fillColorRGB,
+            browseUrl = subItem.annotations.annotationLink.resolvedLink.browseUrl,
+            type = type
+        )
     }
 }

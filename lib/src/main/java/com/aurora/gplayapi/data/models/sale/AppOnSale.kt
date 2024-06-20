@@ -15,15 +15,15 @@
 
 package com.aurora.gplayapi.data.models.sale
 
-class AppOnSale(
-    var category: String,
-    var rating: String,
-    var id: String,
-    var idandroid: String,
-    var downloadsmin: String,
-    var nameapp: String,
-    var price: String,
-    var icon: String,
-    var oldprice: String,
-    var dateup: String
+data class AppOnSale(
+    val category: String,
+    val rating: String,
+    val id: String,
+    val idandroid: String,
+    val downloadsmin: String,
+    val nameapp: String,
+    val price: String,
+    val icon: String,
+    val oldprice: String,
+    val dateup: String
 )

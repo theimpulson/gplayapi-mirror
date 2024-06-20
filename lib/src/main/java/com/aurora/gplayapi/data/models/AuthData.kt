@@ -20,34 +20,49 @@ import java.util.Locale
 
 class AuthData {
 
-    private constructor()
-
-    constructor(email: String, aasToken: String) {
+    internal constructor(email: String, aasToken: String) {
         this.email = email
         this.aasToken = aasToken
     }
 
-    constructor(email: String, authToken: String, insecure: Boolean = true) {
+    internal constructor(email: String, authToken: String, isAnonymous: Boolean) {
         this.email = email
         this.authToken = authToken
-        this.isAnonymous = true
+        this.isAnonymous = isAnonymous
     }
 
     var email: String = String()
+        internal set
     var aasToken: String = String()
-    var isAnonymous: Boolean = false
+        internal set
     var authToken: String = String()
+        internal set
+    var isAnonymous: Boolean = false
+        internal set
     var gsfId: String = String()
+        internal set
     var tokenDispenserUrl: String = String()
+        internal set
     var ac2dmToken: String = String()
+        internal set
     var androidCheckInToken: String = String()
+        internal set
     var deviceCheckInConsistencyToken: String = String()
+        internal set
     var deviceConfigToken: String = String()
+        internal set
     var experimentsConfigToken: String = String()
+        internal set
     var gcmToken: String = String()
+        internal set
     var oAuthLoginToken: String = String()
+        internal set
     var dfeCookie: String = String()
+        internal set
     var locale: Locale = Locale.getDefault()
+        internal set
     var deviceInfoProvider: DeviceInfoProvider? = null
+        internal set
     var userProfile: UserProfile? = null
+        internal set
 }

@@ -17,9 +17,9 @@ package com.aurora.gplayapi.data.models.editor
 
 import com.aurora.gplayapi.data.models.Artwork
 
-class EditorChoiceCluster {
-    var id: Int = -1
-    var clusterTitle: String = String()
-    var clusterBrowseUrl: String = String()
-    var clusterArtwork: List<Artwork> = ArrayList()
-}
+data class EditorChoiceCluster(
+    val id: Int = -1,
+    val clusterTitle: String = String(),
+    val clusterBrowseUrl: String = String(),
+    val clusterArtwork: List<Artwork> = ArrayList()
+)

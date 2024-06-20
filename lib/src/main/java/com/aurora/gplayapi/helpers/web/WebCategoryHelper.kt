@@ -39,11 +39,12 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
 
     private fun parseCategory(type: Category.WebType, payload: Collection<Any>): List<Category> {
         return (payload.dig<ArrayList<Any>>(type.value, 3) ?: arrayListOf()).map {
-            Category().apply {
-                title = it.dig(1, 1) ?: ""
-                browseUrl = it.dig(1, 0) ?: ""
+            val browseUrl = it.dig(1, 0) ?: ""
+            Category(
+                title = it.dig(1, 1) ?: "",
+                browseUrl = browseUrl,
                 imageUrl = getImageUrl(type, browseUrl)
-            }
+            )
         }
     }
 

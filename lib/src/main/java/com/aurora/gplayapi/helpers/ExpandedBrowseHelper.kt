@@ -37,14 +37,13 @@ class ExpandedBrowseHelper(authData: AuthData) : NativeHelper(authData) {
         val title = if (item.hasTitle()) item.title else String()
         val subtitle = if (item.hasSubtitle()) item.subtitle else String()
         val browseUrl = getBrowseUrl(item)
-
-        return StreamCluster().apply {
-            clusterTitle = title
-            clusterSubtitle = subtitle
-            clusterBrowseUrl = browseUrl
-            clusterNextPageUrl = getNextPageUrl(item)
+        return StreamCluster(
+            clusterTitle = title,
+            clusterSubtitle = subtitle,
+            clusterBrowseUrl = browseUrl,
+            clusterNextPageUrl = getNextPageUrl(item),
             clusterAppList = getAppsFromItem(item)
-        }
+        )
     }
 
     override fun getAppsFromItem(item: Item): MutableList<App> {

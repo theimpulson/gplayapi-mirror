@@ -82,17 +82,17 @@ internal object DefaultHttpClient : IHttpClient {
     }
 
     override fun getAuth(url: String): PlayResponse {
-        return PlayResponse().apply {
-            isSuccessful = false
+        return PlayResponse(
+            isSuccessful = false,
             code = 444
-        }
+        )
     }
 
     override fun postAuth(url: String, body: ByteArray): PlayResponse {
-        return PlayResponse().apply {
-            isSuccessful = false
+        return PlayResponse(
+            isSuccessful = false,
             code = 444
-        }
+        )
     }
 
     override fun post(url: String, headers: Map<String, String>, body: ByteArray): PlayResponse {
@@ -140,18 +140,12 @@ internal object DefaultHttpClient : IHttpClient {
 
     @JvmStatic
     private fun buildPlayResponse(response: Response): PlayResponse {
-        return PlayResponse().apply {
-            isSuccessful = response.isSuccessful
-            code = response.code
-
-            if (response.body != null) {
-                responseBytes = response.body!!.bytes()
-            }
-
-            if (!isSuccessful) {
-                errorString = response.message
-            }
-        }.also {
+        return PlayResponse(
+            isSuccessful = response.isSuccessful,
+            code = response.code,
+            responseBytes = if (response.body != null) response.body!!.bytes() else byteArrayOf(),
+            errorString = if (!response.isSuccessful) response.message else String()
+        ).also {
             _responseCode.value = response.code
             Log.d(TAG, "OKHTTP [${response.code}] ${response.request.url}")
         }
