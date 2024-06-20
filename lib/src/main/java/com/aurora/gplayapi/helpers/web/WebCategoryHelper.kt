@@ -50,7 +50,33 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
             Category().apply {
                 title = it.dig(1, 1) ?: ""
                 browseUrl = it.dig(1, 0) ?: ""
+                imageUrl = getImageUrl(type, browseUrl)
             }
         }
+    }
+
+    private fun getImageUrl(type: Category.WebType, browseUrl: String): String {
+        // Sample: https://play-apps-features.googleusercontent.com/png/gm3_categories_icons_apps/auto_and_vehicles.png
+        val category = when (type) {
+            Category.WebType.APPLICATION -> "apps"
+            Category.WebType.GAME -> "games"
+            Category.WebType.FAMILY -> "family"
+        }
+
+        var subCategory = browseUrl
+            .split("/")
+            .last()
+            .lowercase()
+            .replace("game_", "")
+            .replace("app_", "")
+
+
+        subCategory = when (subCategory) {
+            "watch_face" -> return "watch_faces"
+            "watch_app" -> return "watch_apps"
+            else -> subCategory
+        }
+
+        return "https://play-apps-features.googleusercontent.com/png/gm3_categories_icons_${category}/${subCategory}.png"
     }
 }
