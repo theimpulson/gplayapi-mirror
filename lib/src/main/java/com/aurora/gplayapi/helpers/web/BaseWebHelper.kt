@@ -10,11 +10,9 @@ import java.util.UUID
 
 abstract class BaseWebHelper : BaseHelper() {
     fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>> {
-        return WebClient(httpClient)
-            .fetch(freq)
-            .let {
-                RpcBuilder.wrapResponse(it)
-            }
+        val response = WebClient(httpClient).fetch(freq)
+
+        return RpcBuilder.wrapResponse(response)
     }
 
     fun parseBundle(category: String, payload: Any): StreamBundle {

@@ -42,10 +42,7 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
         return parseCategory(type, categoryPayload)
     }
 
-    private fun parseCategory(
-        type: Category.WebType,
-        payload: Collection<Any>
-    ): List<Category> {
+    private fun parseCategory(type: Category.WebType, payload: Collection<Any>): List<Category> {
         return (payload.dig<ArrayList<Any>>(type.value, 3) ?: arrayListOf()).map {
             Category().apply {
                 title = it.dig(1, 1) ?: ""
