@@ -5,10 +5,13 @@ import com.aurora.gplayapi.data.builders.rpc.NextBundleBuilder
 import com.aurora.gplayapi.data.builders.rpc.NextClusterBuilder
 import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
+import com.aurora.gplayapi.helpers.contracts.StreamContract
+import com.aurora.gplayapi.helpers.contracts.StreamContract.Category
+import com.aurora.gplayapi.helpers.contracts.StreamContract.Type
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
 
-class WebStreamHelper : BaseWebHelper() {
+class WebStreamHelper : BaseWebHelper(), StreamContract {
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
@@ -24,11 +27,12 @@ class WebStreamHelper : BaseWebHelper() {
      * - "GAME" for Games
      * + All known categories supported by Google Play Store
      */
-    fun fetch(category: String): StreamBundle {
-        val response = execute(arrayOf(FeaturedStreamBuilder.build(category)))
+    override fun fetch(type: Type, category: Category): StreamBundle {
+        val webCategory = category.value
+        val response = execute(arrayOf(FeaturedStreamBuilder.build(webCategory)))
         val payload = response.dig<Collection<Any>>(
             FeaturedStreamBuilder.TAG,
-            category
+            webCategory
         )
 
         var streamBundle = StreamBundle()
@@ -36,7 +40,7 @@ class WebStreamHelper : BaseWebHelper() {
             return streamBundle
         }
 
-        streamBundle = parseBundle(category, payload)
+        streamBundle = parseBundle(webCategory, payload)
 
         return streamBundle
     }
@@ -47,7 +51,7 @@ class WebStreamHelper : BaseWebHelper() {
      * @return The next stream cluster.
      * @see StreamCluster
      */
-    fun nextStreamCluster(nextPageUrl: String): StreamCluster {
+    override fun nextStreamCluster(nextPageUrl: String): StreamCluster {
         val response = execute(arrayOf(NextClusterBuilder.build(nextPageUrl)))
 
         val payload = response.dig<Collection<Any>>(
@@ -74,12 +78,13 @@ class WebStreamHelper : BaseWebHelper() {
      * @return The next stream bundle.
      * @see StreamBundle
      */
-    fun nextStreamBundle(category: String, nextPageToken: String): StreamBundle {
-        val response = execute(arrayOf(NextBundleBuilder.build(category, nextPageToken)))
+    override fun nextStreamBundle(category: Category, nextPageToken: String): StreamBundle {
+        val webCategory = category.value
+        val response = execute(arrayOf(NextBundleBuilder.build(webCategory, nextPageToken)))
 
         val payload = response.dig<Collection<Any>>(
             NextBundleBuilder.TAG,
-            category
+            webCategory
         )
 
         var streamBundle = StreamBundle()
@@ -87,7 +92,7 @@ class WebStreamHelper : BaseWebHelper() {
             return streamBundle
         }
 
-        streamBundle = parseBundle(category, payload)
+        streamBundle = parseBundle(webCategory, payload)
 
         return streamBundle
     }

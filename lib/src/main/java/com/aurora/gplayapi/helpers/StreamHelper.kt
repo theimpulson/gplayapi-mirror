@@ -19,14 +19,30 @@ import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.models.editor.EditorChoiceBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
+import com.aurora.gplayapi.helpers.contracts.StreamContract
+import com.aurora.gplayapi.helpers.contracts.StreamContract.Category
+import com.aurora.gplayapi.helpers.contracts.StreamContract.Type
 import com.aurora.gplayapi.network.IHttpClient
 
-class StreamHelper(authData: AuthData) : NativeHelper(authData) {
+class StreamHelper(authData: AuthData) : NativeHelper(authData), StreamContract {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
+    }
+
+    override fun fetch(type: Type, category: Category): StreamBundle {
+        return getNavStream(type, category)
+    }
+
+    override fun nextStreamCluster(nextPageUrl: String): StreamCluster {
+        return getNextStreamCluster(nextPageUrl)
+    }
+
+    override fun nextStreamBundle(category: Category, nextPageToken: String): StreamBundle {
+        return next(nextPageToken)
     }
 
     @Throws(Exception::class)
@@ -68,21 +84,5 @@ class StreamHelper(authData: AuthData) : NativeHelper(authData) {
         } else {
             ListResponse.getDefaultInstance()
         }
-    }
-
-    enum class Category(var value: String) {
-        APPLICATION("APPLICATION"),
-        GAME("GAME"),
-        NONE("NONE");
-    }
-
-    enum class Type(var value: String) {
-        EARLY_ACCESS("appsEarlyAccessStream"),
-        EDITOR_CHOICE("getAppsEditorsChoiceStream"),
-        HOME("getHomeStream"),
-        MY_APPS_LIBRARY("myAppsStream?tab=LIBRARY"),
-        PREMIUM_GAMES("getAppsPremiumGameStream"),
-        SUB_NAV("subnavHome"),
-        TOP_CHART("topChartsStream");
     }
 }
