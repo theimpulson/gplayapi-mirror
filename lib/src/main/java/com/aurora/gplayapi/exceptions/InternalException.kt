@@ -15,21 +15,21 @@
 
 package com.aurora.gplayapi.exceptions
 
-sealed class ApiException {
-
-    data class AppNotPurchased(val reason: String = "App not purchased") : Exception()
+internal sealed class InternalException : Exception() {
+    data class AuthException(val reason: String = "Authentication Error") : InternalException()
+    data class AppNotPurchased(val reason: String = "App not purchased") : InternalException()
 
     data class AppNotFound(val reason: String = "App not found, maybe restricted (OEM or Geo)") :
-        Exception()
+        InternalException()
 
-    data class AppRemoved(val reason: String = "App removed from Play Store") : Exception()
+    data class AppRemoved(val reason: String = "App removed from Play Store") : InternalException()
 
-    data class AppNotSupported(val reason: String = "App not supported") : Exception()
+    data class AppNotSupported(val reason: String = "App not supported") : InternalException()
 
     data class EmptyDownloads(val reason: String = "File list empty") :
-        Exception() // Not sure about the root cause.
+        InternalException() // Not sure about the root cause.
 
-    data class Unknown(val reason: String = "¯\\_(ツ)_/¯") : Exception()
+    data class Unknown(val reason: String = "¯\\_(ツ)_/¯") : InternalException()
 
-    data class Server(val code: Int = 500, val reason: String = "Server error") : Exception()
+    data class Server(val code: Int = 500, val reason: String = "Server error") : InternalException()
 }

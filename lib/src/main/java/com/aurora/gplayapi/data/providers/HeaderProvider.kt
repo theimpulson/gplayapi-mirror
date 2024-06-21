@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.providers
 import com.aurora.gplayapi.data.models.AuthData
 import java.util.Locale
 
-object HeaderProvider {
+internal object HeaderProvider {
 
     fun getAuthHeaders(builder: AuthData): MutableMap<String, String> {
         val headers: MutableMap<String, String> = HashMap()

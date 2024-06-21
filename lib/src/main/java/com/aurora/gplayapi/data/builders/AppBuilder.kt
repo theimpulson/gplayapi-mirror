@@ -32,7 +32,7 @@ import com.aurora.gplayapi.utils.Util
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-object AppBuilder {
+internal object AppBuilder {
 
     fun build(detailsResponse: DetailsResponse): App {
         val item = detailsResponse.item

@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object TopChartsBuilder {
+internal object TopChartsBuilder {
     val TAG: String = javaClass.simpleName
 
     private const val TOKEN: String = TokenRepository.TOP_CHARTS_TOKEN

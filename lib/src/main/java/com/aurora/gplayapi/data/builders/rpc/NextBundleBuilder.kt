@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object NextBundleBuilder {
+internal object NextBundleBuilder {
     val TAG: String = javaClass.simpleName
 
     private const val PAGINATED_STREAM_TOKEN: String = TokenRepository.PAGINATED_STREAM_TOKEN

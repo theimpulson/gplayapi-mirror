@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object NextClusterBuilder {
+internal object NextClusterBuilder {
     val TAG: String = javaClass.simpleName
 
     private const val TOKEN: String = TokenRepository.STREAM_TOKEN

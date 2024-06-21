@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.providers
 import com.aurora.gplayapi.data.models.AuthData
 import java.util.Locale
 
-object ParamProvider {
+internal object ParamProvider {
 
     fun getDefaultAuthParams(builder: AuthData): Map<String, String> {
         val params: MutableMap<String, String> = HashMap()

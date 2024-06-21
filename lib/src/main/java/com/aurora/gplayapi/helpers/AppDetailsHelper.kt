@@ -27,7 +27,7 @@ import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.details.DevStream
 import com.aurora.gplayapi.data.models.details.TestingProgramStatus
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
-import com.aurora.gplayapi.exceptions.ApiException
+import com.aurora.gplayapi.exceptions.InternalException
 import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
@@ -84,7 +84,7 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
         if (playResponse.isSuccessful) {
             return getDetailsResponseFromBytes(playResponse.responseBytes)
         } else {
-            throw ApiException.AppNotFound(playResponse.errorString)
+            throw InternalException.AppNotFound(playResponse.errorString)
         }
     }
 
@@ -122,7 +122,7 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
             }
             return appList
         } else {
-            throw ApiException.Server(playResponse.code, playResponse.errorString)
+            throw InternalException.Server(playResponse.code, playResponse.errorString)
         }
     }
 

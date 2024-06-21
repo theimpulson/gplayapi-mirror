@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.builders
 import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.data.models.Review
 
-object ReviewBuilder {
+internal object ReviewBuilder {
 
     fun build(reviewProto: com.aurora.gplayapi.Review): Review {
         return Review().apply {

@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.builders
 import com.aurora.gplayapi.Image
 import com.aurora.gplayapi.data.models.Artwork
 
-object ArtworkBuilder {
+internal object ArtworkBuilder {
     fun build(image: Image): Artwork {
         return Artwork().apply {
             type = image.imageType

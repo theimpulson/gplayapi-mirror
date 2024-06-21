@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object FeaturedStreamBuilder {
+internal object FeaturedStreamBuilder {
     val TAG: String = javaClass.simpleName
 
     private const val TOKEN: String = TokenRepository.STREAM_TOKEN

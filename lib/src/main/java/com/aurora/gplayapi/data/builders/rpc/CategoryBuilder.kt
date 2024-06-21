@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object CategoryBuilder {
+internal object CategoryBuilder {
     val TAG: String = javaClass.simpleName
 
     fun build(tag: String = TAG): String {

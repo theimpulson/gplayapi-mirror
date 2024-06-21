@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object SearchQueryBuilder {
+internal object SearchQueryBuilder {
     val TAG: String = javaClass.simpleName
 
     private const val SEARCH_TOKEN: String = TokenRepository.SEARCH_TOKEN

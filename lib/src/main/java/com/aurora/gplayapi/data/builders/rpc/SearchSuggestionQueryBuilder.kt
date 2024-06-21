@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object SearchSuggestionQueryBuilder {
+internal object SearchSuggestionQueryBuilder {
     val TAG: String = javaClass.simpleName
 
     fun build(query: String, tag: String = TAG): String {

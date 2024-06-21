@@ -24,7 +24,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.data.providers.HeaderProvider
-import com.aurora.gplayapi.exceptions.ApiException
+import com.aurora.gplayapi.exceptions.InternalException
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.CertUtil
 import java.io.IOException
@@ -192,11 +192,11 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     ): List<File> {
         when (deliveryResponse.status) {
             1 -> return getDownloadsFromDeliveryResponse(packageName, versionCode, deliveryResponse)
-            2 -> throw ApiException.AppNotSupported()
-            3 -> throw ApiException.AppNotPurchased()
-            7 -> throw ApiException.AppRemoved()
-            9 -> throw ApiException.AppNotSupported()
-            else -> throw ApiException.Unknown()
+            2 -> throw InternalException.AppNotSupported()
+            3 -> throw InternalException.AppNotPurchased()
+            7 -> throw InternalException.AppRemoved()
+            9 -> throw InternalException.AppNotSupported()
+            else -> throw InternalException.Unknown()
         }
     }
 
@@ -259,7 +259,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         }
 
         if (fileList.isEmpty()) {
-            throw ApiException.Unknown()
+            throw InternalException.Unknown()
         }
 
         return fileList

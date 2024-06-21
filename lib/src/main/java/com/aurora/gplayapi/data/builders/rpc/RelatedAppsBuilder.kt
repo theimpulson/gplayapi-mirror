@@ -1,6 +1,6 @@
 package com.aurora.gplayapi.data.builders.rpc
 
-object RelatedAppsBuilder {
+internal object RelatedAppsBuilder {
     val TAG: String = javaClass.simpleName
 
     fun build(packageName: String, tag: String = TAG): String {

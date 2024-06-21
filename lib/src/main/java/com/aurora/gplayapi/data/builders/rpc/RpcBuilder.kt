@@ -4,7 +4,7 @@ import com.aurora.gplayapi.utils.dig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-object RpcBuilder {
+internal object RpcBuilder {
     fun wrapResponse(input: String): HashMap<String, HashMap<String, Any>> {
         val lines = input.lines()
         val filteredLines: ArrayList<Any> = arrayListOf()

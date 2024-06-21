@@ -5,7 +5,7 @@ import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.Rating
 import com.aurora.gplayapi.utils.dig
 
-object WebAppBuilder {
+internal object WebAppBuilder {
 
     fun build(packageName: String, payload: Any): App {
         val app = App(packageName)

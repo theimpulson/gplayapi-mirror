@@ -22,7 +22,7 @@ import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.data.providers.ParamProvider.getAASTokenParams
 import com.aurora.gplayapi.data.providers.ParamProvider.getAuthParams
 import com.aurora.gplayapi.data.providers.ParamProvider.getDefaultAuthParams
-import com.aurora.gplayapi.exceptions.AuthException
+import com.aurora.gplayapi.exceptions.InternalException.AuthException
 import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.Util
