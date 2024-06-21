@@ -37,7 +37,7 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
             webChart = chart.substring(5)
         }
 
-        val response = execute(arrayOf(TopChartsBuilder.build(category, webChart)))
+        val response = execute(TopChartsBuilder.build(category, webChart))
 
         val payload = response.dig<Collection<Any>>(
             TopChartsBuilder.TAG,

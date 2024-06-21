@@ -17,7 +17,7 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
     }
 
     override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
-        val searchResponse = execute(arrayOf(SearchSuggestionQueryBuilder.build(query)))
+        val searchResponse = execute(SearchSuggestionQueryBuilder.build(query))
 
         val payload = searchResponse.dig<Collection<Any>>(
             SearchSuggestionQueryBuilder.TAG,
@@ -41,9 +41,7 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
     override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
 
-        val searchBundle = SearchBundle()
-        val searchQuery = SearchQueryBuilder.build(query, nextPageUrl)
-        val searchResponse = execute(arrayOf(searchQuery))
+        val searchResponse = execute(SearchQueryBuilder.build(query, nextPageUrl))
 
         var payload = searchResponse.dig<Collection<Any>>(
             SearchQueryBuilder.TAG,
@@ -51,6 +49,7 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
             0
         )
 
+        val searchBundle = SearchBundle()
         if (payload.isNullOrEmpty()) {
             return searchBundle
         }

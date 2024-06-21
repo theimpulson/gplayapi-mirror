@@ -27,7 +27,7 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
     }
 
     private fun getAllCategoriesList(type: Category.WebType): List<Category> {
-        val response = execute(arrayOf(CategoryBuilder.build()))
+        val response = execute(CategoryBuilder.build())
         val payload = response.dig<Collection<Any>>(
             CategoryBuilder.TAG,
             CategoryBuilder.TAG,

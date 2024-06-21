@@ -29,7 +29,7 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
      */
     override fun fetch(type: Type, category: Category): StreamBundle {
         val webCategory = category.value
-        val response = execute(arrayOf(FeaturedStreamBuilder.build(webCategory)))
+        val response = execute(FeaturedStreamBuilder.build(webCategory))
         val payload = response.dig<Collection<Any>>(
             FeaturedStreamBuilder.TAG,
             webCategory
@@ -52,7 +52,7 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
      * @see StreamCluster
      */
     override fun nextStreamCluster(nextPageUrl: String): StreamCluster {
-        val response = execute(arrayOf(NextClusterBuilder.build(nextPageUrl)))
+        val response = execute(NextClusterBuilder.build(nextPageUrl))
 
         val payload = response.dig<Collection<Any>>(
             NextClusterBuilder.TAG,
@@ -80,7 +80,7 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
      */
     override fun nextStreamBundle(category: Category, nextPageToken: String): StreamBundle {
         val webCategory = category.value
-        val response = execute(arrayOf(NextBundleBuilder.build(webCategory, nextPageToken)))
+        val response = execute(NextBundleBuilder.build(webCategory, nextPageToken))
 
         val payload = response.dig<Collection<Any>>(
             NextBundleBuilder.TAG,

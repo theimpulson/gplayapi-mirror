@@ -9,8 +9,8 @@ import com.aurora.gplayapi.utils.dig
 import java.util.UUID
 
 abstract class BaseWebHelper : BaseHelper() {
-    fun execute(freq: Array<String>): HashMap<String, HashMap<String, Any>> {
-        val response = WebClient(httpClient).fetch(freq)
+    fun execute(freq: String): HashMap<String, HashMap<String, Any>> {
+        val response = WebClient(httpClient).fetch(arrayOf(freq))
 
         return RpcBuilder.wrapResponse(response)
     }

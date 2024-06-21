@@ -3,6 +3,7 @@ package com.aurora.gplayapi.helpers.web
 import com.aurora.gplayapi.data.builders.WebAppBuilder
 import com.aurora.gplayapi.data.builders.rpc.MetadataBuilder
 import com.aurora.gplayapi.data.builders.rpc.RelatedAppsBuilder
+import com.aurora.gplayapi.data.builders.rpc.RpcBuilder
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
@@ -22,7 +23,10 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
     override fun getAppByPackageName(packageNameList: List<String>): List<App> {
         val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
-        val response = execute(requests.toTypedArray())
+        val response = WebClient(httpClient).fetch(requests.toTypedArray()).let {
+            RpcBuilder.wrapResponse(it)
+        }
+
         val apps: MutableList<App> = mutableListOf()
 
         packageNameList.forEach { packageName ->
@@ -47,7 +51,7 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
     }
 
     fun getRelatedClusters(packageName: String): List<StreamCluster> {
-        val payload = execute(arrayOf(RelatedAppsBuilder.build(packageName)))
+        val payload = execute(RelatedAppsBuilder.build(packageName))
         val relatedPayload = payload.dig<List<Any>>(RelatedAppsBuilder.TAG, packageName, 1, 1)
 
         if (relatedPayload.isNullOrEmpty()) {
