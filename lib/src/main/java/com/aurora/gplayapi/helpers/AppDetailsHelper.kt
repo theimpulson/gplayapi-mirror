@@ -15,6 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
+import com.aurora.gplayapi.BulkDetailsRequest
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.ListResponse
@@ -27,27 +28,15 @@ import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.details.DevStream
 import com.aurora.gplayapi.data.models.details.TestingProgramStatus
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
-import com.aurora.gplayapi.exceptions.ApiException
+import com.aurora.gplayapi.exceptions.InternalException
+import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
 import com.aurora.gplayapi.network.IHttpClient
 import java.io.IOException
 
-class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
+class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsContract {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
-    }
-
-    private fun getAppListMapFromPayload(payload: Payload): Map<String, List<App>> {
-        val appListMap: MutableMap<String, List<App>> = mutableMapOf()
-        val listResponse: ListResponse = payload.listResponse
-        for (item in listResponse.itemList) {
-            for (subItem in item.subItemList) {
-                if (subItem.categoryId == 3) {
-                    appListMap[subItem.title] = getAppsFromItem(subItem)
-                }
-            }
-        }
-        return appListMap
     }
 
     private fun getDevStream(payload: Payload): DevStream {
@@ -81,27 +70,30 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
 
         val playResponse = httpClient.get(GooglePlayApi.URL_DETAILS, headers, params)
         if (playResponse.isSuccessful) {
-            return getDetailsResponseFromBytes(playResponse.responseBytes)
+            return getResponseFromBytes(playResponse.responseBytes)
         } else {
-            throw ApiException.AppNotFound(playResponse.errorString)
+            throw InternalException.AppNotFound(playResponse.errorString)
         }
     }
 
     @Throws(Exception::class)
-    fun getAppByPackageName(packageName: String): App {
+    override fun getAppByPackageName(packageName: String): App {
         val detailsResponse = getDetailsResponseByPackageName(packageName)
         return AppBuilder.build(detailsResponse)
     }
 
     @Throws(Exception::class)
-    fun getAppByPackageName(packageList: List<String>): List<App> {
-        if (packageList.isEmpty()) {
+    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
+        if (packageNameList.isEmpty()) {
             return emptyList()
         }
 
         val appList: MutableList<App> = ArrayList()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val request = getBulkDetailsBytes(packageList)
+        val request = BulkDetailsRequest.newBuilder()
+            .addAllDocId(packageNameList)
+            .build()
+            .toByteArray()
 
         if (!headers.containsKey("Content-Type")) {
             headers["Content-Type"] = "application/x-protobuf"
@@ -121,10 +113,12 @@ class AppDetailsHelper(authData: AuthData) : BaseHelper(authData) {
             }
             return appList
         } else {
-            throw ApiException.Server(playResponse.code, playResponse.errorString)
+            throw InternalException.Server(playResponse.code, playResponse.errorString)
         }
     }
 
+    // TODO: Move to contract
+    @Throws(Exception::class)
     fun getDetailsStream(streamUrl: String): StreamBundle {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()

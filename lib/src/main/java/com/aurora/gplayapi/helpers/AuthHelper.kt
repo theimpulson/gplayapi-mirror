@@ -34,6 +34,7 @@ class AuthHelper private constructor() {
             this.httpClient = httpClient
         }
 
+        @Throws(Exception::class)
         fun build(email: String, aasToken: String): AuthData {
             val properties = DeviceManager.loadProperties("px_3a.properties")
             if (properties != null) {
@@ -43,6 +44,7 @@ class AuthHelper private constructor() {
             }
         }
 
+        @Throws(Exception::class)
         fun build(email: String, aasToken: String, deviceName: String): AuthData {
             val properties = DeviceManager.loadProperties(deviceName)
             if (properties != null) {
@@ -52,7 +54,13 @@ class AuthHelper private constructor() {
             }
         }
 
-        fun build(email: String, aasToken: String, properties: Properties, locale: Locale = Locale.getDefault()): AuthData {
+        @Throws(Exception::class)
+        fun build(
+            email: String,
+            aasToken: String,
+            properties: Properties,
+            locale: Locale = Locale.getDefault()
+        ): AuthData {
             val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
 
             val authData = AuthData(email, aasToken)

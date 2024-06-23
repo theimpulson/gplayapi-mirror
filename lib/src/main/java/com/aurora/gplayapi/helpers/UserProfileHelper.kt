@@ -23,7 +23,7 @@ import com.aurora.gplayapi.data.models.UserProfile
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class UserProfileHelper(authData: AuthData) : BaseHelper(authData) {
+class UserProfileHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

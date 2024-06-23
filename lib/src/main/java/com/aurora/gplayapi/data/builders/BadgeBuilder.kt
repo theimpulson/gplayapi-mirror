@@ -17,7 +17,7 @@ package com.aurora.gplayapi.data.builders
 
 import com.aurora.gplayapi.data.models.details.Badge
 
-object BadgeBuilder {
+internal object BadgeBuilder {
 
     fun build(badge: com.aurora.gplayapi.Badge): Badge {
         return Badge().apply {

@@ -1,23 +1,25 @@
-package com.aurora.gplayapi.helpers
+package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.builders.rpc.RpcBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.helpers.contracts.SearchContract
+import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import java.util.UUID
 
-class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
-
+class WebSearchHelper : BaseWebHelper(), SearchContract {
     private var query: String = String()
 
-    @Throws(Exception::class)
-    override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
-        val searchResponse = WebClient().fetch(arrayOf(SearchSuggestionQueryBuilder.build(query)))
-            .let { RpcBuilder.wrapResponse(it) }
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
 
-        val payload = searchResponse.dig<Collection<Any>>(
+    override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+        val response = execute(SearchSuggestionQueryBuilder.build(query))
+
+        val payload = response.dig<Collection<Any>>(
             SearchSuggestionQueryBuilder.TAG,
             query,
             0
@@ -36,21 +38,18 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
         return suggestions
     }
 
-    @Throws(Exception::class)
     override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
 
-        val searchBundle = SearchBundle()
-        val searchQuery = SearchQueryBuilder.build(query, nextPageUrl)
-        val searchResponse = WebClient().fetch(arrayOf(searchQuery))
-            .let { RpcBuilder.wrapResponse(it) }
+        val response = execute(SearchQueryBuilder.build(query, nextPageUrl))
 
-        var payload = searchResponse.dig<Collection<Any>>(
+        var payload = response.dig<Collection<Any>>(
             SearchQueryBuilder.TAG,
             query,
             0
         )
 
+        val searchBundle = SearchBundle()
         if (payload.isNullOrEmpty()) {
             return searchBundle
         }
@@ -74,8 +73,8 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
         val nextPageToken: String = payload?.dig<String>(0, 7, 1) ?: ""
 
         searchBundle.apply {
-            this.appList = AppDetailsHelper(authData).getAppByPackageName(packageNames)
-                .toMutableList()
+            this.id = UUID.randomUUID().hashCode()
+            this.appList = getAppDetails(packageNames)
             this.query = query
             this.subBundles = hashSetOf()
         }
@@ -89,7 +88,6 @@ class WebSearchHelper(authData: AuthData) : SearchHelper(authData) {
         return searchBundle
     }
 
-    @Throws(Exception::class)
     override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 

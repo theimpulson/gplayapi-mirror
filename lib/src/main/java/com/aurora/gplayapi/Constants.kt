@@ -78,10 +78,4 @@ object Constants {
             }
         }
     }
-
-    enum class COLLECTION(var value: Array<Int>) {
-        EXACT(arrayOf(0, 1, 0, 23, 16)),
-        QUERY(arrayOf(0, 1, 1, 21, 0)),
-        SIMILAR(arrayOf(0, 1, 2, 22, 0))
-    }
 }

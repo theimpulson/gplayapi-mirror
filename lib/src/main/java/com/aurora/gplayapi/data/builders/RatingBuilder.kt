@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.builders
 import com.aurora.gplayapi.AggregateRating
 import com.aurora.gplayapi.data.models.Rating
 
-object RatingBuilder {
+internal object RatingBuilder {
 
     fun build(rating: AggregateRating): Rating {
         return Rating(

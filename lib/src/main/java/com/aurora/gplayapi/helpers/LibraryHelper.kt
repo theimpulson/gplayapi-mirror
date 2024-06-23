@@ -23,7 +23,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.network.IHttpClient
 
-class LibraryHelper(authData: AuthData) : BaseHelper(authData) {
+class LibraryHelper(authData: AuthData) : NativeHelper(authData) {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
@@ -40,7 +40,7 @@ class LibraryHelper(authData: AuthData) : BaseHelper(authData) {
         val playResponse = httpClient.get(GooglePlayApi.URL_LIBRARY, headers, params)
 
         val appList: MutableList<App> = mutableListOf()
-        val listResponse: ListResponse = getListResponseFromBytes(playResponse.responseBytes)
+        val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
         if (listResponse.itemCount > 0) {
             for (item in listResponse.itemList) {
                 for (subItem in item.subItemList) {

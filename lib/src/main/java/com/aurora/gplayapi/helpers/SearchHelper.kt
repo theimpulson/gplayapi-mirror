@@ -15,10 +15,12 @@
 
 package com.aurora.gplayapi.helpers
 
+import android.annotation.SuppressLint
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
 import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.SearchSuggestEntry
+import com.aurora.gplayapi.SearchSuggestResponse
 import com.aurora.gplayapi.data.builders.AppBuilder
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
@@ -26,11 +28,16 @@ import com.aurora.gplayapi.data.models.PlayResponse
 import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
+import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 
-open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
+class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract {
 
     private val searchTypeExtra = "_-"
+
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
 
     private fun getSubBundle(item: Item): SubBundle {
         try {
@@ -52,14 +59,11 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
         return SubBundle("", SearchBundle.Type.BOGUS)
     }
 
-    override fun using(httpClient: IHttpClient) = apply {
-        this.httpClient = httpClient
-    }
-
     private var query: String = String()
 
+    @SuppressLint("DefaultLocale")
     @Throws(Exception::class)
-    open fun searchSuggestions(query: String): List<SearchSuggestEntry> {
+    override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val paramString = String.format(
             "?q=%s&sb=%d&sst=%d&sst=%d",
@@ -69,8 +73,9 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
             3 /*Item Doc Id : 3 -> Apps*/
         )
         val responseBody = httpClient.get(GooglePlayApi.URL_SEARCH_SUGGEST, header, paramString)
-        val searchSuggestResponse = getSearchSuggestResponseFromBytes(responseBody.responseBytes)
-        return if (searchSuggestResponse != null && searchSuggestResponse.entryCount > 0) {
+        val searchSuggestResponse: SearchSuggestResponse =
+            getResponseFromBytes(responseBody.responseBytes)
+        return if (searchSuggestResponse.entryCount > 0) {
             searchSuggestResponse.entryList
         } else {
             ArrayList()
@@ -78,7 +83,7 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    open fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle {
+    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
         this.query = query
         val header: MutableMap<String, String> = getDefaultHeaders(authData)
         val param: MutableMap<String, String> = HashMap()
@@ -109,7 +114,7 @@ open class SearchHelper(authData: AuthData) : BaseHelper(authData) {
     }
 
     @Throws(Exception::class)
-    open fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
+    override fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
         val compositeSearchBundle = SearchBundle()
 
         bundleSet.forEach {

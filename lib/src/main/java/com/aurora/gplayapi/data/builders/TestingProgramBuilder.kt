@@ -18,7 +18,7 @@ package com.aurora.gplayapi.data.builders
 import com.aurora.gplayapi.AppDetails
 import com.aurora.gplayapi.data.models.details.TestingProgram
 
-object TestingProgramBuilder {
+internal object TestingProgramBuilder {
 
     fun build(appDetails: AppDetails): TestingProgram? {
         return if (appDetails.hasTestingProgramInfo()) {
