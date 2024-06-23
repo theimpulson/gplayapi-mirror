@@ -16,7 +16,6 @@
 package com.aurora.gplayapi.helpers
 
 import com.aurora.gplayapi.BrowseResponse
-import com.aurora.gplayapi.BulkDetailsRequest
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
@@ -61,31 +60,27 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     @Throws(Exception::class)
     fun getPayLoadFromBytes(bytes: ByteArray?): Payload {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
-        return responseWrapper!!.payload
+        return responseWrapper.payload ?: Payload.getDefaultInstance()
     }
 
     @Throws(Exception::class)
     fun getUserProfileResponse(bytes: ByteArray?): PayloadApi {
         val responseWrapper = ResponseWrapperApi.parseFrom(bytes)
-        return responseWrapper!!.payload
+        return responseWrapper.payload ?: PayloadApi.getDefaultInstance()
     }
 
     @Throws(Exception::class)
-    fun getDetailsResponseFromBytes(bytes: ByteArray?): DetailsResponse {
+    inline fun <reified T> getResponseFromBytes(bytes: ByteArray?): T {
         val payload = getPayLoadFromBytes(bytes)
-        return payload.detailsResponse
-    }
 
-    @Throws(Exception::class)
-    fun getListResponseFromBytes(bytes: ByteArray?): ListResponse {
-        val payload = getPayLoadFromBytes(bytes)
-        return payload.listResponse
-    }
-
-    @Throws(Exception::class)
-    fun getBrowseResponseFromBytes(bytes: ByteArray?): BrowseResponse {
-        val payload = getPayLoadFromBytes(bytes)
-        return payload.browseResponse
+        return when (T::class) {
+            BrowseResponse::class -> payload.browseResponse as T
+            DetailsResponse::class -> payload.detailsResponse as T
+            ListResponse::class -> payload.listResponse as T
+            SearchResponse::class -> payload.searchResponse as T
+            SearchSuggestResponse::class -> payload.searchSuggestResponse as T
+            else -> null as T
+        }
     }
 
     @Throws(Exception::class)
@@ -93,13 +88,9 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
         val payload = responseWrapper.payload
         return if (responseWrapper.preFetchCount > 0 && (
-                    (
-                            payload.hasSearchResponse() &&
-                                    payload.searchResponse.itemCount == 0
-                            ) ||
+                    (payload.hasSearchResponse() && payload.searchResponse.itemCount == 0) ||
                             payload.hasListResponse() && payload.listResponse.itemCount == 0 ||
-                            payload.hasBrowseResponse()
-                    )
+                            payload.hasBrowseResponse())
         ) {
             responseWrapper.getPreFetch(0).response.payload
         } else {
@@ -121,40 +112,13 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         return appList
     }
 
-    fun getBulkDetailsBytes(packageList: List<String?>?): ByteArray {
-        val bulkDetailsRequestBuilder = BulkDetailsRequest.newBuilder()
-        bulkDetailsRequestBuilder.addAllDocId(packageList)
-        return bulkDetailsRequestBuilder.build().toByteArray()
-    }
-
-    /*-------------------------------------- APP SEARCH & SUGGESTIONS ---------------------------------------*/
-    @Throws(Exception::class)
-    fun getSearchResponseFromBytes(bytes: ByteArray?): SearchResponse? {
-        val payload = getPayLoadFromBytes(bytes)
-        return if (payload.hasSearchResponse()) {
-            payload.searchResponse
-        } else {
-            null
-        }
-    }
-
-    @Throws(Exception::class)
-    fun getSearchSuggestResponseFromBytes(bytes: ByteArray?): SearchSuggestResponse? {
-        val payload = getPayLoadFromBytes(bytes)
-        return if (payload.hasSearchSuggestResponse()) {
-            payload.searchSuggestResponse
-        } else {
-            null
-        }
-    }
-
     /*--------------------------------------- GENERIC APP STREAMS --------------------------------------------*/
     @Throws(Exception::class)
     fun getNextStreamResponse(nextPageUrl: String): ListResponse {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + nextPageUrl, headers)
         return if (playResponse.isSuccessful) {
-            getListResponseFromBytes(playResponse.responseBytes)
+            getResponseFromBytes(playResponse.responseBytes)
         } else {
             ListResponse.getDefaultInstance()
         }
@@ -165,7 +129,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + browseUrl, headers)
         return if (playResponse.isSuccessful) {
-            getBrowseResponseFromBytes(playResponse.responseBytes)
+            getResponseFromBytes(playResponse.responseBytes)
         } else {
             BrowseResponse.getDefaultInstance()
         }
@@ -249,7 +213,6 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
 
     /*------------------------------------- EDITOR'S CHOICE CLUSTER & BUNDLES ------------------------------------*/
     @Throws(Exception::class)
-
     private fun getEditorChoiceCluster(item: Item): EditorChoiceCluster {
         val title = if (item.hasTitle()) item.title else String()
         val artworkList: MutableList<Artwork> = ArrayList()

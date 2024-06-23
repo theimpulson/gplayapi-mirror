@@ -15,6 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
+import com.aurora.gplayapi.BulkDetailsRequest
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.ListResponse
@@ -36,19 +37,6 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
-    }
-
-    private fun getAppListMapFromPayload(payload: Payload): Map<String, List<App>> {
-        val appListMap: MutableMap<String, List<App>> = mutableMapOf()
-        val listResponse: ListResponse = payload.listResponse
-        for (item in listResponse.itemList) {
-            for (subItem in item.subItemList) {
-                if (subItem.categoryId == 3) {
-                    appListMap[subItem.title] = getAppsFromItem(subItem)
-                }
-            }
-        }
-        return appListMap
     }
 
     private fun getDevStream(payload: Payload): DevStream {
@@ -82,7 +70,7 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
 
         val playResponse = httpClient.get(GooglePlayApi.URL_DETAILS, headers, params)
         if (playResponse.isSuccessful) {
-            return getDetailsResponseFromBytes(playResponse.responseBytes)
+            return getResponseFromBytes(playResponse.responseBytes)
         } else {
             throw InternalException.AppNotFound(playResponse.errorString)
         }
@@ -102,7 +90,10 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
 
         val appList: MutableList<App> = ArrayList()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val request = getBulkDetailsBytes(packageNameList)
+        val request = BulkDetailsRequest.newBuilder()
+            .addAllDocId(packageNameList)
+            .build()
+            .toByteArray()
 
         if (!headers.containsKey("Content-Type")) {
             headers["Content-Type"] = "application/x-protobuf"
@@ -126,6 +117,8 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
         }
     }
 
+    // TODO: Move to contract
+    @Throws(Exception::class)
     fun getDetailsStream(streamUrl: String): StreamBundle {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()

@@ -17,6 +17,7 @@ package com.aurora.gplayapi.helpers
 
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.Payload
 import com.aurora.gplayapi.ResponseWrapper
 import com.aurora.gplayapi.data.models.AuthData
@@ -41,7 +42,7 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
         params["cat"] = type.value
 
         val playResponse = httpClient.get(GooglePlayApi.CATEGORIES_URL, headers, params)
-        val listResponse = getListResponseFromBytes(playResponse.responseBytes)
+        val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
 
         if (listResponse.itemCount > 0) {
             val item = listResponse.getItem(0)

@@ -80,7 +80,7 @@ class StreamHelper(authData: AuthData) : NativeHelper(authData), StreamContract 
             httpClient.get(GooglePlayApi.URL_FDFE + "/" + type.value, headers, params)
 
         return if (playResponse.isSuccessful) {
-            getListResponseFromBytes(playResponse.responseBytes)
+            getResponseFromBytes(playResponse.responseBytes)
         } else {
             ListResponse.getDefaultInstance()
         }

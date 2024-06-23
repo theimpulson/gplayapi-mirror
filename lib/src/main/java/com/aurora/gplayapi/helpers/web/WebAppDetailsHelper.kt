@@ -50,6 +50,7 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         return apps
     }
 
+    // TODO: Unify with AppDetailsHelper
     fun getRelatedClusters(packageName: String): List<StreamCluster> {
         val payload = execute(RelatedAppsBuilder.build(packageName))
         val relatedPayload = payload.dig<List<Any>>(RelatedAppsBuilder.TAG, packageName, 1, 1)

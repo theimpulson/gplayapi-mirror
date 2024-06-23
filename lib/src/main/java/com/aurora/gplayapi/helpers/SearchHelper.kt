@@ -20,6 +20,7 @@ import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.Item
 import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.SearchSuggestEntry
+import com.aurora.gplayapi.SearchSuggestResponse
 import com.aurora.gplayapi.data.builders.AppBuilder
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
@@ -72,8 +73,9 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
             3 /*Item Doc Id : 3 -> Apps*/
         )
         val responseBody = httpClient.get(GooglePlayApi.URL_SEARCH_SUGGEST, header, paramString)
-        val searchSuggestResponse = getSearchSuggestResponseFromBytes(responseBody.responseBytes)
-        return if (searchSuggestResponse != null && searchSuggestResponse.entryCount > 0) {
+        val searchSuggestResponse: SearchSuggestResponse =
+            getResponseFromBytes(responseBody.responseBytes)
+        return if (searchSuggestResponse.entryCount > 0) {
             searchSuggestResponse.entryList
         } else {
             ArrayList()

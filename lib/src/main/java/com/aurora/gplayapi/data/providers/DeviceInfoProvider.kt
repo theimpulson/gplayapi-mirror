@@ -22,9 +22,10 @@ import com.aurora.gplayapi.DeviceConfigurationProto
 import com.aurora.gplayapi.DeviceFeature
 import java.util.Properties
 
-class DeviceInfoProvider(var properties: Properties, var localeString: String) :
-    BaseDeviceInfoProvider() {
-
+class DeviceInfoProvider(
+    private val properties: Properties,
+    private val localeString: String
+) : BaseDeviceInfoProvider() {
     @Transient
     private var timeToReport = System.currentTimeMillis() / 1000
 
@@ -56,9 +57,9 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
             params.add("supportedAbis=$platforms")
 
             return "Android-Finsky/${properties.getProperty("Vending.versionString")} (${
-            params.joinToString(
-                separator = ","
-            )
+                params.joinToString(
+                    separator = ","
+                )
             })"
         }
 
@@ -153,18 +154,17 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
             var vendingVersionString = "7.1.15"
             if (properties.getProperty("Vending.version").length > 6) {
                 vendingVersionString =
-                    StringBuilder(properties.getProperty("Vending.version").substring(2, 6)).insert(
-                        2,
-                        "."
-                    ).insert(1, ".").toString()
+                    StringBuilder(properties.getProperty("Vending.version").substring(2, 6))
+                        .insert(2, ".")
+                        .insert(1, ".")
+                        .toString()
             }
             properties["Vending.versionString"] = vendingVersionString
         }
 
-        if (properties.containsKey("Build.FINGERPRINT") && (
-            !properties.containsKey("Build.ID") ||
-                !properties.containsKey("Build.VERSION.RELEASE")
-            )
+        if (
+            properties.containsKey("Build.FINGERPRINT") &&
+            (!properties.containsKey("Build.ID") || !properties.containsKey("Build.VERSION.RELEASE"))
         ) {
             val fingerprint =
                 properties.getProperty("Build.FINGERPRINT").split("/".toRegex()).toTypedArray()
@@ -185,9 +185,11 @@ class DeviceInfoProvider(var properties: Properties, var localeString: String) :
                     }
                 }
             }
+
             if (!properties.containsKey("Build.ID")) {
                 properties["Build.ID"] = buildId
             }
+
             if (!properties.containsKey("Build.VERSION.RELEASE")) {
                 properties["Build.VERSION.RELEASE"] = release
             }

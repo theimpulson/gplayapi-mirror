@@ -16,6 +16,7 @@
 package com.aurora.gplayapi.helpers
 
 import com.aurora.gplayapi.GooglePlayApi
+import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
@@ -43,7 +44,7 @@ class ClusterHelper(authData: AuthData) : NativeHelper(authData) {
         val responseBody = httpClient.get(GooglePlayApi.URL_FDFE + "/myAppsStream", headers, params)
 
         return if (responseBody.isSuccessful) {
-            val listResponse = getListResponseFromBytes(responseBody.responseBytes)
+            val listResponse = getResponseFromBytes<ListResponse>(responseBody.responseBytes)
             getStreamCluster(listResponse)
         } else {
             StreamCluster()

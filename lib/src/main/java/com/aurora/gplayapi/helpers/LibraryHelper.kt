@@ -40,7 +40,7 @@ class LibraryHelper(authData: AuthData) : NativeHelper(authData) {
         val playResponse = httpClient.get(GooglePlayApi.URL_LIBRARY, headers, params)
 
         val appList: MutableList<App> = mutableListOf()
-        val listResponse: ListResponse = getListResponseFromBytes(playResponse.responseBytes)
+        val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
         if (listResponse.itemCount > 0) {
             for (item in listResponse.itemList) {
                 for (subItem in item.subItemList) {

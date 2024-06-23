@@ -16,6 +16,7 @@
 package com.aurora.gplayapi.helpers
 
 import com.aurora.gplayapi.GooglePlayApi
+import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
@@ -38,7 +39,7 @@ class TopChartsHelper(authData: AuthData) : NativeHelper(authData), TopChartsCon
 
         val playResponse = httpClient.get(GooglePlayApi.TOP_CHART_URL, headers, params)
         return if (playResponse.isSuccessful) {
-            val listResponse = getListResponseFromBytes(playResponse.responseBytes)
+            val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
             getStreamCluster(listResponse)
         } else {
             StreamCluster()

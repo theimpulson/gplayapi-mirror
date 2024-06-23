@@ -55,7 +55,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         )
 
         val purchaseAppList: MutableList<App> = mutableListOf()
-        val listResponse: ListResponse = getListResponseFromBytes(playResponse.responseBytes)
+        val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
         if (listResponse.itemCount > 0) {
             for (item in listResponse.itemList) {
                 for (subItem in item.subItemList) {
