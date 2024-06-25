@@ -111,11 +111,17 @@ internal object AppBuilder {
         parseAppInfo(app, item)
         parseChips(app, item)
         parseDisplayBadges(app, item)
-        parseInfoBadges(app, item)
         parseStreamUrls(app, item)
         parseRating(app, item)
         parseContentRating(app, item)
-        parseArtwork(app, item)
+
+        // Dirty patch to avoid crash on Waydroid
+        try {
+            parseInfoBadges(app, item)
+            parseArtwork(app, item)
+        } catch (_: IncompatibleClassChangeError) {
+
+        }
 
         parseDependencies(app, appDetails)
         parseFiles(app, appDetails)
