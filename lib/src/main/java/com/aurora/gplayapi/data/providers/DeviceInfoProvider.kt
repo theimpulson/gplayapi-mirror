@@ -23,8 +23,8 @@ import com.aurora.gplayapi.DeviceFeature
 import java.util.Properties
 
 class DeviceInfoProvider(
-    private val properties: Properties,
-    private val localeString: String
+     val properties: Properties,
+     val localeString: String
 ) : BaseDeviceInfoProvider() {
     @Transient
     private var timeToReport = System.currentTimeMillis() / 1000
