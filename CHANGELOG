@@ -1,4 +1,4 @@
-Changelog : v3.2.12
+Changelog : v3.3.0
 • New helper classes for fetching data using Web APIs
 • Code improvements, several classes have been marked as internal
 • Update dependencies & plugins
