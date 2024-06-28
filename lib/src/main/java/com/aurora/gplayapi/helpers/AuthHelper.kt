@@ -85,13 +85,46 @@ class AuthHelper private constructor() {
             return authData
         }
 
+        fun build(
+            email: String,
+            authToken: String,
+            properties: Properties,
+            locale: Locale = Locale.getDefault(),
+            isAnonymous: Boolean
+        ): AuthData {
+            val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
+
+            val authData = AuthData(email, authToken, isAnonymous)
+            authData.deviceInfoProvider = deviceInfoProvider
+            authData.locale = locale
+
+            val api = GooglePlayApi(authData).via(httpClient)
+
+            // Android GSF ID
+            val gsfId = api.generateGsfId(deviceInfoProvider)
+            authData.gsfId = gsfId
+
+            // Upload Device Config
+            val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
+            authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
+
+            // GooglePlay TOS
+            val tosResponse = api.toc()
+
+            // Fetch UserProfile
+            authData.userProfile = UserProfileHelper(authData).getUserProfile()
+
+            return authData
+        }
+
         fun buildInsecure(
             email: String,
             authToken: String,
             locale: Locale,
-            deviceInfoProvider: DeviceInfoProvider
+            deviceInfoProvider: DeviceInfoProvider,
+            isAnonymous: Boolean = true
         ): AuthData {
-            val authData = AuthData(email, authToken, true)
+            val authData = AuthData(email, authToken, isAnonymous)
 
             authData.deviceInfoProvider = deviceInfoProvider
             authData.locale = locale
