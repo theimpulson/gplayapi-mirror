@@ -23,6 +23,20 @@ data class SearchBundle(
     val appList: MutableList<App> = mutableListOf()
 ) {
 
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            is SearchBundle -> {
+                id == other.id
+            }
+
+            else -> false
+        }
+    }
+
     enum class Type {
         GENERIC, SIMILAR, RELATED_SEARCHES, RELATED_TO_YOUR_SEARCH, YOU_MIGHT_ALSO_LIKE, BOGUS
     }
