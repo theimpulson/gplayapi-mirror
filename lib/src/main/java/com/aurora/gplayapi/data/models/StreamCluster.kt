@@ -15,13 +15,32 @@
 
 package com.aurora.gplayapi.data.models
 
-class StreamCluster {
-    var id: Int = -1
-    var clusterTitle: String = String()
-    var clusterSubtitle: String = String()
-    var clusterNextPageUrl: String = String()
-    var clusterBrowseUrl: String = String()
+import android.os.Parcelable
+import com.aurora.gplayapi.utils.Commons
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class StreamCluster(
+    val id: Int = Commons.getUniqueId(),
+    var clusterTitle: String = "",
+    var clusterSubtitle: String = "",
+    var clusterNextPageUrl: String = "",
+    var clusterBrowseUrl: String = "",
     var clusterAppList: MutableList<App> = mutableListOf()
+) : Parcelable {
+    override fun hashCode(): Int {
+        return id
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            is StreamCluster -> {
+                id == other.id
+            }
+
+            else -> false
+        }
+    }
 
     fun hasNext(): Boolean {
         return clusterNextPageUrl.isNotBlank()

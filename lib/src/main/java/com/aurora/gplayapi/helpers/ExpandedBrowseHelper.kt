@@ -39,7 +39,6 @@ class ExpandedBrowseHelper(authData: AuthData) : NativeHelper(authData) {
         val browseUrl = getBrowseUrl(item)
 
         return StreamCluster().apply {
-            id = browseUrl.hashCode()
             clusterTitle = title
             clusterSubtitle = subtitle
             clusterBrowseUrl = browseUrl

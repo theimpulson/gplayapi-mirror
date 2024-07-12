@@ -147,7 +147,6 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         val browseUrl = getBrowseUrl(item)
 
         return StreamCluster().apply {
-            id = browseUrl.hashCode()
             clusterTitle = title
             clusterSubtitle = subtitle
             clusterBrowseUrl = browseUrl

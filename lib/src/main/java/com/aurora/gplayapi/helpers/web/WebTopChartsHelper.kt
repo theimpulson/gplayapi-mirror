@@ -5,7 +5,6 @@ import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.contracts.TopChartsContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
-import java.util.UUID
 
 class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
     override fun using(httpClient: IHttpClient) = apply {
@@ -63,7 +62,6 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
         val apps = getAppDetails(packageNames)
 
         streamCluster.apply {
-            id = UUID.randomUUID().hashCode()
             clusterTitle = category
             clusterSubtitle = chart
             clusterAppList = apps
