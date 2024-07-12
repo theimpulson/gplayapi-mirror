@@ -12,7 +12,7 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
         this.httpClient = httpClient
     }
 
-    override fun getAllCategoriesList(type: Category.Type): List<Category> {
+    override fun getAllCategories(type: Category.Type): List<Category> {
         val webType: Category.WebType = when (type) {
             Category.Type.GAME -> Category.WebType.GAME
             Category.Type.APPLICATION -> Category.WebType.APPLICATION
@@ -20,10 +20,6 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
         }
 
         return getAllCategoriesList(webType)
-    }
-
-    override fun getSubCategoryBundle(homeUrl: String): StreamBundle {
-        return StreamBundle()
     }
 
     private fun getAllCategoriesList(type: Category.WebType): List<Category> {
