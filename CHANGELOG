@@ -1,3 +1,7 @@
+Changelog : v3.3.1
+• New helper classes for fetching category streams
+• Code improvements
+
 Changelog : v3.3.0
 • New helper classes for fetching data using Web APIs
 • Code improvements, several classes have been marked as internal

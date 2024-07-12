@@ -28,7 +28,7 @@ maven("https://gitlab.com/api/v4/projects/18497829/packages/maven")
 Then, add a dependency upon the library in the `build.gradle.kts` file's dependency block:
 
 ```kotlin
-implementation("com.aurora:gplayapi:3.3.0")
+implementation("com.aurora:gplayapi:3.3.1")
 ```
 
 ## Build
@@ -91,7 +91,7 @@ val files = PurchaseHelper(authData).purchase(
 ### Fetch All Categories
 
 ```kotlin
-val categoryList = CategoryHelper(authData).getAllCategoriesList(type) //type = GAME or APPLICATION
+val categoryList = CategoryHelper(authData).getAllCategories(type) //type = GAME or APPLICATION
 ```
 
 ### Fetch Search Suggestions

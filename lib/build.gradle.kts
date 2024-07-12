@@ -68,7 +68,7 @@ publishing {
             create<MavenPublication>("release") {
                 groupId = "com.aurora"
                 artifactId = "gplayapi"
-                version = "3.3.0"
+                version = "3.3.1"
                 from(components["release"])
             }
         }
