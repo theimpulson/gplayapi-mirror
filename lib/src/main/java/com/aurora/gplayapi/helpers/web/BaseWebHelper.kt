@@ -6,7 +6,6 @@ import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.BaseHelper
 import com.aurora.gplayapi.utils.dig
-import java.util.UUID
 
 abstract class BaseWebHelper : BaseHelper() {
     fun execute(freq: String): HashMap<String, HashMap<String, Any>> {
@@ -52,7 +51,6 @@ abstract class BaseWebHelper : BaseHelper() {
         }
 
         streamBundle.apply {
-            id = UUID.randomUUID().hashCode()
             streamTitle = category
             streamNextPageUrl = payload.dig(0, 3, 1) ?: ""
         }
@@ -66,7 +64,6 @@ abstract class BaseWebHelper : BaseHelper() {
         appIndex: Array<Int> = arrayOf(0, 0)
     ): StreamCluster {
         return StreamCluster().apply {
-            id = UUID.randomUUID().hashCode()
             clusterTitle = payload.dig(clusterIndex, 1, 0) ?: ""
             clusterSubtitle = payload.dig(clusterIndex, 1, 1) ?: ""
             clusterNextPageUrl = payload.dig(clusterIndex, 1, 3, 1) ?: ""

@@ -2,7 +2,6 @@ package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.data.builders.rpc.CategoryBuilder
 import com.aurora.gplayapi.data.models.Category
-import com.aurora.gplayapi.data.models.StreamBundle
 import com.aurora.gplayapi.helpers.contracts.CategoryContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
