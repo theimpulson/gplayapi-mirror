@@ -1,3 +1,14 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
+// Bump this version when making a new release
+val libVersion = "3.3.1"
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,11 +16,13 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.protobuf)
     `maven-publish`
+    signing
 }
 
 android {
     namespace = "com.aurora.gplayapi"
     compileSdk = 34
+    version = libVersion
 
     defaultConfig {
         minSdk = 21
@@ -61,21 +74,52 @@ protobuf {
     }
 }
 
+
 // Run "./gradlew publishReleasePublicationToLocalRepository" to generate release AAR locally
 publishing {
     publications {
-        afterEvaluate {
-            create<MavenPublication>("release") {
-                groupId = "com.aurora"
-                artifactId = "gplayapi"
-                version = "3.3.1"
+        create<MavenPublication>("release") {
+            groupId = "com.auroraoss"
+            artifactId = "gplayapi"
+            version = libVersion
+            afterEvaluate {
                 from(components["release"])
+            }
+            pom {
+                name.set("GPlay API")
+                description.set("A reversed engineered Google Play Store API")
+                url.set("https://gitlab.com/AuroraOSS/gplayapi")
+
+                licenses {
+                    license {
+                        name.set("GNU GENERAL PUBLIC LICENSE, Version 3")
+                        url.set("https://www.gnu.org/licenses/gpl-3.0.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://gitlab.com/AuroraOSS/gplayapi")
+                    connection.set("scm:git:git@gitlab.com:AuroraOSS/gplayapi.git")
+                    developerConnection.set("scm:git:git@gitlab.com:AuroraOSS/gplayapi.git")
+                }
+
+                developers {
+                    developer {
+                        id.set("whyorean")
+                        name.set("Rahul Patel")
+                        email.set("whyorean@gmail.com")
+                    }
+                }
             }
         }
     }
     repositories {
+        val tokenUsername: String? = localProperties.getProperty("ossrhUsername")
+        val tokenPassword: String? = localProperties.getProperty("ossrhPassword")
+
         maven {
             name = "GitLab"
+            version = libVersion
             url = uri("https://gitlab.com/api/v4/projects/18497829/packages/maven")
             credentials(HttpHeaderCredentials::class) {
                 name = "Job-Token"
@@ -87,7 +131,32 @@ publishing {
         }
         maven {
             name = "local"
+            version = libVersion
             url = uri("./build/repo")
+        }
+        maven {
+            name = "SonatypeOSS"
+            version = libVersion
+            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = tokenUsername
+                password = tokenPassword
+            }
+        }
+        maven {
+            name = "SonatypeOSSSnapshots"
+            version = "${libVersion}-SNAPSHOT"
+            setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            credentials {
+                username = tokenUsername
+                password = tokenPassword
+            }
         }
     }
 }
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["release"])
+}
+
