@@ -1,10 +1,17 @@
 import java.util.Properties
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(localPropertiesFile.inputStream())
+// Signing configuration
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
+
+val tokenUsername: String? = localProperties.getProperty("ossrhUsername")
+val tokenPassword: String? = localProperties.getProperty("ossrhPassword")
+val shouldSignRelease: Boolean
+    get() = !tokenUsername.isNullOrEmpty() && !tokenPassword.isNullOrEmpty()
 
 // Bump this version when making a new release
 val libVersion = "3.3.1"
@@ -114,9 +121,6 @@ publishing {
         }
     }
     repositories {
-        val tokenUsername: String? = localProperties.getProperty("ossrhUsername")
-        val tokenPassword: String? = localProperties.getProperty("ossrhPassword")
-
         maven {
             name = "GitLab"
             version = libVersion
@@ -158,5 +162,9 @@ publishing {
 signing {
     useGpgCmd()
     sign(publishing.publications["release"])
+}
+
+tasks.withType<Sign> {
+    onlyIf("Signing credentials are present (only used for maven central)") { shouldSignRelease }
 }
 
