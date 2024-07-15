@@ -18,21 +18,8 @@ package com.aurora.gplayapi.data.models
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
 import java.util.Locale
 
-class AuthData {
+class AuthData internal constructor(val email: String) {
 
-    internal constructor(email: String, aasToken: String) {
-        this.email = email
-        this.aasToken = aasToken
-    }
-
-    internal constructor(email: String, authToken: String, isAnonymous: Boolean) {
-        this.email = email
-        this.authToken = authToken
-        this.isAnonymous = isAnonymous
-    }
-
-    var email: String = String()
-        internal set
     var aasToken: String = String()
         internal set
     var authToken: String = String()

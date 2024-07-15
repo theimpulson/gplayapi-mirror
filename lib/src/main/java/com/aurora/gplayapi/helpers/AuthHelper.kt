@@ -24,128 +24,72 @@ import com.aurora.gplayapi.network.IHttpClient
 import java.util.Locale
 import java.util.Properties
 
-class AuthHelper private constructor() {
+object AuthHelper {
 
-    companion object {
+    enum class Token {
+        AAS, AUTH
+    }
 
-        var httpClient: IHttpClient = DefaultHttpClient
+    private var httpClient: IHttpClient = DefaultHttpClient
 
-        fun using(httpClient: IHttpClient) = apply {
-            this.httpClient = httpClient
-        }
+    fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
 
-        @Throws(Exception::class)
-        fun build(email: String, aasToken: String): AuthData {
-            val properties = DeviceManager.loadProperties("px_3a.properties")
-            if (properties != null) {
-                return build(email, aasToken, properties)
-            } else {
-                throw Exception("Unable to read device config")
-            }
-        }
+    /**
+     * Builds and returns authentication data to work with the helper methods
+     * @param email E-mail address for the account
+     * @param token Token for account authentication
+     * @param tokenType Type of the token, can be either [Token.AAS] or [Token.AUTH]
+     * @param isAnonymous If the account credentials are anonymous (e.g. provided by Aurora Dispenser), defaults to false
+     * @param properties Properties of the device, defaults to Pixel 7a properties
+     * @param locale Locale for the account, default otherwise
+     * @return An instance of [AuthData]
+     */
+    fun build(
+        email: String,
+        token: String,
+        tokenType: Token,
+        isAnonymous: Boolean = false,
+        properties: Properties = DeviceManager.loadProperties("px_7a.properties")!!,
+        locale: Locale = Locale.getDefault()
+    ): AuthData {
+        val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
+        val authData = AuthData(email)
 
-        @Throws(Exception::class)
-        fun build(email: String, aasToken: String, deviceName: String): AuthData {
-            val properties = DeviceManager.loadProperties(deviceName)
-            if (properties != null) {
-                return build(email, aasToken, properties)
-            } else {
-                throw Exception("Unable to read device config")
-            }
-        }
-
-        @Throws(Exception::class)
-        fun build(
-            email: String,
-            aasToken: String,
-            properties: Properties,
-            locale: Locale = Locale.getDefault()
-        ): AuthData {
-            val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
-
-            val authData = AuthData(email, aasToken)
-            authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = locale
-
-            val api = GooglePlayApi(authData).via(httpClient)
-            val gsfId = api.generateGsfId(deviceInfoProvider)
-            authData.gsfId = gsfId
-
-            val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
-            authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
-
-            val token = api.generateToken(aasToken, GooglePlayApi.Service.GOOGLE_PLAY)
+        // Token
+        if (tokenType == Token.AAS) {
+            authData.aasToken = token
+        } else {
             authData.authToken = token
-
-            val tosResponse = api.toc()
-
-            // Fetch UserProfile
-            authData.userProfile = UserProfileHelper(authData).getUserProfile()
-
-            return authData
         }
 
-        fun build(
-            email: String,
-            authToken: String,
-            properties: Properties,
-            locale: Locale = Locale.getDefault(),
-            isAnonymous: Boolean
-        ): AuthData {
-            val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
+        authData.deviceInfoProvider = deviceInfoProvider
+        authData.locale = locale
+        authData.isAnonymous = isAnonymous
 
-            val authData = AuthData(email, authToken, isAnonymous)
-            authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = locale
+        val api = GooglePlayApi(authData).via(httpClient)
 
-            val api = GooglePlayApi(authData).via(httpClient)
+        // Android GSF ID
+        val gsfId = api.generateGsfId(deviceInfoProvider)
+        authData.gsfId = gsfId
 
-            // Android GSF ID
-            val gsfId = api.generateGsfId(deviceInfoProvider)
-            authData.gsfId = gsfId
+        // Upload Device Config
+        val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
+        authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
 
-            // Upload Device Config
-            val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
-            authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
-
-            // GooglePlay TOS
-            val tosResponse = api.toc()
-
-            // Fetch UserProfile
-            authData.userProfile = UserProfileHelper(authData).getUserProfile()
-
-            return authData
+        // Generate AuthToken if we are working with AAS
+        if (tokenType == Token.AAS) {
+            val authToken = api.generateToken(token, GooglePlayApi.Service.GOOGLE_PLAY)
+            authData.authToken = authToken
         }
 
-        fun buildInsecure(
-            email: String,
-            authToken: String,
-            locale: Locale,
-            deviceInfoProvider: DeviceInfoProvider,
-            isAnonymous: Boolean = true
-        ): AuthData {
-            val authData = AuthData(email, authToken, isAnonymous)
+        // Accept GooglePlay TOS
+        api.toc()
 
-            authData.deviceInfoProvider = deviceInfoProvider
-            authData.locale = locale
+        // Fetch UserProfile
+        authData.userProfile = UserProfileHelper(authData).getUserProfile()
 
-            val api = GooglePlayApi(authData)
-
-            // Android GSF ID
-            val gsfId = api.generateGsfId(deviceInfoProvider)
-            authData.gsfId = gsfId
-
-            // Upload Device Config
-            val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
-            authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
-
-            // GooglePlay TOS
-            val tosResponse = api.toc()
-
-            // Fetch UserProfile
-            authData.userProfile = UserProfileHelper(authData).getUserProfile()
-
-            return authData
-        }
+        return authData
     }
 }
