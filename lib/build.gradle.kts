@@ -68,7 +68,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.25.2"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobufJavaliteVersion.get()}"
     }
     generateProtoTasks {
         all().forEach { task ->

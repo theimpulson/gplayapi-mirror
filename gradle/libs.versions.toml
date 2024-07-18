@@ -1,17 +1,17 @@
 [versions]
 activityVersion = "1.9.0"
 androidGradlePlugin = "8.5.1"
-coilVersion = "2.6.0"
+coilVersion = "2.7.0"
 composeBom = "2024.06.00"
 coreVersion = "1.13.1"
 coroutinesVersion = "1.8.1"
-gsonVersion = "2.10.1"
+gsonVersion = "2.11.0"
 kotlinVersion = "2.0.0"
-ktlintVersion = "12.1.0"
+ktlintVersion = "12.1.1"
 lifecycleVersion = "2.8.3"
 okhttpVersion = "4.12.0"
 protobufPluginVersion = "0.9.4"
-protobufJavaliteVersion = "3.25.3"
+protobufJavaliteVersion = "4.27.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityVersion" }
