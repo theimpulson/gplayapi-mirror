@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             GPlayApiTheme {
                 Scaffold {
                     val context = LocalContext.current
-                    LaunchedEffect(key1 = Unit) { viewModel.buildAuthData() }
+                    LaunchedEffect(key1 = Unit) { viewModel.buildAuthData(context) }
 
                     Column(
                         modifier = Modifier
