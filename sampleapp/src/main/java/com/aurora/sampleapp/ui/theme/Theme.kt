@@ -1,6 +1,7 @@
 package com.aurora.sampleapp.ui.theme
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
@@ -15,6 +16,7 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun GPlayApiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+    val view = LocalView.current
     val context = LocalContext.current
     val colorScheme = if (darkTheme) {
         dynamicDarkColorScheme(context)
@@ -22,8 +24,8 @@ fun GPlayApiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
         dynamicLightColorScheme(context)
     }
 
-    val view = LocalView.current
-    if (!view.isInEditMode) {
+    @Suppress("DEPRECATION")
+    if (!view.isInEditMode && Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.background.toArgb()
