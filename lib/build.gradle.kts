@@ -28,7 +28,7 @@ plugins {
 
 android {
     namespace = "com.aurora.gplayapi"
-    compileSdk = 34
+    compileSdk = 35
     version = libVersion
 
     defaultConfig {
