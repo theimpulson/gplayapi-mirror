@@ -76,7 +76,7 @@ internal object WebAppBuilder {
         }
     }
 
-    private fun parseArtwork(payload: ArrayList<Any>, artworkType: Int = 0): Artwork {
+    fun parseArtwork(payload: ArrayList<Any>, artworkType: Int = 0): Artwork {
         return Artwork().apply {
             type = artworkType
             url = payload.dig<String>(3, 2) ?: ""
