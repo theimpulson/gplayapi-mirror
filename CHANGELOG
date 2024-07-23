@@ -1,3 +1,8 @@
+Changelog : v3.4.1
+• Bump compileSdk to 35 (Android 15)
+• New WebDataSafetyHelper class for fetching data safety information
+• Update dependencies & plugins
+
 Changelog : v3.4.0
 • Model class(es) have been migrated to data class
 • AuthHelper has been simplified, requires using new method to build AuthData
