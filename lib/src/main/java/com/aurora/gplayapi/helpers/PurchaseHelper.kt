@@ -81,13 +81,18 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(IOException::class)
-    fun getDeliveryToken(packageName: String, versionCode: Int, offerType: Int, certificateHash: String): String {
+    fun getDeliveryToken(
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        certificateHash: String? = null
+    ): String {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
         params["doc"] = packageName
         params["vc"] = versionCode.toString()
 
-        if (certificateHash.isNotEmpty()) {
+        if (!certificateHash.isNullOrBlank()) {
             params["ch"] = certificateHash
         }
 
@@ -108,13 +113,13 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     @Throws(IOException::class)
     fun getDeliveryResponse(
         packageName: String,
-        splitModule: String = String(),
+        splitModule: String? = null,
         installedVersionCode: Int = 0,
         updateVersionCode: Int,
         offerType: Int,
         patchFormat: PATCH_FORMAT = PATCH_FORMAT.GDIFF,
         deliveryToken: String,
-        certificateHash: String
+        certificateHash: String? = null
     ): DeliveryResponse {
         val params: MutableMap<String, String> = HashMap()
         params["ot"] = offerType.toString()
@@ -126,11 +131,11 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
             params["pf"] = patchFormat.value.toString();
         }
 
-        if (splitModule.isNotEmpty())  {
+        if (!splitModule.isNullOrBlank())  {
             params["mn"] = splitModule
         }
 
-        if (certificateHash.isNotEmpty()) {
+        if (!certificateHash.isNullOrBlank()) {
             params["ch"] = certificateHash
         }
 
@@ -149,47 +154,23 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     }
 
     @Throws(Exception::class)
-    fun getOnDemandModule(
+    fun purchase(
         packageName: String,
-        splitModule: String,
         versionCode: Int,
         offerType: Int,
-        certificateHash: String = ""
-    ): File? {
-        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
-        val deliveryResponse = getDeliveryResponse(
-            packageName = packageName,
-            splitModule = splitModule,
-            updateVersionCode = versionCode,
-            offerType = offerType,
-            deliveryToken = deliveryToken,
-            certificateHash = certificateHash
-        )
-
-        val modules = processDeliveryResponse(packageName, versionCode, deliveryResponse)
-        return modules.find { it.name == "$splitModule.apk" }
-    }
-
-    @Throws(Exception::class)
-    fun purchase(packageName: String, versionCode: Int, offerType: Int, certificateHash: String = ""): List<File> {
-        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
-        val deliveryResponse = getDeliveryResponse(
-            packageName = packageName,
-            updateVersionCode = versionCode,
-            offerType = offerType,
-            deliveryToken = deliveryToken,
-            certificateHash = certificateHash
-        )
-
-        return processDeliveryResponse(packageName, versionCode, deliveryResponse)
-    }
-
-    @Throws(Exception::class)
-    private fun processDeliveryResponse(
-        packageName: String,
-        versionCode: Int,
-        deliveryResponse: DeliveryResponse
+        certificateHash: String? = null,
+        splitModule: String? = null,
     ): List<File> {
+        val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
+        val deliveryResponse = getDeliveryResponse(
+            packageName = packageName,
+            updateVersionCode = versionCode,
+            offerType = offerType,
+            deliveryToken = deliveryToken,
+            certificateHash = certificateHash,
+            splitModule = splitModule
+        )
+
         when (deliveryResponse.status) {
             1 -> return getDownloadsFromDeliveryResponse(packageName, versionCode, deliveryResponse)
             2 -> throw InternalException.AppNotSupported()
