@@ -15,7 +15,7 @@
 
 package com.aurora.gplayapi.helpers
 
-import com.aurora.gplayapi.Constants.PATCH_FORMAT
+import com.aurora.gplayapi.Constants.PatchFormat
 import com.aurora.gplayapi.DeliveryResponse
 import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.ListResponse
@@ -114,10 +114,10 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     fun getDeliveryResponse(
         packageName: String,
         splitModule: String? = null,
-        installedVersionCode: Int = 0,
+        installedVersionCode: Int? = null,
         updateVersionCode: Int,
         offerType: Int,
-        patchFormat: PATCH_FORMAT = PATCH_FORMAT.GDIFF,
+        patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF,
         deliveryToken: String,
         certificateHash: String? = null
     ): DeliveryResponse {
@@ -126,7 +126,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         params["doc"] = packageName
         params["vc"] = updateVersionCode.toString()
 
-        if (installedVersionCode > 0) {
+        if (installedVersionCode != null && installedVersionCode > 0) {
             params["bvc"] = installedVersionCode.toString();
             params["pf"] = patchFormat.value.toString();
         }
@@ -160,6 +160,8 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         offerType: Int,
         certificateHash: String? = null,
         splitModule: String? = null,
+        installedVersionCode: Int? = null,
+        patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF
     ): List<File> {
         val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
         val deliveryResponse = getDeliveryResponse(
@@ -168,7 +170,9 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
             offerType = offerType,
             deliveryToken = deliveryToken,
             certificateHash = certificateHash,
-            splitModule = splitModule
+            splitModule = splitModule,
+            installedVersionCode = installedVersionCode,
+            patchFormat = patchFormat
         )
 
         when (deliveryResponse.status) {

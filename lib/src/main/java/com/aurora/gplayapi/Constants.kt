@@ -35,7 +35,7 @@ object Constants {
         IMPERSONATION(12);
     }
 
-    enum class PATCH_FORMAT(var value: Int) {
+    enum class PatchFormat(var value: Int) {
         GDIFF(1),
         GZIPPED_GDIFF(2),
         GZIPPED_BSDIFF(3),
