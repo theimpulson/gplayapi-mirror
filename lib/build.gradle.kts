@@ -14,7 +14,7 @@ val shouldSignRelease: Boolean
     get() = !tokenUsername.isNullOrEmpty() && !tokenPassword.isNullOrEmpty()
 
 // Bump this version when making a new release
-val libVersion = "3.4.1"
+val libVersion = "3.4.2"
 
 plugins {
     alias(libs.plugins.android.library)

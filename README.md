@@ -17,10 +17,10 @@ I'm not resposible for anything that may go wrong with:
 
 ## Download
 
-GPlayAPI is available on the [maven central](https://central.sonatype.com/artifact/com.auroraoss/gplayapi).
+GPlayAPI is available on the [mavencentral](https://central.sonatype.com/artifact/com.auroraoss/gplayapi).
 
 ```kotlin
-implementation("com.aurora:gplayapi:3.4.1")
+implementation("com.aurora:gplayapi:3.4.2")
 ```
 
 You can get unsigned release builds for testing latest changes from our [GitLab Package Registry](https://gitlab.com/AuroraOSS/gplayapi/-/packages).
