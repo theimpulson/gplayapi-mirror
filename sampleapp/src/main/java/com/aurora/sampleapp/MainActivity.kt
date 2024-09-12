@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
 package com.aurora.sampleapp
 
 import android.os.Bundle

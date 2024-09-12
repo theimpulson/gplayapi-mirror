@@ -1,3 +1,7 @@
+<!--
+  ~ SPDX-FileCopyrightText: 2023 The Calyx Institute
+  ~ SPDX-License-Identifier: GPL-3.0-only
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
