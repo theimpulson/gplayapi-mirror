@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2023 The Calyx Institute
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
 image: theimpulson/gitlab-ci-android
 
 before_script:
