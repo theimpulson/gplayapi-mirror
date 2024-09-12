@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2020 Aurora OSS
+# SPDX-License-Identifier: GPL-3.0-only
+#
+
 .gradle/
 .idea/
 out/
