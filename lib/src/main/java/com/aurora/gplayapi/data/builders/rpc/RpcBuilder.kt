@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2023-2024 Aurora OSS
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 package com.aurora.gplayapi.data.builders.rpc
 
 import com.aurora.gplayapi.utils.dig

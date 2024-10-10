@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2024 The Calyx Institute
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 package com.aurora.gplayapi.helpers.web
 
 import com.aurora.gplayapi.SearchSuggestEntry

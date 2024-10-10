@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 package com.aurora.gplayapi.utils
 
 import com.aurora.gplayapi.helpers.contracts.StreamContract
