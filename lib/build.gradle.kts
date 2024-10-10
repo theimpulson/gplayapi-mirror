@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
 import java.util.Properties
 
 // Signing configuration
