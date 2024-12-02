@@ -87,7 +87,6 @@ protobuf {
     }
 }
 
-
 // Run "./gradlew publishReleasePublicationToLocalRepository" to generate release AAR locally
 publishing {
     publications {
@@ -155,7 +154,7 @@ publishing {
         }
         maven {
             name = "SonatypeOSSSnapshots"
-            version = "${libVersion}-SNAPSHOT"
+            version = "$libVersion-SNAPSHOT"
             setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             credentials {
                 username = tokenUsername
@@ -173,4 +172,3 @@ signing {
 tasks.withType<Sign> {
     onlyIf("Signing credentials are present (only used for maven central)") { shouldSignRelease }
 }
-
