@@ -13,10 +13,16 @@ import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.BaseHelper
 import com.aurora.gplayapi.utils.Commons
 import com.aurora.gplayapi.utils.dig
+import java.util.Locale
 
 abstract class BaseWebHelper : BaseHelper() {
+
+    var locale: Locale = Locale.getDefault()
+
+    abstract fun with(locale: Locale): BaseWebHelper
+
     fun execute(freq: String): HashMap<String, HashMap<String, Any>> {
-        val response = WebClient(httpClient).fetch(arrayOf(freq))
+        val response = WebClient(httpClient, locale).fetch(arrayOf(freq))
 
         return RpcBuilder.wrapResponse(response)
     }

@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2024 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -10,15 +11,22 @@ import com.aurora.gplayapi.network.DefaultHttpClient
 import com.aurora.gplayapi.network.IHttpClient
 import java.net.URLEncoder
 import java.nio.charset.Charset
+import java.util.Locale
 
-class WebClient(val httpClient: IHttpClient = DefaultHttpClient) {
+class WebClient(
+    val httpClient: IHttpClient = DefaultHttpClient,
+    val locale: Locale = Locale.getDefault()
+) {
+
     private val TAG = javaClass.simpleName
 
     fun fetch(rpcRequests: Array<String>): String {
         val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
         val headers = mapOf(
             "Content-Type" to "application/x-www-form-urlencoded;charset=utf-8",
-            "Origin" to "https://play.google.com"
+            "Origin" to "https://play.google.com",
+            "hl" to locale.language.lowercase(Locale.getDefault()),
+            "gl" to locale.country.lowercase(Locale.getDefault())
         )
 
         return try {

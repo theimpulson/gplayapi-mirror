@@ -11,8 +11,14 @@ import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.helpers.contracts.CategoryContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import java.util.Locale
 
 class WebCategoryHelper : BaseWebHelper(), CategoryContract {
+
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
+    }
+
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }

@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2024 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -11,12 +12,17 @@ import com.aurora.gplayapi.helpers.contracts.CategoryStreamContract
 import com.aurora.gplayapi.helpers.contracts.StreamContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.CategoryUtil
+import java.util.Locale
 
 class WebCategoryStreamHelper : BaseWebHelper(), CategoryStreamContract {
     private lateinit var webStreamHelper: WebStreamHelper
 
     init {
         this.webStreamHelper = WebStreamHelper()
+    }
+
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
     }
 
     override fun using(httpClient: IHttpClient) = apply {

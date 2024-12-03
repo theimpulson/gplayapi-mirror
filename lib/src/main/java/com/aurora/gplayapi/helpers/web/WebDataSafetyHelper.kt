@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2024 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -14,8 +15,14 @@ import com.aurora.gplayapi.data.models.datasafety.EntryType
 import com.aurora.gplayapi.data.models.datasafety.Report
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import java.util.Locale
 
 class WebDataSafetyHelper : BaseWebHelper() {
+
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
+    }
+
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }

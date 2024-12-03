@@ -13,10 +13,15 @@ import com.aurora.gplayapi.data.models.SearchBundle
 import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import java.util.Locale
 import java.util.UUID
 
 class WebSearchHelper : BaseWebHelper(), SearchContract {
     private var query: String = String()
+
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
+    }
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient

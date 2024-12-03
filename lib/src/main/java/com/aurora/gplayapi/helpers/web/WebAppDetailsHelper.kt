@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2024 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -14,6 +15,7 @@ import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.contracts.AppDetailsContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import java.util.Locale
 
 class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
@@ -28,7 +30,7 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
     override fun getAppByPackageName(packageNameList: List<String>): List<App> {
         val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
-        val response = WebClient(httpClient).fetch(requests.toTypedArray()).let {
+        val response = WebClient(httpClient, locale).fetch(requests.toTypedArray()).let {
             RpcBuilder.wrapResponse(it)
         }
 
@@ -71,6 +73,10 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         }
 
         return relatedClusters
+    }
+
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
     }
 
     override fun using(httpClient: IHttpClient) = apply {
