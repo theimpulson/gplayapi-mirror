@@ -1,3 +1,8 @@
+Changelog : v3.4.3
+• REUSE compliance
+• New method for Web API helper classes to change locale
+• Update dependencies & plugins
+
 Changelog : v3.4.2
 • Merge getOnDemandModule method into purchase method
 • Expose parameters for delta downloads in purchase method
