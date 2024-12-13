@@ -121,7 +121,7 @@ class ReviewsHelper(authData: AuthData) : NativeHelper(authData) {
         params["doc"] = packageName
         params["itpr"] = if (testing) "true" else "false"
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val reviewResponse = getReviewResponse(GooglePlayApi.URL_REVIEWS, params, headers)
+        val reviewResponse = getReviewResponse(GooglePlayApi.URL_REVIEW_USER, params, headers)
 
         reviewResponse?.let {
             if (it.userReviewsResponse.reviewCount > 0) {
