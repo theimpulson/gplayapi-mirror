@@ -1,3 +1,7 @@
+Changelog : v3.4.4
+• Fix user reviews
+• Add back sortBy newest for reviews
+
 Changelog : v3.4.3
 • REUSE compliance
 • New method for Web API helper classes to change locale
