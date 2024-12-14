@@ -92,6 +92,7 @@ class ReviewsHelper(authData: AuthData) : NativeHelper(authData) {
         params["n"] = resultNum.toString()
 
         when (filter) {
+            Review.Filter.NEWEST -> params["sort"] = filter.value
             Review.Filter.ALL -> params["sfilter"] = filter.value
             Review.Filter.POSITIVE, Review.Filter.CRITICAL -> params["sent"] = filter.value
             else -> params["rating"] = filter.value
@@ -121,7 +122,7 @@ class ReviewsHelper(authData: AuthData) : NativeHelper(authData) {
         params["doc"] = packageName
         params["itpr"] = if (testing) "true" else "false"
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        val reviewResponse = getReviewResponse(GooglePlayApi.URL_REVIEWS, params, headers)
+        val reviewResponse = getReviewResponse(GooglePlayApi.URL_REVIEW_USER, params, headers)
 
         reviewResponse?.let {
             if (it.userReviewsResponse.reviewCount > 0) {

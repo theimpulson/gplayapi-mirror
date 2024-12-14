@@ -3,6 +3,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import java.util.Properties
+
+// Load properties from local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
+val email = "\"${localProperties["GPLAY_API_EMAIL"] ?: System.getenv("GPLAY_API_EMAIL")}\""
+val token = "\"${localProperties["GPLAY_API_TOKEN"] ?: System.getenv("GPLAY_API_TOKEN")}\""
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -24,8 +36,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "GPLAY_API_EMAIL", "\"${System.getenv("GPLAY_API_EMAIL")}\"")
-        buildConfigField("String", "GPLAY_API_TOKEN", "\"${System.getenv("GPLAY_API_TOKEN")}\"")
+        buildConfigField("String", "GPLAY_API_EMAIL", email.toString())
+        buildConfigField("String", "GPLAY_API_TOKEN", token.toString())
     }
 
     buildTypes {
@@ -37,6 +49,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

@@ -34,6 +34,7 @@ data class Review(
 
     enum class Filter(val value: String) {
         ALL("ALL"),
+        NEWEST("0"),
         POSITIVE("1"),
         CRITICAL("2"),
         FIVE("5"),
