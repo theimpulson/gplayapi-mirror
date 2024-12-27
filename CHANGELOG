@@ -1,3 +1,7 @@
+Changelog : v3.4.5
+• Squash and improve auth validation logic into AuthHelper
+• Update dependencies & plugins
+
 Changelog : v3.4.4
 • Fix user reviews
 • Add back sortBy newest for reviews
