@@ -21,12 +21,11 @@ class WebClient(
     private val TAG = javaClass.simpleName
 
     fun fetch(rpcRequests: Array<String>): String {
-        val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
+        val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute?hl=${locale.language}&gl=${locale.country}"
+
         val headers = mapOf(
             "Content-Type" to "application/x-www-form-urlencoded;charset=utf-8",
-            "Origin" to "https://play.google.com",
-            "hl" to locale.language.lowercase(Locale.getDefault()),
-            "gl" to locale.country.lowercase(Locale.getDefault())
+            "Origin" to "https://play.google.com"
         )
 
         return try {
