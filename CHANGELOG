@@ -1,3 +1,7 @@
+Changelog : v3.4.6
+• Fix locale issue for Web API helper classes
+• Update dependencies & bump up Java version to 21
+
 Changelog : v3.4.5
 • Squash and improve auth validation logic into AuthHelper
 • Update dependencies & plugins
