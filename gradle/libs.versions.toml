@@ -1,22 +1,22 @@
 #
-# SPDX-FileCopyrightText: 2024 The Calyx Institute
+# SPDX-FileCopyrightText: 2024-2025 The Calyx Institute
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
 [versions]
-activityVersion = "1.9.3"
-androidGradlePlugin = "8.8.0"
+activityVersion = "1.10.1"
+androidGradlePlugin = "8.9.0"
 coilVersion = "2.7.0"
-composeBom = "2024.12.01"
+composeBom = "2025.03.00"
 coreVersion = "1.15.0"
 coroutinesVersion = "1.10.1"
-gsonVersion = "2.11.0"
-kotlinVersion = "2.1.0"
+gsonVersion = "2.12.1"
+kotlinVersion = "2.1.10"
 ktlintVersion = "12.1.2"
 lifecycleVersion = "2.8.7"
 okhttpVersion = "4.12.0"
 protobufPluginVersion = "0.9.4"
-protobufJavaliteVersion = "4.29.3"
+protobufJavaliteVersion = "4.30.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityVersion" }
