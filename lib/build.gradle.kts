@@ -38,7 +38,7 @@ kotlin {
 
 android {
     namespace = "com.aurora.gplayapi"
-    compileSdk = 35
+    compileSdk = 36
     version = libVersion
 
     defaultConfig {
