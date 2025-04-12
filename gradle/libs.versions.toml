@@ -5,18 +5,18 @@
 
 [versions]
 activityVersion = "1.10.1"
-androidGradlePlugin = "8.9.0"
-coilVersion = "2.7.0"
-composeBom = "2025.03.00"
-coreVersion = "1.15.0"
-coroutinesVersion = "1.10.1"
-gsonVersion = "2.12.1"
-kotlinVersion = "2.1.10"
+androidGradlePlugin = "8.9.1"
+coilVersion = "3.1.0"
+composeBom = "2025.04.00"
+coreVersion = "1.16.0"
+coroutinesVersion = "1.10.2"
+gsonVersion = "2.13.0"
+kotlinVersion = "2.1.20"
 ktlintVersion = "12.1.2"
 lifecycleVersion = "2.8.7"
 okhttpVersion = "4.12.0"
-protobufPluginVersion = "0.9.4"
-protobufJavaliteVersion = "4.30.1"
+protobufPluginVersion = "0.9.5"
+protobufJavaliteVersion = "4.30.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityVersion" }
@@ -29,7 +29,8 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreVers
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleVersion" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleVersion" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilVersion" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilVersion" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 google-protobuf = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavaliteVersion" }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutinesVersion" }

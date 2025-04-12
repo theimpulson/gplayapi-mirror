@@ -27,7 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.sampleapp.ui.theme.GPlayApiTheme
 
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                                         .requiredSize(192.dp)
                                         .clip(RoundedCornerShape(20.dp)),
                                     model = data.userProfile?.artwork?.url,
-                                    contentDescription = ""
+                                    contentDescription = null
                                 )
 
                                 Text(

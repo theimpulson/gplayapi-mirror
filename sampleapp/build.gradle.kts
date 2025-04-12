@@ -88,6 +88,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.network)
 
     // LifeCycle
     implementation(libs.androidx.lifecycle.runtime.ktx)
