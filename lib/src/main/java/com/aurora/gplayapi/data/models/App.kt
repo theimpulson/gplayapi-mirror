@@ -70,7 +70,7 @@ data class App(
     var testingProgram: TestingProgram? = null,
     var userReview: Review = Review(),
     var updatedOn: String = String(),
-    var versionCode: Int = 0,
+    var versionCode: Long = 0,
     var versionName: String = String(),
     var videoArtwork: Artwork = Artwork(),
     var certificateHashList: MutableList<String> = mutableListOf(),

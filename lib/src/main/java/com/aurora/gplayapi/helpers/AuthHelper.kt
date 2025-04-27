@@ -95,7 +95,7 @@ object AuthHelper {
                 .using(httpClient)
                 .getAppByPackageName(testPackageName)
 
-            app.packageName == testPackageName && app.versionCode != 0
+            app.packageName == testPackageName && app.versionCode != 0L
         } catch (e: Exception) {
             false
         }

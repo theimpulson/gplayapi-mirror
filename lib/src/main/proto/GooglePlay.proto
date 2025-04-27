@@ -984,7 +984,7 @@ message PlusPerson {
 message AppDetails {
   optional string developerName = 1;
   optional int32 majorVersionNumber = 2;
-  optional int32 versionCode = 3;
+  optional int64 versionCode = 3;
   optional string versionString = 4;
   optional string title = 5;
   repeated string appCategory = 7;
@@ -1083,7 +1083,7 @@ message Dependency {
 
 message LibraryDependency {
   optional string packageName = 1;
-  optional int32 versionCode = 2;
+  optional int64 versionCode = 2;
 }
 
 
