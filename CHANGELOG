@@ -1,3 +1,8 @@
+Changelog : v3.4.7
+• Bump compileSdk to API 36
+• Map versionCode for App to Long instead of Int
+• Update dependencies and plugins
+
 Changelog : v3.4.6
 • Fix locale issue for Web API helper classes
 • Update dependencies & bump up Java version to 21
