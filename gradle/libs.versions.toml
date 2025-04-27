@@ -5,12 +5,12 @@
 
 [versions]
 activityVersion = "1.10.1"
-androidGradlePlugin = "8.9.1"
+androidGradlePlugin = "8.9.2"
 coilVersion = "3.1.0"
-composeBom = "2025.04.00"
+composeBom = "2025.04.01"
 coreVersion = "1.16.0"
 coroutinesVersion = "1.10.2"
-gsonVersion = "2.13.0"
+gsonVersion = "2.13.1"
 kotlinVersion = "2.1.20"
 ktlintVersion = "12.1.2"
 lifecycleVersion = "2.8.7"
