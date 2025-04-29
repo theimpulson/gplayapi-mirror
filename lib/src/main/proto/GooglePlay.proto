@@ -1026,6 +1026,14 @@ message AppDetails {
   optional string downloadLabelAbbreviated = 77;
   optional string downloadLabel = 78;
   optional Compatibility compatibility = 82;
+  optional Support support = 86;
+}
+
+message Support {
+  optional string developerName = 1;
+  optional string developerEmail = 2;
+  optional string developerAddress = 3;
+  optional string developerPhoneNumber = 4;
 }
 
 message Compatibility {

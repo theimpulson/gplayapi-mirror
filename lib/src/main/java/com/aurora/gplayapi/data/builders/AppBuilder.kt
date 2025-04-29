@@ -16,6 +16,7 @@ import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.data.models.Support
 import com.aurora.gplayapi.data.models.details.Badge
 import com.aurora.gplayapi.data.models.details.Chip
 import com.aurora.gplayapi.data.models.editor.EditorChoiceReason
@@ -112,6 +113,7 @@ internal object AppBuilder {
         parseDependencies(app, appDetails)
         parseFiles(app, appDetails)
         parseTestingProgram(app, appDetails)
+        parseSupport(app, appDetails)
 
         return app
     }
@@ -292,5 +294,14 @@ internal object AppBuilder {
         val matcher: Matcher =
             Pattern.compile("[\\d]+").matcher(downloadInfo.replace("[,.\\s]+".toRegex(), ""))
         return if (matcher.find()) Util.parseLong(matcher.group(0), 0) else 0
+    }
+
+    private fun parseSupport(app: App, appDetails: AppDetails) {
+        app.support = Support(
+            developerName = appDetails.support.developerName,
+            developerEmail = appDetails.support.developerEmail,
+            developerAddress = appDetails.support.developerAddress,
+            developerPhoneNumber = appDetails.support.developerPhoneNumber
+        )
     }
 }
