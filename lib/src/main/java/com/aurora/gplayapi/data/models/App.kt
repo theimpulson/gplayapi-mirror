@@ -76,7 +76,8 @@ data class App(
     var certificateHashList: MutableList<String> = mutableListOf(),
     var certificateSetList: MutableList<EncodedCertificateSet> = mutableListOf(),
     val compatibility: MutableList<ActiveDevice> = mutableListOf(),
-    var contentRating: ContentRating = ContentRating()
+    var contentRating: ContentRating = ContentRating(),
+    var privacyPolicyUrl: String = String()
 ) : Parcelable {
 
     override fun hashCode(): Int {

@@ -75,6 +75,7 @@ internal object AppBuilder {
         app.developerWebsite = appDetails.developerWebsite
         app.targetSdk = appDetails.targetSdkVersion
         app.updatedOn = appDetails.infoUpdatedOn
+        app.privacyPolicyUrl = item.annotations.privacyPolicyUrl
 
         if (app.developerName.isEmpty()) {
             app.developerName = item.creator
