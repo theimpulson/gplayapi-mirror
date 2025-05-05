@@ -42,7 +42,7 @@ object AuthHelper {
         token: String,
         tokenType: Token,
         isAnonymous: Boolean = false,
-        properties: Properties = DeviceManager.loadProperties("px_7a.properties")!!,
+        properties: Properties = DeviceManager.loadProperties("px_9a.properties")!!,
         locale: Locale = Locale.getDefault()
     ): AuthData {
         val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())

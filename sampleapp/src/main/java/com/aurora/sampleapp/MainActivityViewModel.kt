@@ -28,7 +28,7 @@ class MainActivityViewModel : ViewModel() {
                 token = BuildConfig.GPLAY_API_TOKEN,
                 tokenType = AuthHelper.Token.AAS,
                 properties = Properties().apply {
-                    load(context.resources.openRawResource(com.aurora.gplayapi.R.raw.gplayapi_px_7a))
+                    load(context.resources.openRawResource(com.aurora.gplayapi.R.raw.gplayapi_px_9a))
                 }
             )
         }
