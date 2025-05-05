@@ -1,3 +1,8 @@
+Changelog : v3.4.8
+• Map properties for privacy policy and support section for App
+• All model objects are immutable
+• Drop old spoof configs
+
 Changelog : v3.4.7
 • Bump compileSdk to API 36
 • Map versionCode for App to Long instead of Int
