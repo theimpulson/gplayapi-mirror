@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2021 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -10,4 +10,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class EditorChoiceReason(var bulletins: List<String>, var description: String) : Parcelable
+data class EditorChoiceReason(
+    val bulletins: List<String>,
+    val description: String
+) : Parcelable

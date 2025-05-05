@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -45,22 +45,23 @@ class CategoryStreamHelper(authData: AuthData) : NativeHelper(authData), Categor
     @Throws(Exception::class)
     private fun getSubCategoryBundle(bytes: ByteArray?): StreamBundle {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
-        var streamBundle = StreamBundle()
-
-        if (responseWrapper.preFetchCount > 0) {
-            responseWrapper.preFetchList.forEach {
-                if (it.hasResponse() && it.response.hasPayload()) {
-                    val payload = it.response.payload
-                    val currentStreamBundle = getSubCategoryBundle(payload)
-                    streamBundle.streamClusters.putAll(currentStreamBundle.streamClusters)
+        return when {
+            responseWrapper.preFetchCount > 0 -> {
+                val streamClusters = mutableMapOf<Int, StreamCluster>()
+                responseWrapper.preFetchList.forEach {
+                    if (it.hasResponse() && it.response.hasPayload()) {
+                        val payload = it.response.payload
+                        val currentStreamBundle = getSubCategoryBundle(payload)
+                        streamClusters.putAll(currentStreamBundle.streamClusters)
+                    }
                 }
-            }
-        } else if (responseWrapper.hasPayload()) {
-            val payload = responseWrapper.payload
-            streamBundle = getSubCategoryBundle(payload)
-        }
 
-        return streamBundle
+                StreamBundle(streamClusters = streamClusters)
+            }
+
+            responseWrapper.hasPayload() -> getSubCategoryBundle(responseWrapper.payload)
+            else -> StreamBundle()
+        }
     }
 
     private fun getSubCategoryBundle(payload: Payload): StreamBundle {

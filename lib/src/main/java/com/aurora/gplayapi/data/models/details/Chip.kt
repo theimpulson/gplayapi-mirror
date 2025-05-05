@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -12,9 +12,9 @@ import java.util.UUID
 
 @Parcelize
 data class Chip(
-    var id: String = UUID.randomUUID().toString(),
-    var title: String = String(),
-    var streamUrl: String? = String()
+    val id: String = UUID.randomUUID().toString(),
+    val title: String = String(),
+    val streamUrl: String? = String()
 ) : Parcelable {
 
     override fun hashCode(): Int {

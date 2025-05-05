@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -13,13 +13,13 @@ import java.util.UUID
 
 @Parcelize
 data class Badge(
-    var id: String = UUID.randomUUID().toString(),
-    var textMajor: String = String(),
-    var textMinor: String = String(),
-    var textMinorHtml: String? = String(),
-    var textDescription: String? = String(),
-    var artwork: Artwork? = null,
-    var link: String = String()
+    val id: String = UUID.randomUUID().toString(),
+    val textMajor: String = String(),
+    val textMinor: String = String(),
+    val textMinorHtml: String? = String(),
+    val textDescription: String? = String(),
+    val artwork: Artwork? = null,
+    val link: String = String()
 ) : Parcelable {
 
     override fun equals(other: Any?): Boolean {

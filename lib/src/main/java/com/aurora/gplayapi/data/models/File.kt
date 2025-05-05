@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2021 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -12,13 +12,13 @@ import java.util.UUID
 
 @Parcelize
 data class File(
-    var id: String = UUID.randomUUID().toString(),
-    var name: String = String(),
-    var url: String = String(),
-    var size: Long = 0L,
-    var type: FileType = FileType.BASE,
-    var sha1: String = String(),
-    var sha256: String = String()
+    val id: String = UUID.randomUUID().toString(),
+    val name: String = String(),
+    val url: String = String(),
+    val size: Long = 0L,
+    val type: FileType = FileType.BASE,
+    val sha1: String = String(),
+    val sha256: String = String()
 ) : Parcelable {
 
     enum class FileType {

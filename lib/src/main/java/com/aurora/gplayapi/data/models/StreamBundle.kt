@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -13,9 +13,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class StreamBundle(
     val id: Int = Commons.getUniqueId(),
-    var streamTitle: String = String(),
-    var streamNextPageUrl: String = String(),
-    var streamClusters: MutableMap<Int, StreamCluster> = mutableMapOf()
+    val streamTitle: String = String(),
+    val streamNextPageUrl: String = String(),
+    val streamClusters: Map<Int, StreamCluster> = mapOf()
 ) : Parcelable {
     override fun hashCode(): Int {
         return id

@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -10,4 +10,6 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AppInfo(var appInfoMap: MutableMap<String, String> = mutableMapOf()) : Parcelable
+data class AppInfo(
+    val appInfoMap: Map<String, String> = mapOf()
+) : Parcelable

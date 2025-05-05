@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -9,9 +9,9 @@ package com.aurora.gplayapi.data.models
 data class SearchBundle(
     val id: Int = -1,
     val query: String = String(),
-    val suggestionTerms: MutableSet<String> = HashSet(),
-    val subBundles: MutableSet<SubBundle> = hashSetOf(),
-    val appList: MutableList<App> = mutableListOf()
+    val suggestionTerms: Set<String> = HashSet(),
+    val subBundles: Set<SubBundle> = hashSetOf(),
+    val appList: List<App> = listOf()
 ) {
 
     override fun hashCode(): Int {

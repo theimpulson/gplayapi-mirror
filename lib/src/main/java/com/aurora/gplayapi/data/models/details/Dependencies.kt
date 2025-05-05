@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -12,9 +12,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Dependencies(
-    var dependentPackages: MutableList<String> = mutableListOf(),
-    var dependentSplits: MutableList<String> = mutableListOf(),
-    var dependentLibraries: MutableList<App> = mutableListOf(),
-    var targetSDK: Int = -1,
-    var totalSize: Long = -1L
+    val dependentPackages: List<String> = listOf(),
+    val dependentSplits: List<String> = listOf(),
+    val dependentLibraries: List<App> = listOf(),
+    val targetSDK: Int = -1,
+    val totalSize: Long = -1L
 ) : Parcelable

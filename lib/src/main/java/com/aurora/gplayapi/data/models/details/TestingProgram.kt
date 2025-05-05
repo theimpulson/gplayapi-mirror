@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -12,16 +12,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TestingProgram(
-    var artwork: Artwork = Artwork(),
-    var displayName: String = String(),
-    var email: String = String(),
-    var isAvailable: Boolean = false,
-    var isSubscribed: Boolean = false,
-    var isSubscribedAndInstalled: Boolean = false
+    val artwork: Artwork = Artwork(),
+    val displayName: String = String(),
+    val email: String = String(),
+    val isAvailable: Boolean = false,
+    val isSubscribed: Boolean = false,
+    val isSubscribedAndInstalled: Boolean = false
 ) : Parcelable
 
 @Parcelize
 data class TestingProgramStatus(
-    var subscribed: Boolean = false,
-    var unsubscribed: Boolean = false
+    val subscribed: Boolean = false,
+    val unsubscribed: Boolean = false
 ) : Parcelable

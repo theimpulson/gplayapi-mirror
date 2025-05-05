@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -187,14 +187,14 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
             val androidAppDeliveryData = deliveryResponse.appDeliveryData
             if (androidAppDeliveryData != null) {
                 fileList.add(
-                    File().apply {
-                        name = "base.apk"
-                        url = androidAppDeliveryData.downloadUrl
-                        size = androidAppDeliveryData.downloadSize
-                        type = File.FileType.BASE
-                        sha1 = CertUtil.decodeHash(androidAppDeliveryData.sha1)
+                    File(
+                        name = "base.apk",
+                        url = androidAppDeliveryData.downloadUrl,
+                        size = androidAppDeliveryData.downloadSize,
+                        type = File.FileType.BASE,
+                        sha1 = CertUtil.decodeHash(androidAppDeliveryData.sha1),
                         sha256 = CertUtil.decodeHash(androidAppDeliveryData.sha256)
-                    }
+                    )
                 )
 
                 // Obb & patches (if any)
@@ -204,13 +204,13 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
                         val isOBB = appFileMetadata.fileType == 0
                         val fileType = if (isOBB) "main" else "patch"
                         fileList.add(
-                            File().apply {
-                                name = "$fileType.$versionCode.$packageName.obb"
-                                url = appFileMetadata.downloadUrl
-                                size = appFileMetadata.size
-                                type = if (isOBB) File.FileType.OBB else File.FileType.PATCH
+                            File(
+                                name = "$fileType.$versionCode.$packageName.obb",
+                                url = appFileMetadata.downloadUrl,
+                                size = appFileMetadata.size,
+                                type = if (isOBB) File.FileType.OBB else File.FileType.PATCH,
                                 sha1 = CertUtil.decodeHash(appFileMetadata.sha1)
-                            }
+                            )
                         )
                     }
                 }
@@ -220,14 +220,14 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
                 if (fileMetadataList != null) {
                     for (splitDeliveryData in splitDeliveryDataList) {
                         fileList.add(
-                            File().apply {
-                                name = "${splitDeliveryData.name}.apk"
-                                url = splitDeliveryData.downloadUrl
-                                size = splitDeliveryData.downloadSize
-                                type = File.FileType.SPLIT
-                                sha1 = CertUtil.decodeHash(splitDeliveryData.sha1)
+                            File(
+                                name = "${splitDeliveryData.name}.apk",
+                                url = splitDeliveryData.downloadUrl,
+                                size = splitDeliveryData.downloadSize,
+                                type = File.FileType.SPLIT,
+                                sha1 = CertUtil.decodeHash(splitDeliveryData.sha1),
                                 sha256 = CertUtil.decodeHash(splitDeliveryData.sha256)
-                            }
+                            )
                         )
                     }
                 }

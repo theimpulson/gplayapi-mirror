@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -171,20 +171,17 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
 
         return if (playResponse.isSuccessful) {
             val payload = getPayLoadFromBytes(playResponse.responseBytes)
-            payload.hasTestingProgramResponse()
-            TestingProgramStatus().apply {
-                if (payload.hasTestingProgramResponse() &&
-                    payload.testingProgramResponse.hasResult() &&
-                    payload.testingProgramResponse.result.hasDetails()
-                ) {
-                    val details = payload.testingProgramResponse.result.details
-                    if (details.hasSubscribed()) {
-                        subscribed = details.subscribed
-                    }
-                    if (details.hasUnsubscribed()) {
-                        unsubscribed = details.unsubscribed
-                    }
-                }
+            if (payload.hasTestingProgramResponse() &&
+                payload.testingProgramResponse.hasResult() &&
+                payload.testingProgramResponse.result.hasDetails()
+            ) {
+                val details = payload.testingProgramResponse.result.details
+                return TestingProgramStatus(
+                    subscribed = details.hasSubscribed() && details.subscribed,
+                    unsubscribed = details.hasUnsubscribed() && details.unsubscribed
+                )
+            } else {
+                TestingProgramStatus()
             }
         } else {
             TestingProgramStatus()

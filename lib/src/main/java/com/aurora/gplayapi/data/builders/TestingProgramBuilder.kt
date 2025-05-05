@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -13,16 +13,14 @@ internal object TestingProgramBuilder {
 
     fun build(appDetails: AppDetails): TestingProgram? {
         return if (appDetails.hasTestingProgramInfo()) {
-            TestingProgram().apply {
-                appDetails.testingProgramInfo?.let {
-                    artwork = ArtworkBuilder.build(it.image)
-                    displayName = it.displayName
-                    email = it.email
-                    isAvailable = true
-                    isSubscribed = it.subscribed
-                    isSubscribedAndInstalled = it.subscribedAndInstalled
-                }
-            }
+            TestingProgram(
+                artwork = ArtworkBuilder.build(appDetails.testingProgramInfo.image),
+                displayName = appDetails.testingProgramInfo.displayName,
+                email = appDetails.testingProgramInfo.email,
+                isAvailable = true,
+                isSubscribed = appDetails.testingProgramInfo.subscribed,
+                isSubscribedAndInstalled = appDetails.testingProgramInfo.subscribedAndInstalled
+            )
         } else {
             null
         }

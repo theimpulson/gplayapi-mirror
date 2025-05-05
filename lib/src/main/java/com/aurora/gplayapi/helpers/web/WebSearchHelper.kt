@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
- * SPDX-FileCopyrightText: 2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2024-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -9,7 +9,9 @@ package com.aurora.gplayapi.helpers.web
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
+import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
 import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
@@ -96,14 +98,15 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
     }
 
     override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
-        val compositeSearchBundle = SearchBundle()
+        val appList = mutableListOf<App>()
+        val subBundles = mutableSetOf<SubBundle>()
 
         bundleSet.forEach {
             val searchBundle = searchResults(query, it.nextPageUrl)
-            compositeSearchBundle.appList.addAll(searchBundle.appList)
-            compositeSearchBundle.subBundles.addAll(searchBundle.subBundles)
+            appList.addAll(searchBundle.appList)
+            subBundles.addAll(searchBundle.subBundles)
         }
 
-        return compositeSearchBundle
+        return SearchBundle(appList = appList, subBundles = subBundles)
     }
 }

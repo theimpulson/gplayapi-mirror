@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -107,22 +107,24 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
 
     @Throws(Exception::class)
     override fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
-        val compositeSearchBundle = SearchBundle()
+        val appList = mutableListOf<App>()
+        val subBundles = mutableSetOf<SubBundle>()
 
         bundleSet.forEach {
             val searchBundle = searchResults(query, it.nextPageUrl)
-            compositeSearchBundle.appList.addAll(searchBundle.appList)
-            compositeSearchBundle.subBundles.addAll(searchBundle.subBundles)
+            appList.addAll(searchBundle.appList)
+            subBundles.addAll(searchBundle.subBundles)
         }
 
-        return compositeSearchBundle
+        return SearchBundle(appList = appList, subBundles = subBundles)
     }
 
     private fun getSearchBundle(listResponse: ListResponse): SearchBundle {
-        val searchBundle = SearchBundle()
-        val appList: MutableList<App> = mutableListOf()
+        val appList = mutableListOf<App>()
+        val subBundles = mutableSetOf<SubBundle>()
         val itemList = listResponse.itemList
-        for (item in itemList) {
+
+        itemList.forEach { item ->
             if (item.subItemCount > 0) {
                 for (subItem in item.subItemList) {
                     // Filter out only apps, discard other items (Music, Ebooks, Movies)
@@ -136,11 +138,11 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
                             appList.add(AppBuilder.build(subItem))
                         }
                     }
-                    searchBundle.subBundles.add(getSubBundle(subItem))
+                    subBundles.add(getSubBundle(subItem))
                 }
-                searchBundle.subBundles.add(getSubBundle(item))
+                subBundles.add(getSubBundle(item))
             }
         }
-        return searchBundle.copy(appList = appList)
+        return SearchBundle(appList = appList, subBundles = subBundles)
     }
 }

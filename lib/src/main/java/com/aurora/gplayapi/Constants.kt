@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -9,11 +9,11 @@ package com.aurora.gplayapi
 object Constants {
 
     const val IMAGE_TYPE_APP_SCREENSHOT = 1
-    const val IMAGE_TYPE_PLAY_STORE_PAGE_BACKGROUND = 2
+    const val IMAGE_TYPE_PAGE_BACKGROUND = 2
     const val IMAGE_TYPE_YOUTUBE_VIDEO_LINK = 3
     const val IMAGE_TYPE_APP_ICON = 4
     const val IMAGE_TYPE_CATEGORY_ICON = 5
-    const val IMAGE_TYPE_YOUTUBE_VIDEO_THUMBNAIL = 13
+    const val IMAGE_TYPE_VIDEO_THUMBNAIL = 13
     const val IMAGE_TYPE_GOOGLE_PLUS_BACKGROUND = 15
 
     enum class ABUSE(var value: Int) {

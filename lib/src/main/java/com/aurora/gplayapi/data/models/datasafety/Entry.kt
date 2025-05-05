@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -11,13 +12,13 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Entry(
-    var name: String,
-    var description: String,
-    var purpose: String = "",
-    var artwork: Artwork = Artwork(),
-    var subEntries: List<Entry> = listOf(),
-    var data: List<Data> = listOf(),
-    var type: EntryType = EntryType.UNKNOWN,
+    val name: String,
+    val description: String,
+    val purpose: String = String(),
+    val artwork: Artwork = Artwork(),
+    val subEntries: List<Entry> = listOf(),
+    val data: List<Data> = listOf(),
+    val type: EntryType = EntryType.UNKNOWN,
 ) : Parcelable {
     override fun hashCode(): Int {
         return name.hashCode()

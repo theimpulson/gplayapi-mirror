@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2021 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -11,12 +11,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Artwork(
-    var type: Int = 0,
-    var url: String = String(),
-    var urlAlt: String = String(),
-    var aspectRatio: Int = 0,
-    var width: Int = 0,
-    var height: Int = 0
+    val type: Int = 0,
+    val url: String = String(),
+    val urlAlt: String = String(),
+    val aspectRatio: Int = 0,
+    val width: Int = 0,
+    val height: Int = 0
 ) : Parcelable {
 
     override fun hashCode(): Int {

@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
+ * SPDX-FileCopyrightText: 2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -13,10 +14,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Report(
     val packageName: String,
-    var developerInfo: DeveloperInfo = DeveloperInfo("unknown"),
-    var artwork: Artwork = Artwork(),
-    var privacyUrl: String = "",
-    var entries: List<Entry> = listOf()
+    val developerInfo: DeveloperInfo = DeveloperInfo("unknown"),
+    val artwork: Artwork = Artwork(),
+    val privacyUrl: String = String(),
+    val entries: List<Entry> = listOf()
 ) : Parcelable {
     override fun hashCode(): Int {
         return packageName.hashCode()

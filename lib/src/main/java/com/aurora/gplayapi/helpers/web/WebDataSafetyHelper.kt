@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2024 Aurora OSS
- * SPDX-FileCopyrightText: 2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2024-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -35,10 +35,11 @@ class WebDataSafetyHelper : BaseWebHelper() {
 
         val subEntries: Collection<Any> = dataSafetyPayload.dig(137, 4) ?: arrayListOf()
 
-        return Report(packageName).apply {
-            developerInfo = parseDevInfo(dataSafetyPayload)
-            artwork = parseArtwork(dataSafetyPayload.dig(95, 0) ?: arrayListOf(), 4)
-            privacyUrl = dataSafetyPayload.dig(99, 0, 5, 2) ?: ""
+        return Report(
+            packageName = packageName,
+            developerInfo = parseDevInfo(dataSafetyPayload),
+            artwork = parseArtwork(dataSafetyPayload.dig(95, 0) ?: arrayListOf(), 4),
+            privacyUrl = dataSafetyPayload.dig(99, 0, 5, 2) ?: "",
             entries = mutableListOf(
                 parseEntry(EntryType.DATA_SHARED, subEntries.dig(0) ?: arrayListOf()),
                 parseEntry(EntryType.DATA_COLLECTED, subEntries.dig(1) ?: arrayListOf()),
@@ -47,17 +48,17 @@ class WebDataSafetyHelper : BaseWebHelper() {
                     dataSafetyPayload.dig(137, 9) ?: arrayListOf()
                 )
             )
-        }
+        )
     }
 
     private fun parseDevInfo(payload: Collection<Any>): DeveloperInfo {
-        val devId = payload.dig<String>(68, 2) ?: payload.dig<String>(68, 0) ?: "unknown"
-        return DeveloperInfo(devId).apply {
-            name = payload.dig(68, 0) ?: ""
-            website = payload.dig(69, 0, 5, 2) ?: ""
-            email = payload.dig(69, 1, 0) ?: ""
+        return DeveloperInfo(
+            devId = payload.dig<String>(68, 2) ?: payload.dig<String>(68, 0) ?: "unknown",
+            name = payload.dig(68, 0) ?: "",
+            website = payload.dig(69, 0, 5, 2) ?: "",
+            email = payload.dig(69, 1, 0) ?: "",
             address = payload.dig(69, 2, 0) ?: ""
-        }
+        )
     }
 
     private fun parseEntry(entryType: EntryType, payload: Collection<Any>): Entry {

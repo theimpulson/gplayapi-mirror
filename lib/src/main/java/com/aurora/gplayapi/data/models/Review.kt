@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2021 Aurora OSS
- * SPDX-FileCopyrightText: 2023 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -11,14 +11,14 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Review(
-    var title: String = String(),
-    var comment: String = String(),
-    var commentId: String = String(),
-    var userName: String = String(),
-    var userPhotoUrl: String = String(),
-    var appVersion: String = String(),
-    var rating: Int = 0,
-    var timeStamp: Long = 0L
+    val title: String = String(),
+    val comment: String = String(),
+    val commentId: String = String(),
+    val userName: String = String(),
+    val userPhotoUrl: String = String(),
+    val appVersion: String = String(),
+    val rating: Int = 0,
+    val timeStamp: Long = 0L
 ) : Parcelable {
 
     override fun hashCode(): Int {

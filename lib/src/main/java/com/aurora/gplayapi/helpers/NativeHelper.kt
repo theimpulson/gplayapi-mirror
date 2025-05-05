@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2024 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -210,13 +210,13 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         if (item.imageCount > 0) {
             item.imageList.forEach {
                 artworkList.add(
-                    Artwork().apply {
-                        type = it.imageType
-                        url = it.imageUrl
-                        aspectRatio = it.dimension.aspectRatio
-                        width = it.dimension.width
+                    Artwork(
+                        type = it.imageType,
+                        url = it.imageUrl,
+                        aspectRatio = it.dimension.aspectRatio,
+                        width = it.dimension.width,
                         height = it.dimension.height
-                    }
+                    )
                 )
             }
         }
