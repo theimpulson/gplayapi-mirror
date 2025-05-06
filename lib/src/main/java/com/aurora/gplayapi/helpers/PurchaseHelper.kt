@@ -74,7 +74,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     @Throws(IOException::class)
     fun getDeliveryToken(
         packageName: String,
-        versionCode: Int,
+        versionCode: Long,
         offerType: Int,
         certificateHash: String? = null
     ): String {
@@ -105,8 +105,8 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     fun getDeliveryResponse(
         packageName: String,
         splitModule: String? = null,
-        installedVersionCode: Int? = null,
-        updateVersionCode: Int,
+        installedVersionCode: Long? = null,
+        updateVersionCode: Long,
         offerType: Int,
         patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF,
         deliveryToken: String,
@@ -147,11 +147,11 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
     @Throws(Exception::class)
     fun purchase(
         packageName: String,
-        versionCode: Int,
+        versionCode: Long,
         offerType: Int,
         certificateHash: String? = null,
         splitModule: String? = null,
-        installedVersionCode: Int? = null,
+        installedVersionCode: Long? = null,
         patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF
     ): List<File> {
         val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
@@ -178,7 +178,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
 
     private fun getDownloadsFromDeliveryResponse(
         packageName: String?,
-        versionCode: Int,
+        versionCode: Long,
         deliveryResponse: DeliveryResponse?
     ): List<File> {
         val fileList: MutableList<File> = mutableListOf()
