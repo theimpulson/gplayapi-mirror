@@ -11,17 +11,17 @@ import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 @Parcelize
-data class File(
+data class PlayFile(
     val id: String = UUID.randomUUID().toString(),
     val name: String = String(),
     val url: String = String(),
     val size: Long = 0L,
-    val type: FileType = FileType.BASE,
+    val type: Type = Type.BASE,
     val sha1: String = String(),
     val sha256: String = String()
 ) : Parcelable {
 
-    enum class FileType {
+    enum class Type {
         BASE, OBB, PATCH, SPLIT
     }
 
@@ -31,7 +31,7 @@ data class File(
 
     override fun equals(other: Any?): Boolean {
         return when (other) {
-            is File -> other.id == id
+            is PlayFile -> other.id == id
             else -> false
         }
     }

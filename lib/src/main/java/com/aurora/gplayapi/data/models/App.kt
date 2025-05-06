@@ -42,7 +42,7 @@ data class App(
     val editorReason: EditorChoiceReason? = null,
     val downloadString: String = String(),
     val earlyAccess: Boolean = false,
-    val fileList: List<File> = listOf(),
+    val fileList: List<PlayFile> = listOf(),
     val footerHtml: String = String(),
     val iconArtwork: Artwork = Artwork(),
     val infoBadges: List<Badge> = listOf(),

@@ -20,7 +20,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
-import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.data.models.PlayFile
 import com.aurora.gplayapi.data.models.Support
 import com.aurora.gplayapi.data.models.details.AppInfo
 import com.aurora.gplayapi.data.models.details.Badge
@@ -158,24 +158,24 @@ internal object AppBuilder {
         packageName: String,
         versionCode: Long,
         appDetails: AppDetails
-    ): List<File> {
+    ): List<PlayFile> {
         return appDetails.fileList.map { file ->
             when {
-                file.hasSplitId() -> File(
+                file.hasSplitId() -> PlayFile(
                     name = "${file.splitId}.$versionCode.apk",
-                    type = File.FileType.SPLIT,
+                    type = PlayFile.Type.SPLIT,
                     size = file.size
                 )
 
-                file.fileType == 1 -> File(
+                file.fileType == 1 -> PlayFile(
                     name = "$packageName.$versionCode.obb",
-                    type = File.FileType.OBB,
+                    type = PlayFile.Type.OBB,
                     size = file.size
                 )
 
-                else -> File(
+                else -> PlayFile(
                     name = "$packageName.$versionCode.apk",
-                    type = File.FileType.BASE,
+                    type = PlayFile.Type.BASE,
                     size = file.size
                 )
             }

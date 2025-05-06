@@ -13,7 +13,7 @@ import com.aurora.gplayapi.ListResponse
 import com.aurora.gplayapi.ResponseWrapper
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
-import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.data.models.PlayFile
 import com.aurora.gplayapi.data.providers.HeaderProvider
 import com.aurora.gplayapi.exceptions.InternalException
 import com.aurora.gplayapi.network.IHttpClient
@@ -153,7 +153,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         splitModule: String? = null,
         installedVersionCode: Long? = null,
         patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF
-    ): List<File> {
+    ): List<PlayFile> {
         val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
         val deliveryResponse = getDeliveryResponse(
             packageName = packageName,
@@ -180,18 +180,18 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         packageName: String?,
         versionCode: Long,
         deliveryResponse: DeliveryResponse?
-    ): List<File> {
-        val fileList: MutableList<File> = mutableListOf()
+    ): List<PlayFile> {
+        val fileList: MutableList<PlayFile> = mutableListOf()
         if (deliveryResponse != null) {
             // Add base apk
             val androidAppDeliveryData = deliveryResponse.appDeliveryData
             if (androidAppDeliveryData != null) {
                 fileList.add(
-                    File(
+                    PlayFile(
                         name = "base.apk",
                         url = androidAppDeliveryData.downloadUrl,
                         size = androidAppDeliveryData.downloadSize,
-                        type = File.FileType.BASE,
+                        type = PlayFile.Type.BASE,
                         sha1 = CertUtil.decodeHash(androidAppDeliveryData.sha1),
                         sha256 = CertUtil.decodeHash(androidAppDeliveryData.sha256)
                     )
@@ -204,11 +204,11 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
                         val isOBB = appFileMetadata.fileType == 0
                         val fileType = if (isOBB) "main" else "patch"
                         fileList.add(
-                            File(
+                            PlayFile(
                                 name = "$fileType.$versionCode.$packageName.obb",
                                 url = appFileMetadata.downloadUrl,
                                 size = appFileMetadata.size,
-                                type = if (isOBB) File.FileType.OBB else File.FileType.PATCH,
+                                type = if (isOBB) PlayFile.Type.OBB else PlayFile.Type.PATCH,
                                 sha1 = CertUtil.decodeHash(appFileMetadata.sha1)
                             )
                         )
@@ -220,11 +220,11 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
                 if (fileMetadataList != null) {
                     for (splitDeliveryData in splitDeliveryDataList) {
                         fileList.add(
-                            File(
+                            PlayFile(
                                 name = "${splitDeliveryData.name}.apk",
                                 url = splitDeliveryData.downloadUrl,
                                 size = splitDeliveryData.downloadSize,
-                                type = File.FileType.SPLIT,
+                                type = PlayFile.Type.SPLIT,
                                 sha1 = CertUtil.decodeHash(splitDeliveryData.sha1),
                                 sha256 = CertUtil.decodeHash(splitDeliveryData.sha256)
                             )
