@@ -211,8 +211,5 @@ class GooglePlayApi(private val authData: AuthData) {
         const val URL_USER_PROFILE = "$URL_FDFE/api/userProfile"
         const val URL_LIBRARY = "$URL_FDFE/library"
         const val URL_MODIFY_LIBRARY = "$URL_FDFE/modifyLibrary"
-
-        // Not part of Google's API
-        const val SALES_URL = "https://www.bestappsale.com/api/android/getsale.php"
     }
 }
