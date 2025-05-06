@@ -6,8 +6,7 @@
 package com.aurora.gplayapi.data.builders.rpc
 
 import com.aurora.gplayapi.utils.dig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.json.Json
 
 internal object RpcBuilder {
     fun wrapResponse(input: String): HashMap<String, HashMap<String, Any>> {
@@ -17,7 +16,7 @@ internal object RpcBuilder {
 
         lines
             .filter { it.startsWith("[[\"wrb.fr") }
-            .map { parseJaggedString(it) }
+            .map { Json.decodeFromString<Collection<Any>>(it) }
             .first()
             .forEach {
                 if (it.dig<String>(0) == "wrb.fr") {
@@ -34,15 +33,9 @@ internal object RpcBuilder {
                     result[type] = hashMapOf()
                 }
 
-                result[type]?.put(packageName, parseJaggedString(rpcData))
+                result[type]?.put(packageName, Json.decodeFromString<Collection<Any>>(rpcData))
             }
 
         return result
-    }
-
-    private fun parseJaggedString(input: String): Collection<Any> {
-        val gson = Gson()
-        val arrayType = object : TypeToken<Collection<Any>>() {}.type
-        return gson.fromJson(input, arrayType)
     }
 }

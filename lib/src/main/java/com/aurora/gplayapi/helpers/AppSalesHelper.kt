@@ -11,7 +11,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.sale.SaleBundle
 import com.aurora.gplayapi.network.IHttpClient
-import com.google.gson.Gson
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.util.Locale
 
@@ -32,7 +32,7 @@ class AppSalesHelper(authData: AuthData) : NativeHelper(authData) {
         /*params["typefilter"] = type Not sure of values */
 
         val playResponse = httpClient.get(GooglePlayApi.SALES_URL, headers = mapOf(), params)
-        val saleBundle = Gson().fromJson(String(playResponse.responseBytes), SaleBundle::class.java)
+        val saleBundle = Json.decodeFromString<SaleBundle>(String(playResponse.responseBytes))
 
         return if (saleBundle.sales.isEmpty()) {
             listOf()

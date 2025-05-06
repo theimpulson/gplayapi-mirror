@@ -26,6 +26,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.protobuf)
     `maven-publish`
@@ -70,15 +71,15 @@ android {
 
 dependencies {
 
-    implementation(libs.google.gson)
     implementation(libs.google.protobuf)
     implementation(libs.squareup.okhttp)
-    implementation(libs.kotlin.coroutines.android)
+    implementation(libs.jetbrains.kotlin.coroutines)
+    implementation(libs.jetbrains.kotlin.serialization)
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobufJavaliteVersion.get()}"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobufJavalite.get()}"
     }
     generateProtoTasks {
         all().forEach { task ->
