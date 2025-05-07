@@ -5,6 +5,7 @@
 
 package com.aurora.gplayapi.data.models
 
+@ConsistentCopyVisibility
 data class AndroidCheckInResponse internal constructor(
     val gsfId: String,
     val deviceCheckInConsistencyToken: String
