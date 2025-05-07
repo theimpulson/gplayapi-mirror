@@ -1,14 +1,17 @@
 /*
  * SPDX-FileCopyrightText: 2020-2021 Aurora OSS
- * SPDX-FileCopyrightText: 2023-2024 The Calyx Institute
+ * SPDX-FileCopyrightText: 2023-2025 The Calyx Institute
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 package com.aurora.gplayapi.data.models
 
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
+import com.aurora.gplayapi.data.serializers.LocaleSerializer
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
+@Serializable
 data class AuthData(
     val email: String,
     val aasToken: String = String(),
@@ -24,6 +27,7 @@ data class AuthData(
     val gcmToken: String = String(),
     val oAuthLoginToken: String = String(),
     val dfeCookie: String = String(),
+    @Serializable(with = LocaleSerializer::class)
     val locale: Locale = Locale.getDefault(),
     val deviceInfoProvider: DeviceInfoProvider? = null,
     val userProfile: UserProfile? = null

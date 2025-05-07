@@ -11,12 +11,18 @@ import com.aurora.gplayapi.AndroidCheckinProto
 import com.aurora.gplayapi.AndroidCheckinRequest
 import com.aurora.gplayapi.DeviceConfigurationProto
 import com.aurora.gplayapi.DeviceFeature
+import com.aurora.gplayapi.data.serializers.PropertiesSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.Properties
 
+@Serializable
 class DeviceInfoProvider(
+    @Serializable(with = PropertiesSerializer::class)
      val properties: Properties,
      val localeString: String
 ) : BaseDeviceInfoProvider() {
+
     @Transient
     private var timeToReport = System.currentTimeMillis() / 1000
 

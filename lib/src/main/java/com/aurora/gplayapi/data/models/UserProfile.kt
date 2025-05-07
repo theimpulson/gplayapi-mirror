@@ -6,6 +6,9 @@
 
 package com.aurora.gplayapi.data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UserProfile(
     val name: String = String(),
     val email: String = String(),

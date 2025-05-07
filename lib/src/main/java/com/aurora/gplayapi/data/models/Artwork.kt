@@ -8,7 +8,9 @@ package com.aurora.gplayapi.data.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Artwork(
     val type: Int = 0,
