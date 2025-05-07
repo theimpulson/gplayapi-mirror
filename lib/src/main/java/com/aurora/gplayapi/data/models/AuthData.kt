@@ -9,38 +9,68 @@ package com.aurora.gplayapi.data.models
 import com.aurora.gplayapi.data.providers.DeviceInfoProvider
 import java.util.Locale
 
-class AuthData internal constructor(val email: String) {
+data class AuthData(
+    val email: String,
+    val aasToken: String = String(),
+    val authToken: String = String(),
+    val isAnonymous: Boolean = false,
+    val gsfId: String = String(),
+    val tokenDispenserUrl: String = String(),
+    val ac2dmToken: String = String(),
+    val androidCheckInToken: String = String(),
+    val deviceCheckInConsistencyToken: String = String(),
+    val deviceConfigToken: String = String(),
+    val experimentsConfigToken: String = String(),
+    val gcmToken: String = String(),
+    val oAuthLoginToken: String = String(),
+    val dfeCookie: String = String(),
+    val locale: Locale = Locale.getDefault(),
+    val deviceInfoProvider: DeviceInfoProvider? = null,
+    val userProfile: UserProfile? = null
+) {
 
-    var aasToken: String = String()
-        internal set
-    var authToken: String = String()
-        internal set
-    var isAnonymous: Boolean = false
-        internal set
-    var gsfId: String = String()
-        internal set
-    var tokenDispenserUrl: String = String()
-        internal set
-    var ac2dmToken: String = String()
-        internal set
-    var androidCheckInToken: String = String()
-        internal set
-    var deviceCheckInConsistencyToken: String = String()
-        internal set
-    var deviceConfigToken: String = String()
-        internal set
-    var experimentsConfigToken: String = String()
-        internal set
-    var gcmToken: String = String()
-        internal set
-    var oAuthLoginToken: String = String()
-        internal set
-    var dfeCookie: String = String()
-        internal set
-    var locale: Locale = Locale.getDefault()
-        internal set
-    var deviceInfoProvider: DeviceInfoProvider? = null
-        internal set
-    var userProfile: UserProfile? = null
-        internal set
+    /**
+     * Builder class for building [AuthData] manually
+     */
+    data class Builder(
+        var email: String,
+        var aasToken: String = String(),
+        var authToken: String = String(),
+        var isAnonymous: Boolean = false,
+        var gsfId: String = String(),
+        var tokenDispenserUrl: String = String(),
+        var ac2dmToken: String = String(),
+        var androidCheckInToken: String = String(),
+        var deviceCheckInConsistencyToken: String = String(),
+        var deviceConfigToken: String = String(),
+        var experimentsConfigToken: String = String(),
+        var gcmToken: String = String(),
+        var oAuthLoginToken: String = String(),
+        var dfeCookie: String = String(),
+        var locale: Locale = Locale.getDefault(),
+        var deviceInfoProvider: DeviceInfoProvider? = null,
+        var userProfile: UserProfile? = null
+    ) {
+        fun build(): AuthData {
+            return AuthData(
+                email = email,
+                aasToken = aasToken,
+                authToken = authToken,
+                isAnonymous = isAnonymous,
+                gsfId = gsfId,
+                tokenDispenserUrl = tokenDispenserUrl,
+                ac2dmToken = ac2dmToken,
+                androidCheckInToken = androidCheckInToken,
+                deviceCheckInConsistencyToken = deviceCheckInConsistencyToken,
+                deviceConfigToken = deviceConfigToken,
+                experimentsConfigToken = experimentsConfigToken,
+                gcmToken = gcmToken,
+                oAuthLoginToken = oAuthLoginToken,
+                dfeCookie = dfeCookie,
+                locale = locale,
+                deviceInfoProvider = deviceInfoProvider,
+                userProfile = userProfile
+            )
+        }
+    }
 }

@@ -45,43 +45,42 @@ object AuthHelper {
         properties: Properties = DeviceManager.loadProperties("px_9a.properties")!!,
         locale: Locale = Locale.getDefault()
     ): AuthData {
-        val deviceInfoProvider = DeviceInfoProvider(properties, locale.toString())
-        val authData = AuthData(email)
+        val authBuilder = AuthData.Builder(
+            email = email,
+            aasToken = if (tokenType == Token.AAS) token else String(),
+            authToken = if (tokenType == Token.AUTH) token else String(),
+            deviceInfoProvider = DeviceInfoProvider(properties, locale.toString()),
+            locale = locale,
+            isAnonymous = isAnonymous
+        )
 
-        // Token
-        if (tokenType == Token.AAS) {
-            authData.aasToken = token
-        } else {
-            authData.authToken = token
-        }
-
-        authData.deviceInfoProvider = deviceInfoProvider
-        authData.locale = locale
-        authData.isAnonymous = isAnonymous
-
-        val api = GooglePlayApi(authData).via(httpClient)
+        val api = GooglePlayApi()
+            .using(httpClient)
 
         // Android GSF ID
-        val gsfId = api.generateGsfId(deviceInfoProvider)
-        authData.gsfId = gsfId
+        val checkInResponse = api.generateGsfId(authBuilder.build())
+        authBuilder.gsfId = checkInResponse.gsfId
+        authBuilder.deviceCheckInConsistencyToken = checkInResponse.deviceCheckInConsistencyToken
 
         // Upload Device Config
-        val deviceConfigResponse = api.uploadDeviceConfig(deviceInfoProvider)
-        authData.deviceConfigToken = deviceConfigResponse.uploadDeviceConfigToken
+        authBuilder.deviceConfigToken = api.uploadDeviceConfig(authBuilder.build())
 
         // Generate AuthToken if we are working with AAS
         if (tokenType == Token.AAS) {
-            val authToken = api.generateToken(token, GooglePlayApi.Service.GOOGLE_PLAY)
-            authData.authToken = authToken
+            authBuilder.authToken = api.generateToken(
+                authBuilder.build(), GooglePlayApi.Service.GOOGLE_PLAY
+            )
         }
 
         // Accept GooglePlay TOS
-        api.toc()
+        authBuilder.dfeCookie = api.toc(authBuilder.build())
 
         // Fetch UserProfile
-        authData.userProfile = UserProfileHelper(authData).getUserProfile()
+        authBuilder.userProfile = UserProfileHelper(authBuilder.build())
+            .using(httpClient)
+            .getUserProfile()
 
-        return authData
+        return authBuilder.build()
     }
 
     /**

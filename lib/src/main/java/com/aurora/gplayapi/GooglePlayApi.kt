@@ -6,8 +6,8 @@
 
 package com.aurora.gplayapi
 
+import com.aurora.gplayapi.data.models.AndroidCheckInResponse
 import com.aurora.gplayapi.data.models.AuthData
-import com.aurora.gplayapi.data.providers.DeviceInfoProvider
 import com.aurora.gplayapi.data.providers.HeaderProvider.getAuthHeaders
 import com.aurora.gplayapi.data.providers.HeaderProvider.getDefaultHeaders
 import com.aurora.gplayapi.data.providers.ParamProvider.getAASTokenParams
@@ -20,29 +20,26 @@ import com.aurora.gplayapi.utils.Util
 import java.io.IOException
 import java.math.BigInteger
 
-class GooglePlayApi(private val authData: AuthData) {
+class GooglePlayApi {
 
     private var httpClient: IHttpClient = DefaultHttpClient
 
-    fun via(httpClient: IHttpClient) = apply {
+    fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
     }
 
     @Throws(IOException::class)
-    fun toc(): TocResponse {
+    fun toc(authData: AuthData): String {
         val playResponse = httpClient.get(URL_TOC, getDefaultHeaders(authData))
         val tocResponse = ResponseWrapper.parseFrom(playResponse.responseBytes).payload.tocResponse
         if (tocResponse.tosContent.isNotBlank() && tocResponse.tosToken.isNotBlank()) {
-            acceptTos(tocResponse.tosToken)
+            acceptTos(tocResponse.tosToken, authData)
         }
-        if (tocResponse.cookie.isNotBlank()) {
-            authData.dfeCookie = tocResponse.cookie
-        }
-        return tocResponse
+        return tocResponse.cookie
     }
 
     @Throws(IOException::class)
-    private fun acceptTos(tosToken: String): AcceptTosResponse {
+    private fun acceptTos(tosToken: String, authData: AuthData): AcceptTosResponse {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params["tost"] = tosToken
@@ -55,38 +52,33 @@ class GooglePlayApi(private val authData: AuthData) {
     }
 
     @Throws(IOException::class)
-    fun uploadDeviceConfig(deviceInfoProvider: DeviceInfoProvider): UploadDeviceConfigResponse {
+    fun uploadDeviceConfig(authData: AuthData): String {
         val request = UploadDeviceConfigRequest.newBuilder()
-            .setDeviceConfiguration(deviceInfoProvider.deviceConfigurationProto)
+            .setDeviceConfiguration(authData.deviceInfoProvider!!.deviceConfigurationProto)
             .build()
 
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-
         val playResponse = httpClient.post(URL_UPLOAD_DEVICE_CONFIG, headers, request.toByteArray())
 
-        val configResponse = ResponseWrapper.parseFrom(playResponse.responseBytes)
+        return ResponseWrapper.parseFrom(playResponse.responseBytes)
             .payload
             .uploadDeviceConfigResponse
-
-        if (configResponse.uploadDeviceConfigToken.isNotBlank()) {
-            authData.deviceConfigToken = configResponse.uploadDeviceConfigToken
-        }
-
-        return configResponse
+            .uploadDeviceConfigToken
     }
 
     @Throws(IOException::class)
-    fun generateGsfId(deviceInfoProvider: DeviceInfoProvider): String {
-        val request = deviceInfoProvider.generateAndroidCheckInRequest()
-        val checkInResponse = checkIn(request!!.toByteArray())
+    fun generateGsfId(authData: AuthData): AndroidCheckInResponse {
+        val request = authData.deviceInfoProvider!!.generateAndroidCheckInRequest()
+        val checkInResponse = checkIn(authData, request!!.toByteArray())
         val gsfId = BigInteger.valueOf(checkInResponse.androidId).toString(16)
-        authData.gsfId = gsfId
-        authData.deviceCheckInConsistencyToken = checkInResponse.deviceCheckinConsistencyToken
-        return gsfId
+        return AndroidCheckInResponse(
+            gsfId = gsfId,
+            deviceCheckInConsistencyToken = checkInResponse.deviceCheckinConsistencyToken
+        )
     }
 
     @Throws(IOException::class)
-    private fun checkIn(request: ByteArray): AndroidCheckinResponse {
+    private fun checkIn(authData: AuthData, request: ByteArray): AndroidCheckinResponse {
         val headers: MutableMap<String, String> = getAuthHeaders(authData)
         headers["Content-Type"] = "application/x-protobuffer"
         headers["Host"] = "android.clients.google.com"
@@ -95,10 +87,10 @@ class GooglePlayApi(private val authData: AuthData) {
     }
 
     @Throws(IOException::class)
-    fun generateAASToken(oauthToken: String): String? {
+    fun generateAASToken(authData: AuthData): String? {
         val params: MutableMap<String, String> = HashMap()
         params.putAll(getDefaultAuthParams(authData))
-        params.putAll(getAASTokenParams(oauthToken))
+        params.putAll(getAASTokenParams(authData.oAuthLoginToken))
         val headers: MutableMap<String, String> = getAuthHeaders(authData)
         headers["app"] = "com.android.vending"
         val playResponse = httpClient.post(URL_AUTH, headers, params)
@@ -111,11 +103,11 @@ class GooglePlayApi(private val authData: AuthData) {
     }
 
     @Throws(IOException::class)
-    fun generateToken(aasToken: String, service: Service): String {
+    fun generateToken(authData: AuthData, service: Service): String {
         val headers: MutableMap<String, String> = getAuthHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params.putAll(getDefaultAuthParams(authData))
-        params.putAll(getAuthParams(aasToken))
+        params.putAll(getAuthParams(authData.aasToken))
 
         when (service) {
             Service.AC2DM -> {
