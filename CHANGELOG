@@ -1,3 +1,11 @@
+Changelog : v3.5.0
+• PurchaseHelper now also expects versionCode as Long
+• Renamed File class to PlayFile to avoid conflicts with Java File
+• AuthData is now immutable data class, serializable with kotlin's serialization lib
+• AppSalesHelper has been retired as it is not part of official API
+• More classes have been marked as internal
+• Update dependencies and plugins
+
 Changelog : v3.4.8
 • Map properties for privacy policy and support section for App
 • All model objects are immutable
