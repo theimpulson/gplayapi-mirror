@@ -173,7 +173,7 @@ class GooglePlayApi {
         OAUTHLOGIN
     }
 
-    companion object {
+    internal companion object {
         const val URL_BASE = "https://android.clients.google.com"
         const val URL_FDFE = "$URL_BASE/fdfe"
         const val CATEGORIES_URL = "$URL_FDFE/categoriesList"

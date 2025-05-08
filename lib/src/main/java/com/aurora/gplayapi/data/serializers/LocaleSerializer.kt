@@ -19,7 +19,7 @@ import java.util.Locale
 /**
  * Serializer for [Locale] for working with Kotlin's Serialization library
  */
-object LocaleSerializer : KSerializer<Locale> {
+internal object LocaleSerializer : KSerializer<Locale> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Locale") {
         element<String>("language")
         element<String>("region")

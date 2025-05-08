@@ -8,7 +8,7 @@ package com.aurora.gplayapi.utils
 
 import android.util.Base64
 
-object CertUtil {
+internal object CertUtil {
 
     @OptIn(ExperimentalStdlibApi::class)
     fun decodeHash(base64EncodedHash: String): String {

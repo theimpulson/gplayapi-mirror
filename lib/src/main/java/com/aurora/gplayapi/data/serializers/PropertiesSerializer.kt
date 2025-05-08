@@ -16,7 +16,7 @@ import java.util.Properties
 /**
  * Serializer for [Properties] for working with Kotlin's Serialization library
  */
-object PropertiesSerializer : KSerializer<Properties> {
+internal object PropertiesSerializer : KSerializer<Properties> {
     override val descriptor: SerialDescriptor =
         MapSerializer(String.serializer(), String.serializer()).descriptor
 

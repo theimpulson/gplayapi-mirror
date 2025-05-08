@@ -7,7 +7,7 @@ package com.aurora.gplayapi.utils
 
 import com.aurora.gplayapi.helpers.contracts.StreamContract
 
-object CategoryUtil {
+internal object CategoryUtil {
     fun getCategoryFromUrl(url: String): StreamContract.Category {
         val rawCategory = if (url.contains("cat=")) {
             extractNativeCategory(url) ?: ""
