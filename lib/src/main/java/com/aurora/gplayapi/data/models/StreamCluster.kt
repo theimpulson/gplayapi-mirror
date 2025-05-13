@@ -9,7 +9,9 @@ package com.aurora.gplayapi.data.models
 import android.os.Parcelable
 import com.aurora.gplayapi.utils.Commons
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class StreamCluster(
     val id: Int = Commons.getUniqueId(),

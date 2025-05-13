@@ -6,8 +6,13 @@
 
 package com.aurora.gplayapi.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
+@Parcelize
 data class PlayResponse(
     val id: String = UUID.randomUUID().toString(),
     val responseBytes: ByteArray = byteArrayOf(),
@@ -15,7 +20,7 @@ data class PlayResponse(
     val errorString: String = ("No Error"),
     val isSuccessful: Boolean = false,
     val code: Int = 0
-) {
+) : Parcelable {
     override fun equals(other: Any?): Boolean {
         return when (other) {
             is PlayResponse -> other.id == id

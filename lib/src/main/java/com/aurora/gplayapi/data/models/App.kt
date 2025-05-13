@@ -15,7 +15,9 @@ import com.aurora.gplayapi.data.models.details.Dependencies
 import com.aurora.gplayapi.data.models.details.TestingProgram
 import com.aurora.gplayapi.data.models.editor.EditorChoiceReason
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class App(
     val packageName: String,

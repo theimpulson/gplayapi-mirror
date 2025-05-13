@@ -10,7 +10,9 @@ import android.os.Parcelable
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.DeveloperInfo
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Report(
     val packageName: String,

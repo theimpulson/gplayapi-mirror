@@ -6,13 +6,19 @@
 
 package com.aurora.gplayapi.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class Category(
     val title: String = String(),
     val imageUrl: String = String(),
     val browseUrl: String = String(),
     val color: String = String(),
     val type: Type = Type.APPLICATION
-) {
+) : Parcelable {
 
     enum class Type(val value: String) {
         APPLICATION("APPLICATION"),

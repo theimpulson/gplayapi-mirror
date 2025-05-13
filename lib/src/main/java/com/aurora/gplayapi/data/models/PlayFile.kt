@@ -8,8 +8,10 @@ package com.aurora.gplayapi.data.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
 @Parcelize
 data class PlayFile(
     val id: String = UUID.randomUUID().toString(),

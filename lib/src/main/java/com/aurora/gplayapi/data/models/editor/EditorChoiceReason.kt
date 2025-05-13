@@ -8,7 +8,9 @@ package com.aurora.gplayapi.data.models.editor
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class EditorChoiceReason(
     val bulletins: List<String>,

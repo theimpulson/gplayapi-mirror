@@ -9,8 +9,10 @@ package com.aurora.gplayapi.data.models.details
 import android.os.Parcelable
 import com.aurora.gplayapi.data.models.Artwork
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
 @Parcelize
 data class Badge(
     val id: String = UUID.randomUUID().toString(),

@@ -9,7 +9,9 @@ package com.aurora.gplayapi.data.models.details
 import android.os.Parcelable
 import com.aurora.gplayapi.data.models.App
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class Dependencies(
     val dependentPackages: List<String> = listOf(),

@@ -6,13 +6,19 @@
 
 package com.aurora.gplayapi.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class SearchBundle(
     val id: Int = -1,
     val query: String = String(),
     val suggestionTerms: Set<String> = HashSet(),
     val subBundles: Set<SubBundle> = hashSetOf(),
     val appList: List<App> = listOf()
-) {
+) : Parcelable {
 
     override fun hashCode(): Int {
         return id.hashCode()
@@ -32,7 +38,9 @@ data class SearchBundle(
         GENERIC, SIMILAR, RELATED_SEARCHES, RELATED_TO_YOUR_SEARCH, YOU_MIGHT_ALSO_LIKE, BOGUS
     }
 
-    data class SubBundle(val nextPageUrl: String, val type: Type) {
+    @Serializable
+    @Parcelize
+    data class SubBundle(val nextPageUrl: String, val type: Type) : Parcelable {
 
         override fun hashCode(): Int {
             return nextPageUrl.hashCode()
