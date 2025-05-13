@@ -1,3 +1,6 @@
+Changelog : v3.5.1
+• All possible model classes are now parcelable and serializable using respective Kotlin libs
+
 Changelog : v3.5.0
 • PurchaseHelper now also expects versionCode as Long
 • Renamed File class to PlayFile to avoid conflicts with Java File
