@@ -1,3 +1,6 @@
+Changelog : v3.5.2
+• Fixed issue with Web APIs serialization
+
 Changelog : v3.5.1
 • All possible model classes are now parcelable and serializable using respective Kotlin libs
 

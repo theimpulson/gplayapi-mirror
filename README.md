@@ -20,7 +20,7 @@ I'm not resposible for anything that may go wrong with:
 GPlayAPI is available on the [mavencentral](https://central.sonatype.com/artifact/com.auroraoss/gplayapi).
 
 ```kotlin
-implementation("com.aurora:gplayapi:3.5.1")
+implementation("com.aurora:gplayapi:3.5.2")
 ```
 
 You can get unsigned release builds for testing latest changes from our [GitLab Package Registry](https://gitlab.com/AuroraOSS/gplayapi/-/packages).
