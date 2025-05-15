@@ -71,6 +71,7 @@ android {
 
 dependencies {
 
+    implementation(libs.google.gson)
     implementation(libs.google.protobuf)
     implementation(libs.squareup.okhttp)
     implementation(libs.jetbrains.kotlin.coroutines)
