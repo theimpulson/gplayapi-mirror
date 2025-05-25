@@ -18,15 +18,17 @@ internal object RpcBuilder {
         val filteredLines: ArrayList<Any> = arrayListOf()
         val result = HashMap<String, HashMap<String, Any>>()
 
-        lines
+        val wrbFrames = lines
             .filter { it.startsWith("[[\"wrb.fr") }
             .map { parseJaggedString(it) }
-            .first()
-            .forEach {
-                if (it.dig<String>(0) == "wrb.fr") {
-                    filteredLines.add(it)
-                }
+
+        if (wrbFrames.isEmpty()) return hashMapOf()
+
+        wrbFrames.first().forEach {
+            if (it.dig<String>(0) == "wrb.fr") {
+                filteredLines.add(it)
             }
+        }
 
         filteredLines
             .forEach {

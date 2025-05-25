@@ -80,6 +80,10 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
 
         streamCluster = parseCluster(payload, 21)
 
+        if (!streamCluster.hasNext()) {
+            streamCluster = parseCluster(payload, 22, arrayOf(0, 0, 0))
+        }
+
         return streamCluster
     }
 
