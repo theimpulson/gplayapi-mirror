@@ -92,6 +92,7 @@ abstract class BaseWebHelper : BaseHelper() {
 
     fun getAppDetails(packageNames: List<String>): MutableList<App> {
         return WebAppDetailsHelper()
+            .with(locale)
             .using(httpClient)
             .getAppByPackageName(packageNames)
             .toMutableList()
