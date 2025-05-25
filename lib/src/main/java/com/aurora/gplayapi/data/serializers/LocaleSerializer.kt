@@ -6,51 +6,27 @@
 package com.aurora.gplayapi.data.serializers
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
-import kotlinx.serialization.encoding.encodeStructure
 import java.util.Locale
 
 /**
  * Serializer for [Locale] for working with Kotlin's Serialization library
  */
-internal object LocaleSerializer : KSerializer<Locale> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Locale") {
-        element<String>("language")
-        element<String>("region")
-    }
+object LocaleSerializer : KSerializer<Locale> {
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("Locale", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: Locale) {
-        return encoder.encodeStructure(descriptor) {
-            encodeStringElement(descriptor, 0, value.language)
-            encodeStringElement(descriptor, 1, value.country)
-        }
+    override fun serialize(encoder: Encoder, locale: Locale) {
+        val tag = locale.toLanguageTag()
+        encoder.encodeString(tag)
     }
 
     override fun deserialize(decoder: Decoder): Locale {
-        return decoder.decodeStructure(descriptor) {
-            var language: String? = null
-            var region: String? = null
-
-            while (true) {
-                when (val index = decodeElementIndex(descriptor)) {
-                    0 -> language = decodeStringElement(descriptor, 0)
-                    1 -> region = decodeStringElement(descriptor, 1)
-                    CompositeDecoder.DECODE_DONE -> break
-                    else -> error("Unexpected index: $index")
-                }
-            }
-
-            require(!language.isNullOrBlank() && !region.isNullOrBlank())
-            Locale.Builder()
-                .setLanguage(language)
-                .setRegion(region)
-                .build()
-        }
+        val tag = decoder.decodeString()
+        return Locale.forLanguageTag(tag)
     }
 }

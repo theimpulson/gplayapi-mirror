@@ -16,17 +16,18 @@ import java.util.Properties
 /**
  * Serializer for [Properties] for working with Kotlin's Serialization library
  */
-internal object PropertiesSerializer : KSerializer<Properties> {
-    override val descriptor: SerialDescriptor =
-        MapSerializer(String.serializer(), String.serializer()).descriptor
+object PropertiesSerializer : KSerializer<Properties> {
+    private val serializer = MapSerializer(String.serializer(), String.serializer())
+
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun serialize(encoder: Encoder, value: Properties) {
         val map = value.stringPropertyNames().associateWith { value.getProperty(it) }
-        MapSerializer(String.serializer(), String.serializer()).serialize(encoder, map)
+        serializer.serialize(encoder, map)
     }
 
     override fun deserialize(decoder: Decoder): Properties {
-        val map = MapSerializer(String.serializer(), String.serializer()).deserialize(decoder)
+        val map = serializer.deserialize(decoder)
         return Properties().apply { putAll(map) }
     }
 }
