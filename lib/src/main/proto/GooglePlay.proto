@@ -1022,11 +1022,41 @@ message AppDetails {
   optional string categoryName = 48;
   optional int64 downloadCount = 53;
   optional string downloadLabelDisplay = 61;
+  optional TagGroup tagGroup = 66;
   optional string inAppProduct = 67;
   optional string downloadLabelAbbreviated = 77;
   optional string downloadLabel = 78;
   optional Compatibility compatibility = 82;
   optional Support support = 86;
+}
+
+message TagGroup {
+  // Lazy to guess the type names, please adjust if needed.
+  optional TagType type1 = 1;
+  optional TagType type4 = 4;
+  optional TagType type5 = 5;
+}
+
+message TagType {
+  repeated TagEntry entries = 1;
+}
+
+message TagEntry {
+  optional string name = 1;
+  optional TagMetadata metadata = 2;
+  optional string category = 3;
+}
+
+message TagMetadata {
+  oneof metadata {
+    TagData category = 3;
+    TagData search = 4;
+  }
+}
+
+message TagData {
+  optional string url = 1;
+  optional string label = 2;
 }
 
 message Support {

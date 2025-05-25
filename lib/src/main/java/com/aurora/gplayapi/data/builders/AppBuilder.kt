@@ -15,6 +15,8 @@ import com.aurora.gplayapi.Constants.IMAGE_TYPE_PAGE_BACKGROUND
 import com.aurora.gplayapi.Constants.IMAGE_TYPE_VIDEO_THUMBNAIL
 import com.aurora.gplayapi.DetailsResponse
 import com.aurora.gplayapi.Item
+import com.aurora.gplayapi.TagGroup
+import com.aurora.gplayapi.TagType
 import com.aurora.gplayapi.data.models.ActiveDevice
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
@@ -22,6 +24,7 @@ import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.EncodedCertificateSet
 import com.aurora.gplayapi.data.models.PlayFile
 import com.aurora.gplayapi.data.models.Support
+import com.aurora.gplayapi.data.models.Tag
 import com.aurora.gplayapi.data.models.details.AppInfo
 import com.aurora.gplayapi.data.models.details.Badge
 import com.aurora.gplayapi.data.models.details.Chip
@@ -96,7 +99,7 @@ internal object AppBuilder {
             videoArtwork = artworks.find { it.type == IMAGE_TYPE_VIDEO_THUMBNAIL } ?: Artwork(),
             iconArtwork = artworks.find { it.type == IMAGE_TYPE_APP_ICON } ?: Artwork(),
             categoryArtwork = artworks.find { it.type == IMAGE_TYPE_CATEGORY_ICON } ?: Artwork(),
-            screenshots = artworks.filter { it.type ==  IMAGE_TYPE_APP_SCREENSHOT}
+            screenshots = artworks.filter { it.type == IMAGE_TYPE_APP_SCREENSHOT }
                 .ifEmpty { parseScreenshots(item) },
 
             appInfo = AppInfo(appInfoMap = parseAppInfo(item, activeDevices)),
@@ -116,6 +119,7 @@ internal object AppBuilder {
             compatibility = activeDevices,
             privacyPolicyUrl = item.annotations.privacyPolicyUrl,
             support = parseSupport(appDetails),
+            tags = parseTags(appDetails.tagGroup)
         )
     }
 
@@ -261,5 +265,34 @@ internal object AppBuilder {
             developerAddress = appDetails.support.developerAddress,
             developerPhoneNumber = appDetails.support.developerPhoneNumber
         )
+    }
+
+    private fun parseTags(tagGroup: TagGroup): List<Tag> {
+        val tags = mutableListOf<Tag>()
+
+        fun parseTagEntries(tagType: TagType): List<Tag> {
+            return tagType.entriesList.map { entry ->
+                val url = when {
+                    entry.hasMetadata() -> {
+                        val metadata = entry.metadata
+                        when {
+                            metadata.hasCategory() -> metadata.category.url
+                            metadata.hasSearch() -> metadata.search.url
+                            else -> null
+                        }
+                    }
+
+                    else -> null
+                }
+
+                Tag(entry.name, url)
+            }
+        }
+
+        tagGroup.type1?.let { tags.addAll(parseTagEntries(it)) }
+        tagGroup.type4?.let { tags.addAll(parseTagEntries(it)) }
+        tagGroup.type5?.let { tags.addAll(parseTagEntries(it)) }
+
+        return tags
     }
 }
