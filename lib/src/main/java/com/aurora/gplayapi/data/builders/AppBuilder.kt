@@ -225,7 +225,7 @@ internal object AppBuilder {
 
         map["DOWNLOAD"] = item.details.appDetails.infoDownload
         map["UPDATED_ON"] = item.details.appDetails.infoUpdatedOn
-        map["REQUIRES"] = "Android $minAndroidVersion and up"
+        map["REQUIRES"] = minAndroidVersion.toString()
 
         return map
     }
