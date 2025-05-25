@@ -68,6 +68,7 @@ data class App(
     val shareUrl: String = String(),
     val shortDescription: String = String(),
     val size: Long = 0,
+    val tags: List<Tag> = listOf(),
     val targetSdk: Int = 21,
     val testingProgram: TestingProgram? = null,
     val userReview: Review = Review(),

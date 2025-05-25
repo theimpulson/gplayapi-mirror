@@ -10,6 +10,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.Rating
+import com.aurora.gplayapi.data.models.Tag
 import com.aurora.gplayapi.utils.dig
 
 internal object WebAppBuilder {
@@ -66,13 +67,14 @@ internal object WebAppBuilder {
             contentRating = ContentRating(
                 title = contentRatingPayload.dig<String>(0) ?: "",
                 description = contentRatingPayload.dig<String>(2, 1) ?: "",
-                recommendation = contentRatingPayload.dig<String>(3 , 1) ?: "",
+                recommendation = contentRatingPayload.dig<String>(3, 1) ?: "",
                 artwork = parseArtwork(
                     contentRatingPayload.dig<ArrayList<Any>>(1) ?: arrayListOf(),
                     3
                 ),
                 recommendationAndDescriptionHtml = contentRatingPayload.dig<String>(4, 1) ?: ""
-            )
+            ),
+            tags = parseTags(appInfoPayload.dig<ArrayList<Any>>(118) ?: arrayListOf()),
         )
     }
 
@@ -97,5 +99,30 @@ internal object WebAppBuilder {
             height = (payload.dig<Double>(2, 0) ?: 0.0).toInt(),
             width = (payload.dig<Double>(2, 1) ?: 0.0).toInt()
         )
+    }
+
+    fun parseTags(payload: ArrayList<Any>): List<Tag> {
+        val tags = mutableListOf<Tag>()
+
+        fun dig(node: Any?) {
+            if (node !is List<*>) return
+
+            for (item in node) {
+                if (item is List<*>) {
+                    val name = item.getOrNull(0).toString()
+                    val url = item.dig<String>(1, 4, 2)
+
+                    if (url != null) {
+                        tags.add(Tag(name, url))
+                    } else {
+                        dig(item)
+                    }
+                }
+            }
+        }
+
+        dig(payload)
+
+        return tags
     }
 }
