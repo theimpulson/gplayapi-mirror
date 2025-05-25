@@ -8,6 +8,7 @@ package com.aurora.gplayapi.data.builders
 
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
+import com.aurora.gplayapi.data.models.ContentRating
 import com.aurora.gplayapi.data.models.Rating
 import com.aurora.gplayapi.utils.dig
 
@@ -18,6 +19,7 @@ internal object WebAppBuilder {
         val downloadsPayload = appInfoPayload.dig<ArrayList<Any>>(13) ?: arrayListOf()
         val offersPayload = appInfoPayload.dig<ArrayList<Any>>(57, 0, 0, 0, 0) ?: arrayListOf()
         val ratingPayload = appInfoPayload.dig<ArrayList<Any>>(51) ?: arrayListOf()
+        val contentRatingPayload = appInfoPayload.dig<ArrayList<Any>>(9) ?: arrayListOf()
 
         return App(
             packageName = packageName,
@@ -60,7 +62,17 @@ internal object WebAppBuilder {
             isFree = (offersPayload.dig<Double>(1, 0, 0) ?: 0.0) == 0.0,
             price = offersPayload.dig<String>(1, 0, 2) ?: "",
             rating = parseRating(ratingPayload) ?: Rating(),
-            labeledRating = ratingPayload.dig<String>(0, 0) ?: ""
+            labeledRating = ratingPayload.dig<String>(0, 0) ?: "",
+            contentRating = ContentRating(
+                title = contentRatingPayload.dig<String>(0) ?: "",
+                description = contentRatingPayload.dig<String>(2, 1) ?: "",
+                recommendation = contentRatingPayload.dig<String>(3 , 1) ?: "",
+                artwork = parseArtwork(
+                    contentRatingPayload.dig<ArrayList<Any>>(1) ?: arrayListOf(),
+                    3
+                ),
+                recommendationAndDescriptionHtml = contentRatingPayload.dig<String>(4, 1) ?: ""
+            )
         )
     }
 
