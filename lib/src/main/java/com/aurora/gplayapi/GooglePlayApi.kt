@@ -176,6 +176,7 @@ class GooglePlayApi {
     internal companion object {
         const val URL_BASE = "https://android.clients.google.com"
         const val URL_FDFE = "$URL_BASE/fdfe"
+        const val ACQUIRE_URL = "$URL_FDFE/acquire"
         const val CATEGORIES_URL = "$URL_FDFE/categoriesList"
         const val CATEGORIES_URL_2 = "$URL_FDFE/allCategoriesList"
         const val DELIVERY_URL = "$URL_FDFE/delivery"

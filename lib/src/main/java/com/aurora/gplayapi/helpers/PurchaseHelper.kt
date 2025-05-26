@@ -6,6 +6,8 @@
 
 package com.aurora.gplayapi.helpers
 
+import com.aurora.gplayapi.AcquireRequest
+import com.aurora.gplayapi.AcquireResponseWrapper
 import com.aurora.gplayapi.Constants.PatchFormat
 import com.aurora.gplayapi.DeliveryResponse
 import com.aurora.gplayapi.GooglePlayApi
@@ -15,6 +17,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.PlayFile
 import com.aurora.gplayapi.data.providers.HeaderProvider
+import com.aurora.gplayapi.data.verifier.DfeResponseVerifier
 import com.aurora.gplayapi.exceptions.InternalException
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.CertUtil
@@ -122,7 +125,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
             params["pf"] = patchFormat.value.toString();
         }
 
-        if (!splitModule.isNullOrBlank())  {
+        if (!splitModule.isNullOrBlank()) {
             params["mn"] = splitModule
         }
 
@@ -154,6 +157,9 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
         installedVersionCode: Long? = null,
         patchFormat: PatchFormat = PatchFormat.GZIPPED_BSDIFF
     ): List<PlayFile> {
+        // Lets try to acquire the app, we don't care if it fails.
+        runCatching { acquire(packageName, versionCode, offerType) }
+
         val deliveryToken = getDeliveryToken(packageName, versionCode, offerType, certificateHash)
         val deliveryResponse = getDeliveryResponse(
             packageName = packageName,
@@ -173,6 +179,52 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
             7 -> throw InternalException.AppRemoved()
             9 -> throw InternalException.AppNotSupported()
             else -> throw InternalException.Unknown()
+        }
+    }
+
+    fun acquire(packageName: String, versionCode: Long, offerType: Int): Boolean {
+        val acquireRequest = AcquireRequest.newBuilder()
+            .setPackage(
+                AcquireRequest.Package.newBuilder()
+                    .setPayload(
+                        AcquireRequest.Package.Payload.newBuilder()
+                            .setF2(1)
+                            .setF3(3)
+                            .setPackageName(packageName)
+                    )
+                    .setF2(1)
+            )
+            .setVersion(
+                AcquireRequest.Version.newBuilder()
+                    .setVersionCode(versionCode)
+                    .setF3(0)
+            )
+            .setF15(0)
+            .setOfferType(offerType)
+            .setNonce(DfeResponseVerifier.generateNonce())
+            .setF25(2)
+            .setM30(
+                AcquireRequest.Message30.newBuilder()
+                    .setF1(2)
+                    .setF2(0)
+            )
+            .build()
+
+        val playResponse = httpClient.post(
+            GooglePlayApi.ACQUIRE_URL,
+            HeaderProvider.getDefaultHeaders(authData),
+            acquireRequest.toByteArray()
+        )
+
+        val payload = AcquireResponseWrapper.parseFrom(playResponse.responseBytes)
+
+        if (playResponse.isSuccessful) {
+            with(payload.acquireResponse.acquirePayload.purchase) {
+                // We don't really care about result here as we are anyway going to purchase the app later.
+                return hasAppPurchase() || hasGamePurchase()
+            }
+        } else {
+            return false
         }
     }
 
