@@ -87,14 +87,13 @@ object AuthHelper {
      * Validates given AuthData by fetching a test application
      * @param authData [AuthData] to validate
      */
-    fun isValid(authData: AuthData): Boolean {
+    fun isValid(authData: AuthData, packageName: String = "com.android.chrome"): Boolean {
         return try {
-            val testPackageName = "com.android.chrome"
             val app = AppDetailsHelper(authData)
                 .using(httpClient)
-                .getAppByPackageName(testPackageName)
+                .getAppByPackageName(packageName)
 
-            app.packageName == testPackageName && app.versionCode != 0L
+            app.packageName == packageName && app.versionCode != 0L
         } catch (e: Exception) {
             false
         }
