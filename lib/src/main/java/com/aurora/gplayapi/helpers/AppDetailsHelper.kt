@@ -84,15 +84,15 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
     }
 
     @Throws(Exception::class)
-    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
-        if (packageNameList.isEmpty()) {
+    override fun getAppByPackageName(packageNames: List<String>): List<App> {
+        if (packageNames.isEmpty()) {
             return emptyList()
         }
 
         val appList: MutableList<App> = ArrayList()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
         val request = BulkDetailsRequest.newBuilder()
-            .addAllDocId(packageNameList)
+            .addAllDocId(packageNames)
             .build()
             .toByteArray()
 

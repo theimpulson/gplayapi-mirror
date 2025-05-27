@@ -20,8 +20,8 @@ object LocaleSerializer : KSerializer<Locale> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("Locale", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, locale: Locale) {
-        val tag = locale.toLanguageTag()
+    override fun serialize(encoder: Encoder, value: Locale) {
+        val tag = value.toLanguageTag()
         encoder.encodeString(tag)
     }
 
