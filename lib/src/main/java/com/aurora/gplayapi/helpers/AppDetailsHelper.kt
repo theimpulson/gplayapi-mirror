@@ -89,7 +89,7 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
             return emptyList()
         }
 
-        val appList: MutableList<App> = ArrayList()
+        val appList: MutableList<App> = mutableListOf()
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
         val request = BulkDetailsRequest.newBuilder()
             .addAllDocId(packageNameList)

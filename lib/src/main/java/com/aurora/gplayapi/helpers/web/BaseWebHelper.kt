@@ -22,20 +22,20 @@ abstract class BaseWebHelper : BaseHelper() {
     abstract fun with(locale: Locale): BaseWebHelper
 
     fun execute(freq: String): HashMap<String, HashMap<String, Any>> {
-        val response = WebClient(httpClient, locale).fetch(arrayOf(freq))
+        val response = WebClient(httpClient, locale).fetch(listOf(freq))
 
         return RpcBuilder.wrapResponse(response)
     }
 
     fun parseBundle(category: String, payload: Any): StreamBundle {
         var streamBundle = StreamBundle()
-        payload.dig<Collection<Any>>(0, 1)?.let { entries ->
+        payload.dig<List<Any>>(0, 1).let { entries ->
             entries.mapNotNull { entry ->
-                val topCharts = entry.dig(27, 1) ?: arrayListOf<Any>()
-                val events = entry.dig(34, 0) ?: arrayListOf<Any>()
-                val banner = entry.dig(29, 0) ?: arrayListOf<Any>()
-                val legacyCluster = entry.dig(21, 0) ?: arrayListOf<Any>()
-                val cluster = entry.dig(22, 0) ?: arrayListOf<Any>()
+                val topCharts = entry.dig<List<Any>>(27, 1)
+                val events = entry.dig<List<Any>>(34, 0)
+                val banner = entry.dig<List<Any>>(29, 0)
+                val legacyCluster = entry.dig<List<Any>>(21, 0)
+                val cluster = entry.dig<List<Any>>(22, 0)
 
                 // Skip events and top charts clusters
                 // TODO: Add support for events in the future
@@ -52,17 +52,17 @@ abstract class BaseWebHelper : BaseHelper() {
                 }
 
                 if (cluster.isNotEmpty()) {
-                    return@mapNotNull parseCluster(entry, 22, arrayOf(0, 0, 0))
+                    return@mapNotNull parseCluster(entry, 22, listOf(0, 0, 0))
                 }
 
-                StreamCluster()
+                StreamCluster.EMPTY
             }
                 .filter { it.clusterAppList.isNotEmpty() }
                 .also {
                     streamBundle = StreamBundle(
                         id = Commons.getUniqueId(),
                         streamTitle = category,
-                        streamNextPageUrl = payload.dig(0, 3, 1) ?: "",
+                        streamNextPageUrl = payload.dig<String>(0, 3, 1),
                         streamClusters = it.associateBy { b -> b.id }.toMutableMap()
                     )
                 }
@@ -73,17 +73,17 @@ abstract class BaseWebHelper : BaseHelper() {
     fun parseCluster(
         payload: Any,
         clusterIndex: Int,
-        appIndex: Array<Int> = arrayOf(0, 0)
+        appIndex: List<Int> = listOf(0, 0)
     ): StreamCluster {
         return StreamCluster(
-            clusterTitle = payload.dig(clusterIndex, 1, 0) ?: "",
-            clusterSubtitle = payload.dig(clusterIndex, 1, 1) ?: "",
-            clusterNextPageUrl = payload.dig(clusterIndex, 1, 3, 1) ?: "",
-            clusterBrowseUrl = payload.dig(clusterIndex, 1, 2, 4, 2) ?: "",
+            clusterTitle = payload.dig<String>(clusterIndex, 1, 0),
+            clusterSubtitle = payload.dig<String>(clusterIndex, 1, 1),
+            clusterNextPageUrl = payload.dig<String>(clusterIndex, 1, 3, 1),
+            clusterBrowseUrl = payload.dig<String>(clusterIndex, 1, 2, 4, 2),
             clusterAppList = getAppDetails(
-                (payload.dig<ArrayList<Any>>(clusterIndex, 0) ?: arrayListOf()).mapNotNull {
+                payload.dig<List<Any>>(clusterIndex, 0).mapNotNull {
                     it.dig(
-                        *appIndex
+                        *appIndex.toTypedArray()
                     )
                 }
             )

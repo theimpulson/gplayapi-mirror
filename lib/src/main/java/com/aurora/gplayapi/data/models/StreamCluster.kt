@@ -21,6 +21,11 @@ data class StreamCluster(
     val clusterBrowseUrl: String = String(),
     val clusterAppList: List<App> = listOf()
 ) : Parcelable {
+
+    companion object {
+        val EMPTY = StreamCluster()
+    }
+
     override fun hashCode(): Int {
         return id
     }

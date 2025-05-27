@@ -23,7 +23,7 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
 
     @Throws(Exception::class)
     override fun getAllCategories(type: Category.Type): List<Category> {
-        val categoryList: MutableList<Category> = ArrayList()
+        val categoryList: MutableList<Category> = mutableListOf()
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"

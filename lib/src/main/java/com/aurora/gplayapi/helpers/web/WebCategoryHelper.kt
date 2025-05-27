@@ -35,25 +35,25 @@ class WebCategoryHelper : BaseWebHelper(), CategoryContract {
 
     private fun getAllCategoriesList(type: Category.WebType): List<Category> {
         val response = execute(CategoryBuilder.build())
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             CategoryBuilder.TAG,
             CategoryBuilder.TAG,
         )
 
-        if (payload.isNullOrEmpty()) {
-            return listOf()
+        if (payload.isEmpty()) {
+            return emptyList()
         }
 
-        val categoryPayload = payload.dig<ArrayList<Any>>(0, 1, 0, 3) ?: arrayListOf()
+        val categoryPayload = payload.dig<List<Any>>(0, 1, 0, 3)
 
         return parseCategory(type, categoryPayload)
     }
 
-    private fun parseCategory(type: Category.WebType, payload: Collection<Any>): List<Category> {
-        return (payload.dig<ArrayList<Any>>(type.value, 3) ?: arrayListOf()).map {
-            val browseUrl = it.dig(1, 0) ?: ""
+    private fun parseCategory(type: Category.WebType, payload: List<Any>): List<Category> {
+        return payload.dig<List<Any>>(type.value, 3).map {
+            val browseUrl = it.dig<String>(1, 0)
             Category(
-                title = it.dig(1, 1) ?: "",
+                title = it.dig<String>(1, 1),
                 browseUrl = browseUrl,
                 imageUrl = getImageUrl(type, browseUrl)
             )

@@ -42,14 +42,15 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
     override fun fetch(type: Type, category: Category): StreamBundle {
         val webCategory = category.value
         val response = execute(FeaturedStreamBuilder.build(webCategory))
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             FeaturedStreamBuilder.TAG,
             webCategory
         )
 
         var streamBundle = StreamBundle()
-        if (payload.isNullOrEmpty()) {
-            return streamBundle
+
+        if (payload.isEmpty()) {
+            return StreamBundle()
         }
 
         streamBundle = parseBundle(webCategory, payload)
@@ -66,22 +67,20 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
     override fun nextStreamCluster(nextPageUrl: String): StreamCluster {
         val response = execute(NextClusterBuilder.build(nextPageUrl))
 
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             NextClusterBuilder.TAG,
             nextPageUrl.hashCode().toString(),
             0 // For next stream cluster, the payload is a list of clusters even if it's just one cluster
         )
 
-        var streamCluster = StreamCluster()
-
-        if (payload.isNullOrEmpty()) {
-            return streamCluster
+        if (payload.isEmpty()) {
+            return StreamCluster.EMPTY
         }
 
-        streamCluster = parseCluster(payload, 21)
+        var streamCluster = parseCluster(payload, 21)
 
         if (!streamCluster.hasNext()) {
-            streamCluster = parseCluster(payload, 22, arrayOf(0, 0, 0))
+            streamCluster = parseCluster(payload, 22, listOf(0, 0, 0))
         }
 
         return streamCluster
@@ -98,13 +97,13 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
         val webCategory = category.value
         val response = execute(NextBundleBuilder.build(webCategory, nextPageToken))
 
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             NextBundleBuilder.TAG,
             webCategory
         )
 
         var streamBundle = StreamBundle()
-        if (payload.isNullOrEmpty()) {
+        if (payload.isEmpty()) {
             return streamBundle
         }
 

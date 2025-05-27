@@ -33,7 +33,7 @@ class TopChartsHelper(authData: AuthData) : NativeHelper(authData), TopChartsCon
             val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
             getStreamCluster(listResponse)
         } else {
-            StreamCluster()
+            StreamCluster.EMPTY
         }
     }
 }

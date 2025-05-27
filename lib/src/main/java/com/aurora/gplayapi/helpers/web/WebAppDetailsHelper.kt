@@ -19,6 +19,14 @@ import java.util.Locale
 
 class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
+    }
+
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
+
     override fun getAppByPackageName(packageName: String): App {
         val apps = getAppByPackageName(listOf(packageName))
         return if (apps.isNotEmpty()) {
@@ -30,7 +38,7 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
     override fun getAppByPackageName(packageNameList: List<String>): List<App> {
         val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
-        val response = WebClient(httpClient, locale).fetch(requests.toTypedArray()).let {
+        val response = WebClient(httpClient, locale).fetch(requests).let {
             RpcBuilder.wrapResponse(it)
         }
 
@@ -38,14 +46,12 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
         packageNameList.forEach { packageName ->
             val payload = response.dig<Any>(MetadataBuilder.TAG, packageName)
-            if (payload != null) {
-                apps.add(
-                    WebAppBuilder.build(
-                        packageName,
-                        payload
-                    )
+            apps.add(
+                WebAppBuilder.build(
+                    packageName,
+                    payload
                 )
-            }
+            )
         }
 
         apps.apply {
@@ -62,24 +68,16 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         val payload = execute(RelatedAppsBuilder.build(packageName))
         val relatedPayload = payload.dig<List<Any>>(RelatedAppsBuilder.TAG, packageName, 1, 1)
 
-        if (relatedPayload.isNullOrEmpty()) {
+        if (relatedPayload.isEmpty()) {
             return listOf()
         }
 
         val relatedClusters = mutableListOf<StreamCluster>()
 
         relatedPayload.forEach {
-            relatedClusters.add(parseCluster(it, 21, arrayOf(0, 0)))
+            relatedClusters.add(parseCluster(it, 21, listOf(0, 0)))
         }
 
         return relatedClusters
-    }
-
-    override fun with(locale: Locale) = apply {
-        this.locale = locale
-    }
-
-    override fun using(httpClient: IHttpClient) = apply {
-        this.httpClient = httpClient
     }
 }

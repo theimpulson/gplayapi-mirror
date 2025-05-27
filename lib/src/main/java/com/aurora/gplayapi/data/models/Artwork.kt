@@ -21,6 +21,10 @@ data class Artwork(
     val height: Int = 0
 ) : Parcelable {
 
+    companion object {
+        val EMPTY = Artwork()
+    }
+
     override fun hashCode(): Int {
         return url.hashCode()
     }
