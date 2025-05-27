@@ -50,27 +50,28 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
 
         val response = execute(TopChartsBuilder.build(category, webChart))
 
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             TopChartsBuilder.TAG,
             "$category$webChart"
         )
 
-        if (payload.isNullOrEmpty()) {
-            return StreamCluster()
+        if (payload.isEmpty()) {
+            return StreamCluster.EMPTY
         }
 
         val packageNames: List<String> =
-            payload.dig<Collection<Any>>(0, 1, 0, 28, 0)?.let { entry ->
+            payload.dig<List<Any>>(0, 1, 0, 28, 0).let { entry ->
                 entry.mapNotNull {
                     it.dig(0, 0, 0)
                 }
-            } ?: emptyList()
+            }
 
         if (packageNames.isEmpty()) {
-            return StreamCluster()
+            return StreamCluster.EMPTY
         }
 
         val apps = getAppDetails(packageNames)
+
         return StreamCluster(
             clusterTitle = category,
             clusterSubtitle = chart,
@@ -82,6 +83,6 @@ class WebTopChartsHelper : BaseWebHelper(), TopChartsContract {
      * Irrelevant for web client as it doesn't support pagination
      */
     override fun getNextStreamCluster(nextPageUrl: String): StreamCluster {
-        return StreamCluster()
+        return StreamCluster.EMPTY
     }
 }

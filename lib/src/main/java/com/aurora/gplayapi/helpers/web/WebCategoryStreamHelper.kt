@@ -15,10 +15,10 @@ import com.aurora.gplayapi.utils.CategoryUtil
 import java.util.Locale
 
 class WebCategoryStreamHelper : BaseWebHelper(), CategoryStreamContract {
-    private lateinit var webStreamHelper: WebStreamHelper
-
-    init {
-        this.webStreamHelper = WebStreamHelper()
+    private val webStreamHelper: WebStreamHelper by lazy {
+        WebStreamHelper()
+            .with(locale)
+            .using(httpClient)
     }
 
     override fun with(locale: Locale) = apply {
@@ -27,7 +27,6 @@ class WebCategoryStreamHelper : BaseWebHelper(), CategoryStreamContract {
 
     override fun using(httpClient: IHttpClient) = apply {
         this.httpClient = httpClient
-        this.webStreamHelper = WebStreamHelper().using(httpClient)
     }
 
     override fun fetch(url: String): StreamBundle {

@@ -19,8 +19,17 @@ import java.util.Locale
 
 class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
+    override fun with(locale: Locale) = apply {
+        this.locale = locale
+    }
+
+    override fun using(httpClient: IHttpClient) = apply {
+        this.httpClient = httpClient
+    }
+
     override fun getAppByPackageName(packageName: String): App {
         val apps = getAppByPackageName(listOf(packageName))
+
         return if (apps.isNotEmpty()) {
             apps.first()
         } else {
@@ -28,29 +37,21 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         }
     }
 
-    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
-        val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
-        val response = WebClient(httpClient, locale).fetch(requests.toTypedArray()).let {
-            RpcBuilder.wrapResponse(it)
-        }
+    override fun getAppByPackageName(packageNames: List<String>): List<App> {
+        val requests = packageNames.map { packageName -> MetadataBuilder.build(packageName) }
+        val response = WebClient(httpClient, locale)
+            .fetch(requests)
+            .let { RpcBuilder.wrapResponse(it) }
 
-        val apps: MutableList<App> = mutableListOf()
+        val apps = mutableListOf<App>()
 
-        packageNameList.forEach { packageName ->
-            val payload = response.dig<Any>(MetadataBuilder.TAG, packageName)
-            if (payload != null) {
-                apps.add(
-                    WebAppBuilder.build(
-                        packageName,
-                        payload
-                    )
-                )
-            }
-        }
-
-        apps.apply {
-            filter {
-                it.displayName.isNotEmpty()
+        packageNames.forEach { packageName ->
+            val payload: List<Any> = response.dig(MetadataBuilder.TAG, packageName)
+            if (payload.isNotEmpty()) {
+                val app = WebAppBuilder.build(packageName, payload)
+                if (app.displayName.isNotBlank()) {
+                    apps.add(app)
+                }
             }
         }
 
@@ -62,24 +63,16 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         val payload = execute(RelatedAppsBuilder.build(packageName))
         val relatedPayload = payload.dig<List<Any>>(RelatedAppsBuilder.TAG, packageName, 1, 1)
 
-        if (relatedPayload.isNullOrEmpty()) {
+        if (relatedPayload.isEmpty()) {
             return listOf()
         }
 
         val relatedClusters = mutableListOf<StreamCluster>()
 
         relatedPayload.forEach {
-            relatedClusters.add(parseCluster(it, 21, arrayOf(0, 0)))
+            relatedClusters.add(parseCluster(it, 21, listOf(0, 0)))
         }
 
         return relatedClusters
-    }
-
-    override fun with(locale: Locale) = apply {
-        this.locale = locale
-    }
-
-    override fun using(httpClient: IHttpClient) = apply {
-        this.httpClient = httpClient
     }
 }
