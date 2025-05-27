@@ -149,24 +149,6 @@ publishing {
             version = libVersion
             url = uri("./build/repo")
         }
-        maven {
-            name = "SonatypeOSS"
-            version = libVersion
-            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = tokenUsername
-                password = tokenPassword
-            }
-        }
-        maven {
-            name = "SonatypeOSSSnapshots"
-            version = "$libVersion-SNAPSHOT"
-            setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            credentials {
-                username = tokenUsername
-                password = tokenPassword
-            }
-        }
     }
 }
 
