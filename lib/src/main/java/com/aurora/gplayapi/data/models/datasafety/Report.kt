@@ -21,6 +21,11 @@ data class Report(
     val privacyUrl: String = String(),
     val entries: List<Entry> = listOf()
 ) : Parcelable {
+
+    fun isValid(): Boolean {
+        return entries.isNotEmpty()
+    }
+
     override fun hashCode(): Int {
         return packageName.hashCode()
     }

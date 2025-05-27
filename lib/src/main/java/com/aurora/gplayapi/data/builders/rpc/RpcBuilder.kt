@@ -15,7 +15,7 @@ internal object RpcBuilder {
 
     fun wrapResponse(input: String): HashMap<String, HashMap<String, Any>> {
         val lines = input.lines()
-        val filteredLines: ArrayList<Any> = arrayListOf()
+        val filteredLines: MutableList<Any> = mutableListOf()
         val result = HashMap<String, HashMap<String, Any>>()
 
         val wrbFrames = lines
@@ -33,7 +33,7 @@ internal object RpcBuilder {
         filteredLines
             .forEach {
                 val (type, packageName) = (it.dig<String>(6)).toString().split("@")
-                val rpcData = it.dig<String>(2) ?: return@forEach
+                val rpcData = it.dig<String>(2)
 
                 if (result[type] == null) {
                     result[type] = hashMapOf()
@@ -45,8 +45,12 @@ internal object RpcBuilder {
         return result
     }
 
-    private fun parseJaggedString(input: String): Collection<Any> {
-        val arrayType = object : TypeToken<Collection<Any>>() {}.type
-        return gson.fromJson(input, arrayType)
+    private fun parseJaggedString(input: String): List<Any> {
+        if (input == "null" || input.isEmpty()) {
+            return emptyList()
+        }
+
+        val type = object : TypeToken<List<Any>>() {}.type
+        return gson.fromJson(input, type)
     }
 }

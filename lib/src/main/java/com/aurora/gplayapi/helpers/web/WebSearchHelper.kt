@@ -32,19 +32,19 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
     override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
         val response = execute(SearchSuggestionQueryBuilder.build(query))
 
-        val payload = response.dig<Collection<Any>>(
+        val payload = response.dig<List<Any>>(
             SearchSuggestionQueryBuilder.TAG,
             query,
             0
         )
 
-        if (payload.isNullOrEmpty()) {
+        if (payload.isEmpty()) {
             return emptyList()
         }
 
         val suggestions = payload.map {
             SearchSuggestEntry.newBuilder().apply {
-                title = it.dig(0)
+                title = it.dig<String>(0)
             }.build()
         }
 
@@ -56,14 +56,14 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
 
         val response = execute(SearchQueryBuilder.build(query, nextPageUrl))
 
-        var payload = response.dig<Collection<Any>>(
+        var payload = response.dig<List<Any>>(
             SearchQueryBuilder.TAG,
             query,
             0
         )
 
-        if (payload.isNullOrEmpty()) {
-            return SearchBundle()
+        if (payload.isEmpty()) {
+            return SearchBundle.EMPTY
         }
 
         // First stream is search stream, following are app streams (made-up names :p)
@@ -72,17 +72,17 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
         }
 
         // Find only the package names, complete app info is fetched via AppDetailsHelper
-        val packageNames: List<String> = payload?.dig<Collection<Any>>(0, 0)?.let { entry ->
+        val packageNames: List<String> = payload.dig<List<Any>>(0, 0).let { entry ->
             entry.mapNotNull {
                 it.dig(12, 0)
             }
-        } ?: emptyList()
-
-        if (packageNames.isEmpty()) {
-            return SearchBundle()
         }
 
-        val nextPageToken: String = payload?.dig<String>(0, 7, 1) ?: ""
+        if (packageNames.isEmpty()) {
+            return SearchBundle.EMPTY
+        }
+
+        val nextPageToken: String = payload.dig<String>(0, 7, 1)
 
         // Include sub-bundles only if there is a next page
         return SearchBundle(
@@ -90,14 +90,14 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
             appList = getAppDetails(packageNames),
             query = query,
             subBundles = if (nextPageToken.isNotEmpty()) {
-                hashSetOf(SearchBundle.SubBundle(nextPageToken, SearchBundle.Type.GENERIC))
+                hashSetOf(SubBundle(nextPageToken, SearchBundle.Type.GENERIC))
             } else {
                 hashSetOf()
             }
         )
     }
 
-    override fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle {
+    override fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
         val appList = mutableListOf<App>()
         val subBundles = mutableSetOf<SubBundle>()
 

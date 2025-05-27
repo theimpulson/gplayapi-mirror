@@ -20,6 +20,10 @@ data class SearchBundle(
     val appList: List<App> = listOf()
 ) : Parcelable {
 
+    companion object {
+        val EMPTY = SearchBundle()
+    }
+
     override fun hashCode(): Int {
         return id.hashCode()
     }

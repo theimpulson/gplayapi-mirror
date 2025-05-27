@@ -20,7 +20,7 @@ class WebClient(
 
     private val TAG = javaClass.simpleName
 
-    fun fetch(rpcRequests: Array<String>): String {
+    fun fetch(rpcRequests: List<String>): String {
         val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute?hl=${locale.language}&gl=${locale.country}"
 
         val headers = mapOf(
@@ -39,7 +39,7 @@ class WebClient(
         }
     }
 
-    private fun buildFRequest(rpcRequests: Array<String>): ByteArray {
+    private fun buildFRequest(rpcRequests: List<String>): ByteArray {
         return """
             f.req=[[
                 ${rpcRequests.joinToString(separator = ",") { URLEncoder.encode(it, "UTF-8") }}
