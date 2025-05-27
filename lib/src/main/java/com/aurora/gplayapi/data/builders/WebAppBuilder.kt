@@ -15,7 +15,7 @@ import com.aurora.gplayapi.utils.dig
 
 internal object WebAppBuilder {
 
-    fun build(packageName: String, payload: Any): App {
+    fun build(packageName: String, payload: List<Any>): App {
         val appInfoPayload = payload.dig<List<Any>>(1, 2)
         val downloadsPayload = appInfoPayload.dig<List<Any>>(13)
         val offersPayload = appInfoPayload.dig<List<Any>>(57, 0, 0, 0, 0)

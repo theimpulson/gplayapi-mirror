@@ -15,6 +15,7 @@ import com.aurora.gplayapi.data.models.datasafety.EntryType
 import com.aurora.gplayapi.data.models.datasafety.Report
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
+import com.aurora.gplayapi.utils.digOrDefault
 import java.util.Locale
 
 class WebDataSafetyHelper : BaseWebHelper() {
@@ -53,7 +54,7 @@ class WebDataSafetyHelper : BaseWebHelper() {
         var developerId = payload.dig<String>(68, 2)
 
         if (developerId.isBlank()) {
-            developerId = payload.dig<String>(68, 0)
+            developerId = payload.digOrDefault<String>("unknown", 68, 0)
         }
 
         return DeveloperInfo(

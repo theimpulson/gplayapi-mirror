@@ -15,5 +15,5 @@ import kotlinx.serialization.Serializable
 data class EditorChoiceBundle(
     val id: Int = -1,
     val bundleTitle: String = String(),
-    val bundleChoiceClusters: List<EditorChoiceCluster> = mutableListOf()
+    val bundleChoiceClusters: List<EditorChoiceCluster> = ArrayList()
 ) : Parcelable

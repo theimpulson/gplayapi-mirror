@@ -150,7 +150,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         return if (payload.hasListResponse()) {
             getStreamCluster(payload.listResponse)
         } else {
-            StreamCluster.EMPTY
+            StreamCluster()
         }
     }
 
@@ -162,11 +162,11 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
                 return getStreamCluster(subItem)
             }
         }
-        return StreamCluster.EMPTY
+        return StreamCluster()
     }
 
     fun getStreamClusters(listResponse: ListResponse): List<StreamCluster> {
-        val streamClusters: MutableList<StreamCluster> = mutableListOf()
+        val streamClusters: MutableList<StreamCluster> = ArrayList()
         if (listResponse.itemCount > 0) {
             val item = listResponse.getItem(0)
             if (item != null && item.subItemCount > 0) {
@@ -205,7 +205,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     @Throws(Exception::class)
     private fun getEditorChoiceCluster(item: Item): EditorChoiceCluster {
         val title = if (item.hasTitle()) item.title else String()
-        val artworkList: MutableList<Artwork> = mutableListOf()
+        val artworkList: MutableList<Artwork> = ArrayList()
         val browseUrl = getBrowseUrl(item)
         if (item.imageCount > 0) {
             item.imageList.forEach {
@@ -230,7 +230,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
 
     private fun getEditorChoiceBundles(item: Item): EditorChoiceBundle {
         val title = if (item.hasTitle()) item.title else String()
-        val choiceClusters: MutableList<EditorChoiceCluster> = mutableListOf()
+        val choiceClusters: MutableList<EditorChoiceCluster> = ArrayList()
         for (subItem in item.subItemList) {
             choiceClusters.add(getEditorChoiceCluster(subItem))
         }
@@ -243,7 +243,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     }
 
     fun getEditorChoiceBundles(listResponse: ListResponse?): List<EditorChoiceBundle> {
-        val editorChoiceBundles: MutableList<EditorChoiceBundle> = mutableListOf()
+        val editorChoiceBundles: MutableList<EditorChoiceBundle> = ArrayList()
 
         listResponse?.itemList?.forEach { item ->
             item?.subItemList?.forEach { subItem ->

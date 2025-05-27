@@ -38,7 +38,7 @@ class ClusterHelper(authData: AuthData) : NativeHelper(authData) {
             val listResponse = getResponseFromBytes<ListResponse>(responseBody.responseBytes)
             getStreamCluster(listResponse)
         } else {
-            StreamCluster.EMPTY
+            StreamCluster()
         }
     }
 

@@ -69,7 +69,7 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
         return if (searchSuggestResponse.entryCount > 0) {
             searchSuggestResponse.entryList
         } else {
-            emptyList()
+            ArrayList()
         }
     }
 

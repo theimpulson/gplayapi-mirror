@@ -29,6 +29,7 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
     override fun getAppByPackageName(packageName: String): App {
         val apps = getAppByPackageName(listOf(packageName))
+
         return if (apps.isNotEmpty()) {
             apps.first()
         } else {
@@ -36,27 +37,21 @@ class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
         }
     }
 
-    override fun getAppByPackageName(packageNameList: List<String>): List<App> {
-        val requests = packageNameList.map { packageName -> MetadataBuilder.build(packageName) }
-        val response = WebClient(httpClient, locale).fetch(requests).let {
-            RpcBuilder.wrapResponse(it)
-        }
+    override fun getAppByPackageName(packageNames: List<String>): List<App> {
+        val requests = packageNames.map { packageName -> MetadataBuilder.build(packageName) }
+        val response = WebClient(httpClient, locale)
+            .fetch(requests)
+            .let { RpcBuilder.wrapResponse(it) }
 
-        val apps: MutableList<App> = mutableListOf()
+        val apps = mutableListOf<App>()
 
-        packageNameList.forEach { packageName ->
-            val payload = response.dig<Any>(MetadataBuilder.TAG, packageName)
-            apps.add(
-                WebAppBuilder.build(
-                    packageName,
-                    payload
-                )
-            )
-        }
-
-        apps.apply {
-            filter {
-                it.displayName.isNotEmpty()
+        packageNames.forEach { packageName ->
+            val payload: List<Any> = response.dig(MetadataBuilder.TAG, packageName)
+            if (payload.isNotEmpty()) {
+                val app = WebAppBuilder.build(packageName, payload)
+                if (app.displayName.isNotBlank()) {
+                    apps.add(app)
+                }
             }
         }
 

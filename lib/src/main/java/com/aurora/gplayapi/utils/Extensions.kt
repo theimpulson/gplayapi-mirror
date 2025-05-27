@@ -35,3 +35,17 @@ internal inline fun <reified T> Any?.dig(vararg keys: Any): T {
 
     return (current as? T) ?: default()
 }
+
+internal inline fun <reified T> Any?.digOrDefault(default: T, vararg keys: Any): T {
+    var current: Any? = this
+
+    for (key in keys) {
+        current = when (current) {
+            is Map<*, *> -> current[key]
+            is List<*> -> (key as? Int)?.let { current.getOrNull(it) }
+            else -> return default
+        }
+    }
+
+    return (current as? T) ?: default
+}

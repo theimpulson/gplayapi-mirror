@@ -68,7 +68,7 @@ class ReviewsHelper(authData: AuthData) : NativeHelper(authData) {
 
     private fun getReviewCluster(reviewResponse: ReviewResponse?): ReviewCluster {
         return reviewResponse?.let {
-            val reviewList: MutableList<Review> = mutableListOf()
+            val reviewList: MutableList<Review> = ArrayList()
             for (reviewProto in it.userReviewsResponse.reviewList) {
                 reviewProto?.let { review ->
                     reviewList.add(ReviewBuilder.build(review))
