@@ -79,7 +79,7 @@ class WebStreamHelper : BaseWebHelper(), StreamContract {
 
         var streamCluster = parseCluster(payload, 21)
 
-        if (!streamCluster.hasNext()) {
+        if (streamCluster.clusterAppList.isEmpty()) {
             streamCluster = parseCluster(payload, 22, listOf(0, 0, 0))
         }
 
