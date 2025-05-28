@@ -1022,12 +1022,23 @@ message AppDetails {
   optional string categoryName = 48;
   optional int64 downloadCount = 53;
   optional string downloadLabelDisplay = 61;
+  optional AppLaunch appLaunch = 64;
   optional TagGroup tagGroup = 66;
   optional string inAppProduct = 67;
   optional string downloadLabelAbbreviated = 77;
   optional string downloadLabel = 78;
   optional Compatibility compatibility = 82;
   optional Support support = 86;
+}
+
+message AppLaunch {
+  optional string date = 1;
+  optional Time time = 2;
+
+  message Time {
+      optional int64 timestamp = 1;
+      optional int64 unknown = 2; // nanoseconds?
+  }
 }
 
 message TagGroup {
