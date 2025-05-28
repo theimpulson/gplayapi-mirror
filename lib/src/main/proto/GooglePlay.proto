@@ -1033,8 +1033,11 @@ message AppDetails {
 message TagGroup {
   // Lazy to guess the type names, please adjust if needed.
   optional TagType type1 = 1;
+  optional TagType type2 = 2;
+  optional TagType type3 = 3;
   optional TagType type4 = 4;
   optional TagType type5 = 5;
+  optional TagType type6 = 6;
 }
 
 message TagType {
@@ -1088,6 +1091,7 @@ message Publisher{
 message PublisherStream{
   optional string moreUrl = 3;
   optional string query = 11;
+  optional StreamLink link = 83;
 }
 
 message EditorChoice{
@@ -1267,7 +1271,7 @@ message Annotations {
   optional string privacyPolicyUrl = 18;
   optional SuggestionReasons suggestion_reasons = 19;
   optional Warning optimalDeviceClassWarning = 20;
-  repeated BadgeContainer badgeContainer = 21;
+  optional BadgeContainer badgeContainer = 21;
   optional SectionMetaData sectionSuggestForRating = 22;
   optional SectionMetaData sectionPurchaseCrossSell = 24;
   repeated OverflowLink overflowLink = 25;
@@ -1462,6 +1466,7 @@ message Stream{
   optional string title = 1;
   optional SubStream stream = 2;
   optional string subtitle = 3;
+  optional StreamLink link = 83;
 }
 
 message SubStream{

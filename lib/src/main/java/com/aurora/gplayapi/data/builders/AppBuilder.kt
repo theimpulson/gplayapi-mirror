@@ -147,6 +147,10 @@ internal object AppBuilder {
     private fun parseInfoBadges(item: Item): List<Badge> {
         val allBadges = mutableListOf<Badge>()
         item.annotations?.let { annotations ->
+            annotations.badgeContainer.badgeList.forEach {
+                allBadges.add(BadgeBuilder.build(it))
+            }
+
             annotations.infoBadgeList?.let { badges ->
                 badges.forEach { allBadges.add(BadgeBuilder.build(it)) }
             }
@@ -155,6 +159,7 @@ internal object AppBuilder {
                 allBadges.add(BadgeBuilder.build(it))
             }
         }
+
         return allBadges
     }
 
@@ -289,9 +294,14 @@ internal object AppBuilder {
             }
         }
 
-        tagGroup.type1?.let { tags.addAll(parseTagEntries(it)) }
-        tagGroup.type4?.let { tags.addAll(parseTagEntries(it)) }
-        tagGroup.type5?.let { tags.addAll(parseTagEntries(it)) }
+        listOfNotNull(
+            tagGroup.type1,
+            tagGroup.type2,
+            tagGroup.type3,
+            tagGroup.type4,
+            tagGroup.type5,
+            tagGroup.type6
+        ).forEach { tags.addAll(parseTagEntries(it)) }
 
         return tags
     }
