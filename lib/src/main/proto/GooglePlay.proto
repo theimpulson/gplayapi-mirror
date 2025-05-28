@@ -1091,7 +1091,7 @@ message Publisher{
 message PublisherStream{
   optional string moreUrl = 3;
   optional string query = 11;
-  optional StreamLink link = 83;
+  optional string browseUrl = 83;
 }
 
 message EditorChoice{
@@ -1466,7 +1466,7 @@ message Stream{
   optional string title = 1;
   optional SubStream stream = 2;
   optional string subtitle = 3;
-  optional StreamLink link = 83;
+  optional string browseUrl = 83;
 }
 
 message SubStream{
