@@ -46,11 +46,12 @@ class CategoryStreamHelper(authData: AuthData) : NativeHelper(authData), Categor
     private fun getSubCategoryBundle(bytes: ByteArray?): StreamBundle {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
         return when {
-            responseWrapper.preFetchCount > 0 -> {
+            responseWrapper.hasPreFetch() -> {
                 val streamClusters = mutableMapOf<Int, StreamCluster>()
-                responseWrapper.preFetchList.forEach {
-                    if (it.hasResponse() && it.response.hasPayload()) {
-                        val payload = it.response.payload
+
+                with(responseWrapper.preFetch) {
+                    if (hasResponse() && response.hasPayload()) {
+                        val payload = response.payload
                         val currentStreamBundle = getSubCategoryBundle(payload)
                         streamClusters.putAll(currentStreamBundle.streamClusters)
                     }

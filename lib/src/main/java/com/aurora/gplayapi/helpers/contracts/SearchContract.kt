@@ -6,12 +6,12 @@
 package com.aurora.gplayapi.helpers.contracts
 
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 
 interface SearchContract {
     fun searchSuggestions(query: String): List<SearchSuggestEntry>
-
-    fun searchResults(query: String, nextPageUrl: String = ""): SearchBundle
-
-    fun next(bundleSet: MutableSet<SearchBundle.SubBundle>): SearchBundle
+    fun searchResults(query: String, nextPageUrl: String = ""): StreamBundle
+    fun nextStreamBundle(query: String, nextPageUrl: String = ""): StreamBundle
+    fun nextStreamCluster(query: String, nextPageUrl: String = ""): StreamCluster
 }

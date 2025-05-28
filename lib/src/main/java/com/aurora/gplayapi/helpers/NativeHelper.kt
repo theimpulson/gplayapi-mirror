@@ -77,15 +77,17 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     @Throws(Exception::class)
     fun getPrefetchPayLoad(bytes: ByteArray?): Payload {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
-        val payload = responseWrapper.payload
-        return if (responseWrapper.preFetchCount > 0 && (
-                    (payload.hasSearchResponse() && payload.searchResponse.itemCount == 0) ||
-                            payload.hasListResponse() && payload.listResponse.itemCount == 0 ||
-                            payload.hasBrowseResponse())
-        ) {
-            responseWrapper.getPreFetch(0).response.payload
-        } else {
-            payload
+
+        return when {
+            responseWrapper.hasPreFetch() -> {
+                responseWrapper.preFetch.response.payload
+            }
+            responseWrapper.hasPayload() -> {
+                responseWrapper.payload
+            }
+            else -> {
+                Payload.getDefaultInstance()
+            }
         }
     }
 
