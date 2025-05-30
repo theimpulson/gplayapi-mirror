@@ -19,6 +19,10 @@ data class StreamBundle(
     val streamNextPageUrl: String = String(),
     val streamClusters: Map<Int, StreamCluster> = mapOf()
 ) : Parcelable {
+    companion object {
+        val EMPTY = StreamBundle()
+    }
+
     override fun hashCode(): Int {
         return id
     }

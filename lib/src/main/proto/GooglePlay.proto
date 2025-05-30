@@ -1190,7 +1190,7 @@ message Bucket {
 
 message ListResponse {
   repeated Bucket bucket = 1;
-  repeated Item item = 2;
+  optional Item item = 2;
 }
 
 message Item {
@@ -1924,7 +1924,7 @@ message ServerCookies {
 message ResponseWrapper {
   optional Payload payload = 1;
   optional ServerCommands commands = 2;
-  repeated PreFetch preFetch = 3;
+  optional PreFetch preFetch = 3;
   repeated Notification notification = 4;
   optional ServerMetadata serverMetadata = 5;
   optional Targets targets = 6;

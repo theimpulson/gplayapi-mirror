@@ -9,9 +9,8 @@ package com.aurora.gplayapi.helpers.web
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.builders.rpc.SearchQueryBuilder
 import com.aurora.gplayapi.data.builders.rpc.SearchSuggestionQueryBuilder
-import com.aurora.gplayapi.data.models.App
-import com.aurora.gplayapi.data.models.SearchBundle
-import com.aurora.gplayapi.data.models.SearchBundle.SubBundle
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.contracts.SearchContract
 import com.aurora.gplayapi.network.IHttpClient
 import com.aurora.gplayapi.utils.dig
@@ -19,7 +18,6 @@ import java.util.Locale
 import java.util.UUID
 
 class WebSearchHelper : BaseWebHelper(), SearchContract {
-    private var query: String = String()
 
     override fun with(locale: Locale) = apply {
         this.locale = locale
@@ -51,9 +49,27 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
         return suggestions
     }
 
-    override fun searchResults(query: String, nextPageUrl: String): SearchBundle {
-        this.query = query
+    override fun searchResults(query: String, nextPageUrl: String): StreamBundle {
+        val cluster = search(query)
 
+        return StreamBundle(
+            id = UUID.randomUUID().hashCode(),
+            streamClusters = mapOf(
+                UUID.randomUUID().hashCode() to cluster
+            )
+        )
+    }
+
+    override fun nextStreamBundle(query: String, nextPageUrl: String): StreamBundle {
+        // Web does not support pagination in the same way as native API, there is only one stream.
+        return StreamBundle.EMPTY
+    }
+
+    override fun nextStreamCluster(query: String, nextPageUrl: String): StreamCluster {
+        return search(query, nextPageUrl)
+    }
+
+    fun search(query: String, nextPageUrl: String = ""): StreamCluster {
         val response = execute(SearchQueryBuilder.build(query, nextPageUrl))
 
         var payload = response.dig<List<Any>>(
@@ -63,7 +79,7 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
         )
 
         if (payload.isEmpty()) {
-            return SearchBundle.EMPTY
+            return StreamCluster.EMPTY
         }
 
         // First stream is search stream, following are app streams (made-up names :p)
@@ -79,34 +95,16 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
         }
 
         if (packageNames.isEmpty()) {
-            return SearchBundle.EMPTY
+            return StreamCluster.EMPTY
         }
 
         val nextPageToken: String = payload.dig<String>(0, 7, 1)
 
-        // Include sub-bundles only if there is a next page
-        return SearchBundle(
+        return StreamCluster(
             id = UUID.randomUUID().hashCode(),
-            appList = getAppDetails(packageNames),
-            query = query,
-            subBundles = if (nextPageToken.isNotEmpty()) {
-                hashSetOf(SubBundle(nextPageToken, SearchBundle.Type.GENERIC))
-            } else {
-                hashSetOf()
-            }
+            clusterTitle = query,
+            clusterNextPageUrl = nextPageToken,
+            clusterAppList = getAppDetails(packageNames)
         )
-    }
-
-    override fun next(bundleSet: MutableSet<SubBundle>): SearchBundle {
-        val appList = mutableListOf<App>()
-        val subBundles = mutableSetOf<SubBundle>()
-
-        bundleSet.forEach {
-            val searchBundle = searchResults(query, it.nextPageUrl)
-            appList.addAll(searchBundle.appList)
-            subBundles.addAll(searchBundle.subBundles)
-        }
-
-        return SearchBundle(appList = appList, subBundles = subBundles)
     }
 }

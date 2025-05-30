@@ -6,6 +6,7 @@
 
 package com.aurora.gplayapi.data.providers
 
+import com.aurora.gplayapi.GooglePlayApi
 import com.aurora.gplayapi.data.models.AuthData
 import java.util.Locale
 
@@ -24,7 +25,8 @@ internal object HeaderProvider {
     fun getDefaultHeaders(authData: AuthData): MutableMap<String, String> {
         val headers: MutableMap<String, String> = HashMap()
         headers["Authorization"] = "Bearer " + authData.authToken
-        headers["User-Agent"] = authData.deviceInfoProvider!!.userAgentString
+        // Use the legacy user agent for compatibility with older versions of Google Play
+        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
         headers["X-DFE-Device-Id"] = authData.gsfId
         headers["Accept-Language"] = authData.locale.toString().replace("_", "-")
         headers["X-DFE-Encoded-Targets"] =

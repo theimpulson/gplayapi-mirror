@@ -41,11 +41,11 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
 
     /*-------------------------------------------- COMMONS -------------------------------------------------*/
     fun getNextPageUrl(item: Item): String {
-        return if (item.hasContainerMetadata() && item.containerMetadata.hasNextPageUrl()) item.containerMetadata.nextPageUrl else String()
+        return item.containerMetadata?.nextPageUrl.orEmpty()
     }
 
     fun getBrowseUrl(item: Item): String {
-        return if (item.hasContainerMetadata() && item.containerMetadata.hasBrowseUrl()) item.containerMetadata.browseUrl else String()
+        return item.containerMetadata?.browseUrl.orEmpty()
     }
 
     @Throws(Exception::class)
@@ -77,30 +77,30 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     @Throws(Exception::class)
     fun getPrefetchPayLoad(bytes: ByteArray?): Payload {
         val responseWrapper = ResponseWrapper.parseFrom(bytes)
-        val payload = responseWrapper.payload
-        return if (responseWrapper.preFetchCount > 0 && (
-                    (payload.hasSearchResponse() && payload.searchResponse.itemCount == 0) ||
-                            payload.hasListResponse() && payload.listResponse.itemCount == 0 ||
-                            payload.hasBrowseResponse())
-        ) {
-            responseWrapper.getPreFetch(0).response.payload
-        } else {
-            payload
+
+        return when {
+            responseWrapper.hasPreFetch() -> {
+                responseWrapper.preFetch.response.payload
+            }
+
+            responseWrapper.hasPayload() -> {
+                responseWrapper.payload
+            }
+
+            else -> {
+                Payload.getDefaultInstance()
+            }
         }
     }
 
-    open fun getAppsFromItem(item: Item): MutableList<App> {
-        val appList: MutableList<App> = mutableListOf()
-        if (item.subItemCount > 0) {
-            for (subItem in item.subItemList) {
-                if (subItem.type == 1) {
-                    val app = build(subItem)
-                    appList.add(app)
-                    // System.out.printf("%s -> %s\n", app.displayName, app.packageName);
-                }
+    open fun getAppsFromItem(item: Item): List<App> {
+        with(item) {
+            return if (subItemList.isNotEmpty()) {
+                subItemList.filter { type == 45 }.map { build(it) }
+            } else {
+                emptyList()
             }
         }
-        return appList
     }
 
     /*--------------------------------------- GENERIC APP STREAMS --------------------------------------------*/
@@ -108,6 +108,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     fun getNextStreamResponse(nextPageUrl: String): ListResponse {
         val headers: Map<String, String> = getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + nextPageUrl, headers)
+
         return if (playResponse.isSuccessful) {
             getResponseFromBytes(playResponse.responseBytes)
         } else {
@@ -132,73 +133,61 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
         return getStreamCluster(listResponse)
     }
 
-    open fun getStreamCluster(item: Item): StreamCluster {
-        val title = if (item.hasTitle()) item.title else String()
-        val subtitle = if (item.hasSubtitle()) item.subtitle else String()
-        val browseUrl = getBrowseUrl(item)
-
-        return StreamCluster(
-            clusterTitle = title,
-            clusterSubtitle = subtitle,
-            clusterBrowseUrl = browseUrl,
-            clusterNextPageUrl = getNextPageUrl(item),
-            clusterAppList = getAppsFromItem(item)
-        )
-    }
-
-    fun getStreamCluster(payload: Payload): StreamCluster {
-        return if (payload.hasListResponse()) {
-            getStreamCluster(payload.listResponse)
-        } else {
-            StreamCluster()
+    fun getStreamCluster(item: Item): StreamCluster {
+        with(item) {
+            return StreamCluster(
+                clusterTitle = title.orEmpty(),
+                clusterSubtitle = subtitle.orEmpty(),
+                clusterBrowseUrl = getBrowseUrl(item),
+                clusterNextPageUrl = getNextPageUrl(item),
+                clusterAppList = getAppsFromItem(item)
+            )
         }
+
+        return StreamCluster.EMPTY
     }
 
     fun getStreamCluster(listResponse: ListResponse): StreamCluster {
-        if (listResponse.itemCount > 0) {
-            val item = listResponse.getItem(0)
-            if (item != null && item.subItemCount > 0) {
-                val subItem = item.getSubItem(0)
-                return getStreamCluster(subItem)
+        with(listResponse) {
+            if (hasItem() and item.subItemList.isNotEmpty()) {
+                return getStreamCluster(item.subItemList.first())
             }
         }
-        return StreamCluster()
+
+        return StreamCluster.EMPTY
     }
 
-    fun getStreamClusters(listResponse: ListResponse): List<StreamCluster> {
-        val streamClusters: MutableList<StreamCluster> = ArrayList()
-        if (listResponse.itemCount > 0) {
-            val item = listResponse.getItem(0)
-            if (item != null && item.subItemCount > 0) {
+    fun getStreamClusters(listResponse: ListResponse): Map<Int, StreamCluster> {
+        var clusters = mutableMapOf<Int, StreamCluster>()
+
+        with(listResponse) {
+            if (hasItem() and item.subItemList.isNotEmpty()) {
                 for (subItem in item.subItemList) {
-                    streamClusters.add(getStreamCluster(subItem))
+                    val cluster = getStreamCluster(subItem)
+
+                    clusters.put(
+                        cluster.id,
+                        cluster
+                    )
                 }
             }
         }
-        return streamClusters
+
+        return clusters
     }
 
     fun getStreamBundle(listResponse: ListResponse): StreamBundle {
-        var nextPageUrl = String()
-        var title = String()
-        val streamClusterMap: MutableMap<Int, StreamCluster> = mutableMapOf()
-
-        if (listResponse.itemCount > 0) {
-            val item = listResponse.getItem(0)
-            if (item != null && item.subItemCount > 0) {
-                for (subItem in item.subItemList) {
-                    val streamCluster = getStreamCluster(subItem)
-                    streamClusterMap[streamCluster.id] = streamCluster
-                }
-                title = item.title
-                nextPageUrl = getNextPageUrl(item)
+        with(listResponse) {
+            if (hasItem() && item.subItemList.isNotEmpty()) {
+                return StreamBundle(
+                    streamTitle = item.title.orEmpty(),
+                    streamNextPageUrl = getNextPageUrl(item),
+                    streamClusters = getStreamClusters(this)
+                )
             }
         }
-        return StreamBundle(
-            streamTitle = title,
-            streamNextPageUrl = nextPageUrl,
-            streamClusters = streamClusterMap
-        )
+
+        return StreamBundle.EMPTY
     }
 
     /*------------------------------------- EDITOR'S CHOICE CLUSTER & BUNDLES ------------------------------------*/
@@ -245,9 +234,13 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     fun getEditorChoiceBundles(listResponse: ListResponse?): List<EditorChoiceBundle> {
         val editorChoiceBundles: MutableList<EditorChoiceBundle> = ArrayList()
 
-        listResponse?.itemList?.forEach { item ->
-            item?.subItemList?.forEach { subItem ->
-                subItem?.let {
+        if (listResponse == null || !listResponse.hasItem()) {
+            return editorChoiceBundles
+        }
+
+        with(listResponse.item) {
+            subItemList.forEach { subItem ->
+                subItem.let {
                     val bundle = getEditorChoiceBundles(it)
                     if (bundle.bundleChoiceClusters.isNotEmpty()) {
                         editorChoiceBundles.add(bundle)

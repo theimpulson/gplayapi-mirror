@@ -32,35 +32,25 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
 
     private fun getDevStream(payload: Payload): DevStream {
         val listResponse: ListResponse = payload.listResponse
-        for (item in listResponse.itemList) {
-            for (subItem in item.subItemList) {
-                if (subItem.categoryId != 3) {
-                    if (subItem.hasAnnotations() && subItem.annotations.hasOverlayMetaData()) {
-                        val hasTitle = subItem.annotations.overlayMetaData.hasOverlayTitle()
-                        val hasDesc = subItem.annotations.overlayMetaData.hasOverlayDescription()
-                        return DevStream(
-                            title = if (hasTitle) {
-                                subItem.annotations.overlayMetaData.overlayTitle.title
-                            } else {
-                                String()
-                            },
-                            imgUrl = if (hasTitle) {
-                                subItem.annotations.overlayMetaData.overlayTitle.compositeImage.url
-                            } else {
-                                String()
-                            },
-                            description = if (hasDesc) {
-                                subItem.annotations.overlayMetaData.overlayDescription.description
-                            } else {
-                                String()
-                            },
-                            streamBundle = getStreamBundle(payload.listResponse)
-                        )
+
+        with(listResponse) {
+            if (hasItem()) {
+                with(item) {
+                    if (hasAnnotations() && annotations.hasOverlayMetaData()) {
+                        with(annotations.overlayMetaData) {
+                            return DevStream(
+                                title = overlayTitle?.title.orEmpty(),
+                                imgUrl = overlayTitle?.compositeImage?.url.orEmpty(),
+                                description = overlayDescription?.description.orEmpty(),
+                                streamBundle = getStreamBundle(payload.listResponse)
+                            )
+                        }
                     }
                 }
             }
         }
-        return DevStream()
+
+        return DevStream.EMPTY
     }
 
     @Throws(Exception::class)
