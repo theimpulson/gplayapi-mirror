@@ -35,7 +35,7 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
             if (hasItem()) {
                 with(item) {
                     // Categories are nested items, so we need to iterate through them
-                    // list -> item -> subitem[0] -> subitem -> category item
+                    // list -> item -> subitems[0] -> subitems -> category item
                     if (subItemList.isNotEmpty()) {
                         return subItemList.first().subItemList.map { si ->
                             getCategoryFromItem(type, si)
@@ -53,7 +53,7 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
             title = item.title,
             imageUrl = item.getImage(0).imageUrl,
             color = item.getImage(0).fillColorRGB,
-            browseUrl = item.annotations.annotationLink.resolvedLink.browseUrl,
+            browseUrl = item.annotations?.annotationLink?.resolvedLink?.browseUrl.orEmpty(),
             type = type
         )
     }

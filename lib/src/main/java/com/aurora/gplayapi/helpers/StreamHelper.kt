@@ -56,9 +56,6 @@ class StreamHelper(authData: AuthData) : NativeHelper(authData), StreamContract 
     @Throws(Exception::class)
     private fun getListResponse(type: Type, category: Category): ListResponse {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-        // Use legacy user agent for compatibility with older Google Play versions
-        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
-
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"
 

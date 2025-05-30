@@ -35,7 +35,6 @@ class ExpandedBrowseHelper(authData: AuthData) : NativeHelper(authData) {
                 }
             }
         }
-
         return appList
     }
 }

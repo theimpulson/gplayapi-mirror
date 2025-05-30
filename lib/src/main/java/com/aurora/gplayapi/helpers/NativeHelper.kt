@@ -41,11 +41,11 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
 
     /*-------------------------------------------- COMMONS -------------------------------------------------*/
     fun getNextPageUrl(item: Item): String {
-        return if (item.hasContainerMetadata() && item.containerMetadata.hasNextPageUrl()) item.containerMetadata.nextPageUrl else String()
+        return item.containerMetadata?.nextPageUrl.orEmpty()
     }
 
     fun getBrowseUrl(item: Item): String {
-        return if (item.hasContainerMetadata() && item.containerMetadata.hasBrowseUrl()) item.containerMetadata.browseUrl else String()
+        return item.containerMetadata?.browseUrl.orEmpty()
     }
 
     @Throws(Exception::class)
