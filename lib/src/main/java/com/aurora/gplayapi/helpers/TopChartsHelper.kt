@@ -29,11 +29,12 @@ class TopChartsHelper(authData: AuthData) : NativeHelper(authData), TopChartsCon
         params["scat"] = category
 
         val playResponse = httpClient.get(GooglePlayApi.TOP_CHART_URL, headers, params)
+
         return if (playResponse.isSuccessful) {
             val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
             getStreamCluster(listResponse)
         } else {
-            StreamCluster()
+            StreamCluster.EMPTY
         }
     }
 }

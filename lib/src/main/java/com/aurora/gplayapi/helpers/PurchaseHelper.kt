@@ -50,8 +50,9 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
 
         val purchaseAppList: MutableList<App> = mutableListOf()
         val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
-        if (listResponse.itemCount > 0) {
-            for (item in listResponse.itemList) {
+
+        with(listResponse) {
+            if (hasItem()) {
                 for (subItem in item.subItemList) {
                     if (item.subItemCount > 0) {
                         if (item.hasAnnotations() &&
@@ -65,6 +66,7 @@ class PurchaseHelper(authData: AuthData) : NativeHelper(authData) {
                 }
             }
         }
+
         if (!getAllAppDetails) {
             return purchaseAppList
         }
