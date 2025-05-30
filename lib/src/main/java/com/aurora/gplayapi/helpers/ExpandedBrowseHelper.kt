@@ -21,20 +21,7 @@ class ExpandedBrowseHelper(authData: AuthData) : NativeHelper(authData) {
 
     fun getExpandedBrowseClusters(expandedBrowseUrl: String): StreamCluster {
         val listResponse = getNextStreamResponse(expandedBrowseUrl)
-        return getStreamCluster(listResponse.getItem(0))
-    }
-
-    override fun getStreamCluster(item: Item): StreamCluster {
-        val title = if (item.hasTitle()) item.title else String()
-        val subtitle = if (item.hasSubtitle()) item.subtitle else String()
-        val browseUrl = getBrowseUrl(item)
-        return StreamCluster(
-            clusterTitle = title,
-            clusterSubtitle = subtitle,
-            clusterBrowseUrl = browseUrl,
-            clusterNextPageUrl = getNextPageUrl(item),
-            clusterAppList = getAppsFromItem(item)
-        )
+        return getStreamCluster(listResponse.item)
     }
 
     override fun getAppsFromItem(item: Item): MutableList<App> {
@@ -48,6 +35,7 @@ class ExpandedBrowseHelper(authData: AuthData) : NativeHelper(authData) {
                 }
             }
         }
+
         return appList
     }
 }

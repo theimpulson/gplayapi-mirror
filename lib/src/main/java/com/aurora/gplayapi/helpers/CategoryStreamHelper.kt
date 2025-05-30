@@ -27,7 +27,6 @@ class CategoryStreamHelper(authData: AuthData) : NativeHelper(authData), Categor
     override fun fetch(url: String): StreamBundle {
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val playResponse = httpClient.get(GooglePlayApi.URL_FDFE + "/" + url, headers)
-
         return getSubCategoryBundle(playResponse.responseBytes)
     }
 
@@ -66,10 +65,12 @@ class CategoryStreamHelper(authData: AuthData) : NativeHelper(authData), Categor
     }
 
     private fun getSubCategoryBundle(payload: Payload): StreamBundle {
-        var streamBundle = StreamBundle()
-        if (payload.hasListResponse() && payload.listResponse.itemCount > 0) {
-            streamBundle = getStreamBundle(payload.listResponse)
+        with(payload) {
+            if (hasListResponse()) {
+                return getStreamBundle(payload.listResponse)
+            }
         }
-        return streamBundle
+
+        return StreamBundle.EMPTY
     }
 }

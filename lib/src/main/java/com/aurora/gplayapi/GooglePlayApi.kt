@@ -204,5 +204,8 @@ class GooglePlayApi {
         const val URL_USER_PROFILE = "$URL_FDFE/api/userProfile"
         const val URL_LIBRARY = "$URL_FDFE/library"
         const val URL_MODIFY_LIBRARY = "$URL_FDFE/modifyLibrary"
+
+        const val LEGACY_USER_AGENT =
+            "Android-Finsky/29.2.15-21 [0] [PR] 426536134 (api=3,versionCode=82921510,sdk=25)"
     }
 }

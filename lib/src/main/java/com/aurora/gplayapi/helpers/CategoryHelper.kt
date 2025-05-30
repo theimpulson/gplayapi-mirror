@@ -23,7 +23,6 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
 
     @Throws(Exception::class)
     override fun getAllCategories(type: Category.Type): List<Category> {
-        val categoryList: MutableList<Category> = ArrayList()
         val headers = HeaderProvider.getDefaultHeaders(authData)
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"
@@ -32,26 +31,29 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
         val playResponse = httpClient.get(GooglePlayApi.CATEGORIES_URL, headers, params)
         val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
 
-        if (listResponse.itemCount > 0) {
-            val item = listResponse.getItem(0)
-            if (item.subItemCount > 0) {
-                val subItem = item.getSubItem(0)
-                if (subItem.subItemCount > 0) {
-                    for (subSubItem in subItem.subItemList) {
-                        categoryList.add(getCategoryFromItem(type, subSubItem))
+        with(listResponse) {
+            if (hasItem()) {
+                with(item) {
+                    // Categories are nested items, so we need to iterate through them
+                    // list -> item -> subitem[0] -> subitem -> category item
+                    if (subItemList.isNotEmpty()) {
+                        return subItemList.first().subItemList.map { si ->
+                            getCategoryFromItem(type, si)
+                        }
                     }
                 }
             }
         }
-        return categoryList
+
+        return emptyList()
     }
 
-    private fun getCategoryFromItem(type: Category.Type, subItem: Item): Category {
+    private fun getCategoryFromItem(type: Category.Type, item: Item): Category {
         return Category(
-            title = subItem.title,
-            imageUrl = subItem.getImage(0).imageUrl,
-            color = subItem.getImage(0).fillColorRGB,
-            browseUrl = subItem.annotations.annotationLink.resolvedLink.browseUrl,
+            title = item.title,
+            imageUrl = item.getImage(0).imageUrl,
+            color = item.getImage(0).fillColorRGB,
+            browseUrl = item.annotations.annotationLink.resolvedLink.browseUrl,
             type = type
         )
     }

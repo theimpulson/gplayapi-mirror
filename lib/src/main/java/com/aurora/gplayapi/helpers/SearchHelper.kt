@@ -47,11 +47,6 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
     @Throws(Exception::class)
     override fun searchResults(query: String, nextPageUrl: String): StreamBundle {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
-
-        // DO NOT CHANGE THIS USER-AGENT
-        headers["User-Agent"] =
-            "Android-Finsky/29.2.15-21 [0] [PR] 426536134 (api=3,versionCode=82921510,sdk=24)"
-
         val param: MutableMap<String, String> = HashMap()
         param["q"] = query
         param["c"] = "3"

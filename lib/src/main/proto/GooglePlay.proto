@@ -1190,7 +1190,7 @@ message Bucket {
 
 message ListResponse {
   repeated Bucket bucket = 1;
-  repeated Item item = 2;
+  optional Item item = 2;
 }
 
 message Item {

@@ -32,11 +32,14 @@ class LibraryHelper(authData: AuthData) : NativeHelper(authData) {
 
         val appList: MutableList<App> = mutableListOf()
         val listResponse: ListResponse = getResponseFromBytes(playResponse.responseBytes)
-        if (listResponse.itemCount > 0) {
-            for (item in listResponse.itemList) {
-                for (subItem in item.subItemList) {
-                    if (item.subItemCount > 0) {
-                        appList.addAll(getAppsFromItem(subItem))
+
+        with(listResponse) {
+            if (hasItem()) {
+                with(item) {
+                    if (subItemCount > 0) {
+                        for (subItem in subItemList) {
+                            appList.addAll(getAppsFromItem(subItem))
+                        }
                     }
                 }
             }
