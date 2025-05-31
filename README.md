@@ -20,7 +20,7 @@ I'm not resposible for anything that may go wrong with:
 GPlayAPI is available on the [mavencentral](https://central.sonatype.com/artifact/com.auroraoss/gplayapi).
 
 ```kotlin
-implementation("com.aurora:gplayapi:3.5.3")
+implementation("com.aurora:gplayapi:3.5.4")
 ```
 
 You can get unsigned release builds for testing latest changes from our [GitLab Package Registry](https://gitlab.com/AuroraOSS/gplayapi/-/packages).
@@ -100,10 +100,28 @@ val entries = SearchHelper(authData).searchSuggestions(query)
 ```kotlin
 var helper = SearchHelper(authData)
 var searchBundle = helper.searchResults(query) 
-var appList = searchBundle.appList 
 
-// To fetch next list 
-appList = helper.next(searchBundle.subBundles)
+val clusters = searchBundle.clusters // List of AppClusters
+
+clusters.forEach {
+    var cluster = it
+    cluster.apps.forEach { app ->
+        // Do something with each app
+    }
+
+    while (cluster.nextPageUrl != null) {
+        val nextCluster = helper.nextStream(cluster.nextPageUrl)
+        nextCluster.apps.forEach { app ->
+            // Do something with each app
+        }
+
+        cluster = cluster.copy(
+            clusterNextPageUrl = nextCluster.nextPageUrl,
+        )
+    }
+}
+
+// If searchBundle has nextPageUrl, you can fetch next page in similar way
 ```
 
 ### App Reviews
