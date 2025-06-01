@@ -96,7 +96,7 @@ abstract class NativeHelper(protected var authData: AuthData) : BaseHelper() {
     open fun getAppsFromItem(item: Item): List<App> {
         with(item) {
             return if (subItemList.isNotEmpty()) {
-                subItemList.filter { type == 45 }.map { build(it) }
+                subItemList.filter { it.type == 1 }.map { build(it) }
             } else {
                 emptyList()
             }
