@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-jdk: openjdk17
+jdk: openjdk21
 install:
   - chmod +x gradlew
   - ./gradlew :lib:publishToMavenLocal

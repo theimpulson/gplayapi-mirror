@@ -60,7 +60,9 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
 
         return if (responseBody.isSuccessful) {
             val payload = getPrefetchPayLoad(responseBody.responseBytes)
-            getStreamBundle(payload.listResponse)
+            val stream = getStreamBundle(payload.listResponse)
+            // Search stream title is set to the query
+            stream.copy(streamTitle = query)
         } else {
             StreamBundle.EMPTY
         }
