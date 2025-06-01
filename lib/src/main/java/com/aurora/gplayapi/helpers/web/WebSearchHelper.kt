@@ -54,8 +54,9 @@ class WebSearchHelper : BaseWebHelper(), SearchContract {
 
         return StreamBundle(
             id = UUID.randomUUID().hashCode(),
+            streamTitle = query,
             streamClusters = mapOf(
-                UUID.randomUUID().hashCode() to cluster
+                cluster.id to cluster
             )
         )
     }
