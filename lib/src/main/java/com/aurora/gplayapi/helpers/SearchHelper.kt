@@ -26,7 +26,10 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
     @SuppressLint("DefaultLocale")
     @Throws(Exception::class)
     override fun searchSuggestions(query: String): List<SearchSuggestEntry> {
-        val header: MutableMap<String, String> = getDefaultHeaders(authData)
+        val headers: MutableMap<String, String> = getDefaultHeaders(authData)
+        // Use the legacy user agent for compatibility with older versions of Google Play
+        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
+
         val paramString = String.format(
             "?q=%s&sb=%d&sst=%d&sst=%d",
             query,
@@ -34,7 +37,7 @@ class SearchHelper(authData: AuthData) : NativeHelper(authData), SearchContract 
             2 /*Text Entry*/,
             3 /*Item Doc Id : 3 -> Apps*/
         )
-        val responseBody = httpClient.get(GooglePlayApi.URL_SEARCH_SUGGEST, header, paramString)
+        val responseBody = httpClient.get(GooglePlayApi.URL_SEARCH_SUGGEST, headers, paramString)
         val searchSuggestResponse: SearchSuggestResponse =
             getResponseFromBytes(responseBody.responseBytes)
         return if (searchSuggestResponse.entryCount > 0) {

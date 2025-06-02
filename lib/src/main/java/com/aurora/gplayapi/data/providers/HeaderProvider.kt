@@ -25,8 +25,7 @@ internal object HeaderProvider {
     fun getDefaultHeaders(authData: AuthData): MutableMap<String, String> {
         val headers: MutableMap<String, String> = HashMap()
         headers["Authorization"] = "Bearer " + authData.authToken
-        // Use the legacy user agent for compatibility with older versions of Google Play
-        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
+        headers["User-Agent"] = authData.deviceInfoProvider!!.userAgentString
         headers["X-DFE-Device-Id"] = authData.gsfId
         headers["Accept-Language"] = authData.locale.toString().replace("_", "-")
         headers["X-DFE-Encoded-Targets"] =

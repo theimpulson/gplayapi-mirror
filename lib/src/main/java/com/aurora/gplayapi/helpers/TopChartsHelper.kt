@@ -23,6 +23,9 @@ class TopChartsHelper(authData: AuthData) : NativeHelper(authData), TopChartsCon
     @Throws(Exception::class)
     override fun getCluster(category: String, chart: String): StreamCluster {
         val headers: MutableMap<String, String> = getDefaultHeaders(authData)
+        // Use the legacy user agent for compatibility with older versions of Google Play
+        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
+
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"
         params["stcid"] = chart

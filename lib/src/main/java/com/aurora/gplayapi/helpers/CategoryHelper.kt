@@ -24,6 +24,9 @@ class CategoryHelper(authData: AuthData) : NativeHelper(authData), CategoryContr
     @Throws(Exception::class)
     override fun getAllCategories(type: Category.Type): List<Category> {
         val headers = HeaderProvider.getDefaultHeaders(authData)
+        // Use the legacy user agent for compatibility with older versions of Google Play
+        headers["User-Agent"] = GooglePlayApi.LEGACY_USER_AGENT
+
         val params: MutableMap<String, String> = HashMap()
         params["c"] = "3"
         params["cat"] = type.value
