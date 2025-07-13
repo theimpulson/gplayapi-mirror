@@ -134,7 +134,7 @@ internal object DefaultHttpClient : IHttpClient {
         return PlayResponse(
             isSuccessful = response.isSuccessful,
             code = response.code,
-            responseBytes = if (response.body != null) response.body!!.bytes() else byteArrayOf(),
+            responseBytes = response.body.bytes(),
             errorString = if (!response.isSuccessful) response.message else String()
         ).also {
             _responseCode.value = response.code
