@@ -17,9 +17,9 @@ import java.util.Locale
 
 abstract class BaseWebHelper : BaseHelper() {
 
-    var locale: Locale = Locale.getDefault()
+    var locale: Locale? = null
 
-    abstract fun with(locale: Locale): BaseWebHelper
+    abstract fun with(locale: Locale?): BaseWebHelper
 
     fun execute(freq: String): HashMap<String, HashMap<String, Any>> {
         val response = WebClient(httpClient, locale).fetch(listOf(freq))
