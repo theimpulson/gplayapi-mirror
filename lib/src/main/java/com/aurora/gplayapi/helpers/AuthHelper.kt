@@ -72,8 +72,8 @@ object AuthHelper {
             )
         }
 
-        // Accept GooglePlay TOS
-        authBuilder.dfeCookie = api.toc(authBuilder.build())
+        // Do not accept GooglePlay TOS, this adds device to google account
+        // authBuilder.dfeCookie = api.toc(authBuilder.build())
 
         // Fetch UserProfile
         authBuilder.userProfile = UserProfileHelper(authBuilder.build())
