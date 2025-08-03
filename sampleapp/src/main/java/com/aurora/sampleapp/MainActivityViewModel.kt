@@ -10,13 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.helpers.AuthHelper
-import com.aurora.gplayapi.helpers.web.WebAppDetailsHelper
-import com.aurora.gplayapi.helpers.web.WebSearchHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
 import java.util.Properties
 
 class MainActivityViewModel : ViewModel() {
