@@ -15,13 +15,17 @@ import java.util.Locale
 
 class WebClient(
     val httpClient: IHttpClient = DefaultHttpClient,
-    val locale: Locale = Locale.getDefault()
+    val locale: Locale?
 ) {
-
     private val TAG = javaClass.simpleName
 
     fun fetch(rpcRequests: List<String>): String {
-        val url = "https://play.google.com/_/PlayStoreUi/data/batchexecute?hl=${locale.language}&gl=${locale.country}"
+        var url = "https://play.google.com/_/PlayStoreUi/data/batchexecute"
+        url = if (locale != null) {
+            url + "?hl=${locale.language}&gl=${locale.country}"
+        } else {
+            url
+        }
 
         val headers = mapOf(
             "Content-Type" to "application/x-www-form-urlencoded;charset=utf-8",

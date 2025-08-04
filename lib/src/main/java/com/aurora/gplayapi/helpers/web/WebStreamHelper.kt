@@ -20,7 +20,7 @@ import java.util.Locale
 
 class WebStreamHelper : BaseWebHelper(), StreamContract {
 
-    override fun with(locale: Locale) = apply {
+    override fun with(locale: Locale?) = apply {
         this.locale = locale
     }
 

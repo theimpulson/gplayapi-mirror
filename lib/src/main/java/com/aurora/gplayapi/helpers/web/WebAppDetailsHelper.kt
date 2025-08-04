@@ -19,7 +19,7 @@ import java.util.Locale
 
 class WebAppDetailsHelper : BaseWebHelper(), AppDetailsContract {
 
-    override fun with(locale: Locale) = apply {
+    override fun with(locale: Locale?) = apply {
         this.locale = locale
     }
 
