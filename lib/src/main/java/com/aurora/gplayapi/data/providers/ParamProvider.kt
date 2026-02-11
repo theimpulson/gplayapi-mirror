@@ -36,6 +36,7 @@ internal object ParamProvider {
         params["token_request_options"] = "CAA4AVAB"
         params["check_email"] = "1"
         params["system_partition"] = "1"
+        params["droidguard_results"] = "null"
         return params
     }
 
