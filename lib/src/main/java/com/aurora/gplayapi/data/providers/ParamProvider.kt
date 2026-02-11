@@ -48,6 +48,7 @@ internal object ParamProvider {
         params["ACCESS_TOKEN"] = "1"
         params["callerPkg"] = "com.google.android.gms"
         params["Token"] = oauthToken
+        params["droidguard_results"] = "null"
         return params
     }
 }
