@@ -30,39 +30,41 @@ class WebDataSafetyHelper : BaseWebHelper() {
 
     fun fetch(packageName: String): Report {
         val response = execute(DataSafetyBuilder.build(packageName))
-        val dataSafetyPayload = response.dig<List<Any>>(DataSafetyBuilder.TAG, packageName, 1, 2)
+        val dataSafetyPayload = response.dig<Map<Any, Any>>(DataSafetyBuilder.TAG, packageName, 1, 2, 1)
 
-        val subEntries = dataSafetyPayload.dig<List<Any>>(137, 4)
+        val dataSharedPayload = dataSafetyPayload.dig<List<Any>>("138", 4, 0)
+        val dataCollectedPayload = dataSafetyPayload.dig<List<Any>>("138", 4, 1)
+        val securityPracticesPayload = dataSafetyPayload.dig<List<Any>>("138", 9)
 
         return Report(
             packageName = packageName,
             developerInfo = parseDevInfo(dataSafetyPayload),
-            artwork = parseArtwork(dataSafetyPayload.dig(95, 0), 4),
-            privacyUrl = dataSafetyPayload.dig<String>(99, 0, 5, 2),
+            artwork = parseArtwork(dataSafetyPayload.dig("96", 0), 4),
+            privacyUrl = dataSafetyPayload.dig<String>("100", 0, 5, 2),
             entries = mutableListOf(
-                parseEntry(EntryType.DATA_SHARED, subEntries.dig(0)),
-                parseEntry(EntryType.DATA_COLLECTED, subEntries.dig(1)),
+                parseEntry(EntryType.DATA_SHARED, dataSharedPayload),
+                parseEntry(EntryType.DATA_COLLECTED, dataCollectedPayload),
                 parseSecurityEntry(
                     EntryType.SECURITY_PRACTICES,
-                    dataSafetyPayload.dig<List<Any>>(137, 9)
+                    securityPracticesPayload
                 )
             )
         )
     }
 
-    private fun parseDevInfo(payload: List<Any>): DeveloperInfo {
-        var developerId = payload.dig<String>(68, 2)
+    private fun parseDevInfo(payload: Map<Any, Any>): DeveloperInfo {
+        var developerId = payload.dig<String>("69", 2)
 
         if (developerId.isBlank()) {
-            developerId = payload.digOrDefault<String>("unknown", 68, 0)
+            developerId = payload.digOrDefault<String>("unknown", "69", 0)
         }
 
         return DeveloperInfo(
             devId = developerId,
-            name = payload.dig<String>(68, 0),
-            website = payload.dig<String>(69, 0, 5, 2),
-            email = payload.dig<String>(69, 1, 0),
-            address = payload.dig<String>(69, 2, 0)
+            name = payload.dig<String>("69", 0),
+            website = payload.dig<String>("70", 0, 5, 2),
+            email = payload.dig<String>("70", 1, 0),
+            address = payload.dig<String>("70", 4, 2, 0)
         )
     }
 
