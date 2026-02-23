@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import com.android.build.api.dsl.ApplicationExtension
 import java.util.Properties
 
 // Load properties from local.properties
@@ -25,7 +26,7 @@ kotlin {
     jvmToolchain(21)
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "com.aurora.sampleapp"
     compileSdk = 36
 
@@ -40,8 +41,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "GPLAY_API_EMAIL", email.toString())
-        buildConfigField("String", "GPLAY_API_TOKEN", token.toString())
+        buildConfigField("String", "GPLAY_API_EMAIL", email)
+        buildConfigField("String", "GPLAY_API_TOKEN", token)
     }
 
     buildTypes {
@@ -54,13 +55,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
-    }
     buildFeatures {
         buildConfig = true
         compose = true

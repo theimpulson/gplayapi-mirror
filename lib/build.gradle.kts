@@ -34,7 +34,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(11)
 }
 
 android {
@@ -54,13 +54,6 @@ android {
         release {
             isMinifyEnabled = false
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
     }
     packaging {
         resources {
