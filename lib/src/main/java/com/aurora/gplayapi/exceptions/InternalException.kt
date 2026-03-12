@@ -10,7 +10,7 @@ internal sealed class InternalException : Exception() {
     data class AuthException(val reason: String = "Authentication Error") : InternalException()
     data class AppNotPurchased(val reason: String = "App not purchased") : InternalException()
 
-    data class AppNotFound(val reason: String = "App not found, maybe restricted (OEM or Geo)") :
+    data class AppNotFound(val code: Int = 0, val reason: String = "App not found, maybe restricted (OEM or Geo)") :
         InternalException()
 
     data class AppRemoved(val reason: String = "App removed from Play Store") : InternalException()

@@ -63,7 +63,7 @@ class AppDetailsHelper(authData: AuthData) : NativeHelper(authData), AppDetailsC
         if (playResponse.isSuccessful) {
             return getResponseFromBytes(playResponse.responseBytes)
         } else {
-            throw InternalException.AppNotFound(playResponse.errorString)
+            throw InternalException.AppNotFound(playResponse.code, playResponse.errorString)
         }
     }
 
